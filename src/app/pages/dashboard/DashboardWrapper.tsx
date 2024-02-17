@@ -18,7 +18,6 @@ import {
 } from "../../../_metronic/partials/widgets";
 import { ToolbarWrapper } from "../../../_metronic/layout/components/toolbar";
 import { Content } from "../../../_metronic/layout/components/content";
-import { CreateHost } from "../../../_metronic/partials/content/Tabs/CreateHost";
 
 const DashboardPage: FC = () => (
   <>
