@@ -5,6 +5,7 @@
 // Button
 .btn {
 	--#{$prefix}btn-color: var(--#{$prefix}body-color);
+	font-family: fonticon;
 
 	// Reset outline
 	outline: none !important;	
