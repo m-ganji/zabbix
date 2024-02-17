@@ -1,0 +1,38 @@
+stages:
+  - build
+  - deploy
+
+variables:
+  CONTAINER_IMAGE: reg.fn/sample-rahmani/persian-zabbix-frontend:${CI_COMMIT_SHORT_SHA}
+  GIT_ASKPASS: ""
+  DOCKER_HOST: "unix:///var/run/docker.sock"
+
+
+build:
+  stage: build
+  tags:
+    - docker
+  image: reg.fn/cicd/docker:latest
+  before_script:
+    - docker login -u ${ckartxac} -p ${cqscsdub} reg.fn
+  script:
+    - docker build -t ${CONTAINER_IMAGE} .
+    - docker tag ${CONTAINER_IMAGE} ${CONTAINER_IMAGE}
+    - docker tag ${CONTAINER_IMAGE}  reg.fn/sample-rahmani/persian-zabbix-frontend:latest
+    - docker push ${CONTAINER_IMAGE}
+
+
+deploy:
+  stage: deploy
+  tags:
+    - docker
+  image:
+    name: reg.fn/cicd/bitnami/kubectl:1.24
+    entrypoint: [""]
+  before_script:
+    - sed -i "s/<version>/${CI_COMMIT_SHORT_SHA}/g" deployment.yml
+    - sed -i "s/<REGISTRY_URL>/${REGISTRY_URL}/g" deployment.yml
+  script:
+    - echo ${vaztpgag} > ./config
+    - base64 -di ./config > ./admin.conf
+    - kubectl --kubeconfig ./admin.conf apply -f deployment.yml
