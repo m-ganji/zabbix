@@ -87,7 +87,7 @@
             @include property( z-index, $app-sidebar-fixed-z-index);
             @include property( top, $app-sidebar-fixed-top);
             @include property( bottom, $app-sidebar-fixed-bottom);
-            @include property( left, $app-sidebar-fixed-left);
+            @include property( right, $app-sidebar-fixed-left);
         }  
 
         [data-kt-app-sidebar-stacked="true"] & {

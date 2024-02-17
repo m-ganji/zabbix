@@ -98,7 +98,7 @@
         // Sidebar
         [data-kt-app-header-fixed="true"][data-kt-app-sidebar-fixed="true"][data-kt-app-sidebar-push-header="true"] &,
         [data-kt-app-header-fixed="true"][data-kt-app-sidebar-sticky="on"][data-kt-app-sidebar-push-header="true"] & {
-            left: calc(
+            right: calc(
                 var(--#{$prefix}app-sidebar-width) + 
                 var(--#{$prefix}app-sidebar-gap-start, 0px) + 
                 var(--#{$prefix}app-sidebar-gap-end, 0px)
@@ -107,7 +107,7 @@
 
         body:not([data-kt-app-header-fixed="true"])[data-kt-app-sidebar-fixed="true"][data-kt-app-sidebar-push-header="true"] &,
         body:not([data-kt-app-header-fixed="true"])[data-kt-app-sidebar-sticky="on"][data-kt-app-sidebar-push-header="true"] & {
-            margin-left: calc(
+            margin-right: calc(
                 var(--#{$prefix}app-sidebar-width) + 
                 var(--#{$prefix}app-sidebar-gap-start, 0px) + 
                 var(--#{$prefix}app-sidebar-gap-end, 0px)
