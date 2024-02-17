@@ -92,7 +92,7 @@ const CreateHost: FC = () => {
                   </span>
                   <input
                     type="text"
-                    className="form-control rounded-start-2"
+                    className="form-control rounded-start-2 rounded-end-0"
                     placeholder="نام هاست"
                     aria-label="نام هاست"
                     aria-describedby="tab-hosts"
@@ -108,7 +108,7 @@ const CreateHost: FC = () => {
                   </span>
                   <input
                     type="text"
-                    className="form-control rounded-start-2 "
+                    className="form-control rounded-start-2 rounded-end-0"
                     placeholder="نام نمایشی"
                     aria-label="نام نمایشی"
                     aria-describedby="tab-hosts"
@@ -178,13 +178,13 @@ const CreateHost: FC = () => {
                 <div className="input-group">
                   <input
                     type={showPassword ? "text" : "password"}
-                    className="form-control rounded-end-2"
+                    className="form-control rounded-end-2 rounded-start-0 "
                     id="password"
                     placeholder="رمز عبور را اینجا وارد نمایید"
                     autoComplete="off"
                   />
                   <button
-                    className="btn border rounded-start-2"
+                    className="btn border rounded-start-2 rounded-end-0"
                     type="button"
                     onClick={togglePasswordVisibility}
                   >

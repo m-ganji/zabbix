@@ -19,6 +19,7 @@ const SidebarMenu = () => {
           id='#kt_app_sidebar_menu'
           data-kt-menu='true'
           data-kt-menu-expand='false'
+          dir='rtl'
         >
           <SidebarMenuMain />
         </div>
