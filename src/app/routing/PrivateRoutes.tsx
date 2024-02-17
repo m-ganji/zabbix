@@ -87,7 +87,7 @@ const SuspensedView: FC<WithChildren> = ({children}) => {
     barColors: {
       '0': baseColor,
     },
-    barThickness: 1,
+    barThickness: 2,
     shadowBlur: 5,
   })
   return <Suspense fallback={<TopBarProgress />}>{children}</Suspense>

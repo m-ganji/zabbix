@@ -37,7 +37,7 @@
 
         // Sidebar
         [data-kt-app-sidebar-fixed="true"] & {
-            margin-left: calc(
+            margin-right: calc(
                 var(--#{$prefix}app-sidebar-width) + 
                 var(--#{$prefix}app-sidebar-gap-start, 0px) + 
                 var(--#{$prefix}app-sidebar-gap-end, 0px)
@@ -46,7 +46,7 @@
 
         // Sidebar Panel
         [data-kt-app-sidebar-panel-fixed="true"] & {
-            margin-left: calc(
+            margin-right: calc(
                 var(--#{$prefix}app-sidebar-width) + 
                 var(--#{$prefix}app-sidebar-gap-start, 0px) + 
                 var(--#{$prefix}app-sidebar-gap-end, 0px) +
