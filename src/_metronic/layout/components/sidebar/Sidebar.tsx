@@ -26,7 +26,8 @@ const Sidebar = () => {
           id='kt_app_sidebar'
           className={clsx('app-sidebar', config.app?.sidebar?.default?.class)}
         >
-          <SidebarLogo sidebarRef={sidebarRef} />
+          {/* <SidebarLogo sidebarRef={sidebarRef} /> */}
+          <h3 className='text-center py-4 mt-4 fs-5'>فناوران توسعه امن</h3>
           <SidebarMenu />
           <SidebarFooter />
         </div>

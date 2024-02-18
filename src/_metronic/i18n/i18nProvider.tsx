@@ -15,7 +15,7 @@ import esMessages from './messages/es.json'
 import frMessages from './messages/fr.json'
 import jaMessages from './messages/ja.json'
 import zhMessages from './messages/zh.json'
-import fnMessages from './messages/fa.json'
+import faMessages from './messages/fa.json'
 import {WithChildren} from '../helpers'
 
 const allMessages = {
@@ -25,7 +25,7 @@ const allMessages = {
   fr: frMessages,
   ja: jaMessages,
   zh: zhMessages,
-  fn: fnMessages,
+  fa: faMessages,
 
 }
 
