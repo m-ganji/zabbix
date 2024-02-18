@@ -182,21 +182,10 @@ const CreateHost: FC = () => {
                   />
                 </div>
                 <div className="col">
-                  <select
-                    className="form-select form-select-lg"
-                    name="AuthenticationAlgorithm"
-                    id="AuthenticationAlgorithm"
-                  >
-                    <option value="-1" selected>
-                      پیش فرض
-                    </option>
-                    <option value="0">هیچکدام</option>
-                    <option value="1">MD2</option>
-                    <option value="2">MD5</option>
-                    <option value="4">Straight</option>
-                    <option value="5">OEM</option>
-                    <option value="6">RMCP+</option>
-                  </select>
+                  <MultipleSelect
+                    options={hostGroup}
+                    Loading={IsHostGpFetchLoading}
+                  />
                 </div>
               </div>
               <div className="row mt-3 position-relative" style={{ zIndex: 0 }}>
