@@ -126,6 +126,7 @@ const DashboardWrapper: FC = () => {
     <>
       <PageTitle breadcrumbs={[]}>
         {intl.formatMessage({ id: "MENU.DASHBOARD" })}
+      
       </PageTitle>
       <DashboardPage />
     </>
