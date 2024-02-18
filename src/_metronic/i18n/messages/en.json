@@ -1,5 +1,8 @@
 {
   "TRANSLATOR.SELECT": "Select your language",
+  "MENU.SELECT.ALL": "Add All",
+  "MENU.SELECT.ALL.DEL": "Del All",
+  "MENU.SELECT": "Select",
   "MENU.NEW": "new",
   "MENU.ACTIONS": "Actions",
   "MENU.CREATE_POST": "Create New Post",
