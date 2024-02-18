@@ -15,7 +15,7 @@ const SidebarMenu = () => {
         data-kt-scroll-save-state='true'
       >
         <div
-          className='menu menu-column menu-rounded menu-sub-indention px-3'
+          className='menu menu-column menu-rounded  menu-sub-indention px-3'
           id='#kt_app_sidebar_menu'
           data-kt-menu='true'
           data-kt-menu-expand='false'

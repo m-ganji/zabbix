@@ -62,75 +62,95 @@ const SidebarMenuMain = () => {
 
       <SidebarMenuItemWithSub
         to="/crafted/pages/wizards"
-        title="Wizards"
+        title="خدمات"
         hasBullet={true}
       >
         <SidebarMenuItem
           to="/crafted/pages/wizards/horizontal"
-          title="Horizontal"
+          title="خدمات"
           hasBullet={true}
         />
         <SidebarMenuItem
           to="/crafted/pages/wizards/vertical"
-          title="Vertical"
+          title="SLA"
           hasBullet={true}
         />
       </SidebarMenuItemWithSub>
       <SidebarMenuItemWithSub
         to="/crafted/accounts"
-        title="Accounts"
+        title="دیتا"
         icon="profile-circle"
         fontIcon="bi-person"
       >
         <SidebarMenuItem
           to="/crafted/account/overview"
-          title="Overview"
+          title="گروه های قالب"
           hasBullet={true}
         />
         <SidebarMenuItem
           to="/crafted/account/settings"
-          title="Settings"
+          title="گروه های هاست"
+          hasBullet={true}
+        />
+        <SidebarMenuItem
+          to="/crafted/account/settings"
+          title="قالب ها"
+          hasBullet={true}
+        />
+        <SidebarMenuItem
+          to="/crafted/account/settings"
+          title="نگهداری"
+          hasBullet={true}
+        />
+        <SidebarMenuItem
+          to="/crafted/account/settings"
+          title="همبستگی رویداد"
           hasBullet={true}
         />
       </SidebarMenuItemWithSub>
       <SidebarMenuItemWithSub
         to="/error"
-        title="Errors"
+        title="اعلاتات"
         fontIcon="bi-sticky"
         icon="cross-circle"
       >
-        <SidebarMenuItem to="/error/404" title="Error 404" hasBullet={true} />
-        <SidebarMenuItem to="/error/500" title="Error 500" hasBullet={true} />
+        <SidebarMenuItem to="/error/404" title="اقدامات" hasBullet={true} />
+        <SidebarMenuItem
+          to="/error/500"
+          title="انواع رسانه ها"
+          hasBullet={true}
+        />
+        <SidebarMenuItem to="/error/404" title="اسکریپت ها" hasBullet={true} />
       </SidebarMenuItemWithSub>
       <SidebarMenuItemWithSub
         to="/crafted/widgets"
-        title="Widgets"
+        title="اعضا"
         icon="element-7"
         fontIcon="bi-layers"
       >
         <SidebarMenuItem
-          to="/crafted/widgets/lists"
-          title="Lists"
-          hasBullet={true}
-        />
-        <SidebarMenuItem
           to="/crafted/widgets/statistics"
-          title="Statistics"
+          title="گروه های کاربر"
           hasBullet={true}
         />
         <SidebarMenuItem
           to="/crafted/widgets/charts"
-          title="Charts"
+          title="نقش های کاربر"
           hasBullet={true}
         />
         <SidebarMenuItem
           to="/crafted/widgets/mixed"
-          title="Mixed"
+          title="اعضا"
+          hasBullet={true}
+        />
+            <SidebarMenuItem
+          to="/crafted/widgets/lists"
+          title="توکن API "
           hasBullet={true}
         />
         <SidebarMenuItem
           to="/crafted/widgets/tables"
-          title="Tables"
+          title="احراز هویت"
           hasBullet={true}
         />
         <SidebarMenuItem
@@ -141,14 +161,14 @@ const SidebarMenuMain = () => {
       </SidebarMenuItemWithSub>
       <div className="menu-item">
         <div className="menu-content pt-8 pb-2">
-          <span className="menu-section text-muted text-uppercase fs-8 ls-1">
-            Apps
+          <span className="menu-section text-muted text-uppercase fs-7">
+            دیگر
           </span>
         </div>
       </div>
       <SidebarMenuItemWithSub
         to="/apps/chat"
-        title="Chat"
+        title="پشتیبانی"
         fontIcon="bi-chat-left"
         icon="message-text-2"
       >
@@ -171,7 +191,13 @@ const SidebarMenuMain = () => {
       <SidebarMenuItem
         to="/apps/user-management/users"
         icon="abstract-28"
-        title="User management"
+        title="پروفایل"
+        fontIcon="bi-layers"
+      />
+      <SidebarMenuItem
+        to="#"
+        icon="abstract-28"
+        title="خروج از اکانت"
         fontIcon="bi-layers"
       />
       <div className="menu-item">
