@@ -2,40 +2,9 @@ import { AxiosResponse } from "axios";
 import { FC, useEffect, useState } from "react";
 import { instanceZabbix } from "../../../../services/axiosInstance";
 import Select, { ValueType } from "react-select";
+import makeAnimated from "react-select/animated";
 
-interface IDefaultItemRendererProps {
-  checked: boolean;
-  option: Option;
-  disabled?: boolean;
-  onClick;
-}
-
-const DefaultItemRenderer = ({
-  checked,
-  option,
-  onClick,
-  disabled,
-}: IDefaultItemRendererProps) => (
-  <div className={`item-renderer ${disabled ? "disabled" : ""}`}>
-    <input
-      type="checkbox"
-      onChange={onClick}
-      className="ms-2"
-      checked={checked}
-      tabIndex={-1}
-      disabled={disabled}
-    />
-    <span>{option.label}</span>
-  </div>
-);
-
-const filterOptions = (options, filter) => {
-  if (!filter) {
-    return options;
-  }
-  const re = new RegExp(filter, "i");
-  return options.filter(({ value }) => value && value.match(re));
-};
+const animatedComponents = makeAnimated();
 
 interface ZabbixRequest {
   jsonrpc: string;
@@ -237,7 +206,9 @@ const CreateHost: FC = () => {
                     value={selectedHost}
                     onChange={handleChange}
                     className="basic-multi-select"
-                    classNamePrefix="select"
+                    classNamePrefix="گروه های هاست"
+                    placeholder="گروه های هاست"
+                    components={animatedComponents}
                     styles={customStyles} // Apply custom styles
                   />
                 </div>
