@@ -1,12 +1,7 @@
 import { AxiosResponse } from "axios";
 import { FC, useEffect, useState } from "react";
 import { instanceZabbix } from "../../../../services/axiosInstance";
-import Select from "react-select";
-import ValueType from "react-select";
-import makeAnimated from "react-select/animated";
 import { MultipleSelect } from "../../../layout/components/multiple-select/MultipleSelect";
-
-const animatedComponents = makeAnimated();
 
 interface ZabbixRequest {
   jsonrpc: string;
