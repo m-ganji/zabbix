@@ -1,10 +1,122 @@
-import { FC, useState } from "react";
+import { AxiosResponse } from "axios";
+import { FC, useEffect, useState } from "react";
+import { instanceZabbix } from "../../../../services/axiosInstance";
+import Select, { ValueType } from "react-select";
+
+interface IDefaultItemRendererProps {
+  checked: boolean;
+  option: Option;
+  disabled?: boolean;
+  onClick;
+}
+
+const DefaultItemRenderer = ({
+  checked,
+  option,
+  onClick,
+  disabled,
+}: IDefaultItemRendererProps) => (
+  <div className={`item-renderer ${disabled ? "disabled" : ""}`}>
+    <input
+      type="checkbox"
+      onChange={onClick}
+      className="ms-2"
+      checked={checked}
+      tabIndex={-1}
+      disabled={disabled}
+    />
+    <span>{option.label}</span>
+  </div>
+);
+
+const filterOptions = (options, filter) => {
+  if (!filter) {
+    return options;
+  }
+  const re = new RegExp(filter, "i");
+  return options.filter(({ value }) => value && value.match(re));
+};
+
+interface ZabbixRequest {
+  jsonrpc: string;
+  auth: string;
+  method: string;
+  params: {
+    output: string;
+  };
+  id: number;
+}
+interface ApiItem {
+  groupid: string;
+  name: string;
+}
+interface Option {
+  label: string;
+  value: string;
+}
+
+interface OptionType {
+  value: string;
+  label: string;
+}
 
 const CreateHost: FC = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [hostGroup, setHostGroup] = useState<Option[]>([]); // Correctly typed state
+  const [selectedHost, setSelectedHost] = useState<OptionType[] | null>([]);
+
+  const [IsHostGpFetchLoading, setIsHostGpFetchLoading] =
+    useState<boolean>(false);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    setIsHostGpFetchLoading(true);
+    try {
+      const requestData: ZabbixRequest = {
+        jsonrpc: "2.0",
+        auth: "00adfa66232686959999fc40d1ab81edf3ff547181ad7e52df819b19031bb391",
+        method: "hostgroup.get",
+        params: {
+          output: "extend",
+        },
+        id: 1,
+      };
+      const response: AxiosResponse<{ result: ApiItem[] }> =
+        await instanceZabbix.post("/", requestData);
+      const apiData: ApiItem[] = response.data.result;
+
+      const transformedData = apiData.map((item) => ({
+        label: item.name,
+        value: item.groupid,
+      }));
+
+      setHostGroup(transformedData);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+    setIsHostGpFetchLoading(false);
+  };
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
+  };
+
+  const handleChange = (selectedOptions: ValueType<OptionType>) => {
+    setSelectedHost(selectedOptions as OptionType[]);
+  };
+
+  const customStyles = {
+    control: (provided: any) => ({
+      ...provided,
+      backgroundColor: "white", // Set background color of the control (the input)
+    }),
+    menu: (provided: any) => ({
+      ...provided,
+      backgroundColor: "white", // Set background color of the dropdown menu
+    }),
   };
 
   return (
@@ -115,6 +227,49 @@ const CreateHost: FC = () => {
                     autoComplete="off"
                     required
                   />
+                </div>
+              </div>
+              <div className="row">
+                <div className="col w-50">
+                  <Select
+                    isMulti
+                    options={hostGroup}
+                    value={selectedHost}
+                    onChange={handleChange}
+                    className="basic-multi-select"
+                    classNamePrefix="select"
+                    styles={customStyles} // Apply custom styles
+                  />
+                </div>
+                <div className="col">
+                  <select
+                    className="form-select form-select-lg"
+                    name="AuthenticationAlgorithm"
+                    id="AuthenticationAlgorithm"
+                  >
+                    <option value="-1" selected>
+                      پیش فرض
+                    </option>
+                    <option value="0">هیچکدام</option>
+                    <option value="1">MD2</option>
+                    <option value="2">MD5</option>
+                    <option value="4">Straight</option>
+                    <option value="5">OEM</option>
+                    <option value="6">RMCP+</option>
+                  </select>
+                </div>
+              </div>
+              <div className="row mt-3">
+                <div className="col">
+                  <div dir="rtl" className="form-floating">
+                    <textarea
+                      className="form-control"
+                      placeholder="توضیحات را اینجا وارد کنید"
+                      id="floatingTextarea2"
+                      style={{ height: 100 }}
+                    />
+                    <label htmlFor="floatingTextarea2">توضیحات</label>
+                  </div>
                 </div>
               </div>
             </div>
