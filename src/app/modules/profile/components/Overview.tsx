@@ -57,7 +57,6 @@ export function Overview() {
       title: intl.formatMessage({ id: "MONITORING.HOSTS.SEVERITY.OPTION6" }),
     },
   ];
-  const intl = useIntl();
   return (
     <Content>
       <div className="row">
@@ -124,7 +123,9 @@ export function Overview() {
             className="btn-group btn-group-toggle d-flex flex-column mb-5 "
             data-toggle="buttons"
           >
-            <p className="mt-5 ">تگ ها</p>
+            <p className="mt-5 ">
+              {intl.formatMessage({ id: "MONITORING.HOSTS.TAGS" })}
+            </p>
             <div className="w-100">
               <div
                 className="btn-group py-2"
@@ -142,7 +143,9 @@ export function Overview() {
                     setActiveButtonTag("and/or");
                   }}
                 >
-                  and/or
+                  {intl.formatMessage({
+                    id: "MONITORING.HOSTS.TAGS.AND",
+                  })}{" "}
                 </button>
                 <button
                   type="button"
@@ -155,13 +158,15 @@ export function Overview() {
                     setActiveButtonTag("OR");
                   }}
                 >
-                  OR
+                  {intl.formatMessage({
+                    id: "MONITORING.HOSTS.TAGS.OR",
+                  })}
                 </button>
               </div>
             </div>
           </div>
           <div>
-            {tagsField.map((item, index) => (
+          {tagsField.map((item, index) => (
               <div className="d-flex mb-3 gap-3 " key={item.id}>
                 <div style={{ width: "33%" }}>
                   <input
@@ -169,7 +174,9 @@ export function Overview() {
                     className="form-control py-2"
                     id={`exampleInputEmail${item.id}`}
                     aria-describedby="emailHelp"
-                    placeholder="تگ"
+                    placeholder={intl.formatMessage({
+                      id: "MONITORING.HOSTS.ADDTAG.TITLE",
+                    })}
                     style={{ direction: "rtl" }}
                     dir="rtl"
                   />
@@ -181,34 +188,59 @@ export function Overview() {
                   aria-label="Floating label select example"
                   style={{ width: "33%" }}
                 >
-                  <option value={4}>موجود</option>
-                  <option value={1}>برابر</option>
-                  <option selected value={0}>
-                    شامل
+                  <option value={4}>
+                    {intl.formatMessage({
+                      id: "MONITORING.HOSTS.ADDTAG.OPTION1",
+                    })}
                   </option>
-                  <option value={5}> موجود نیست</option>
-                  <option value={3}> برابر نیست</option>
-                  <option value={2}> شامل نیست</option>{" "}
+                  <option value={1}>
+                    {intl.formatMessage({
+                      id: "MONITORING.HOSTS.ADDTAG.OPTION2",
+                    })}
+                  </option>
+                  <option selected value={0}>
+                    {intl.formatMessage({
+                      id: "MONITORING.HOSTS.ADDTAG.OPTION3",
+                    })}
+                  </option>
+                  <option value={5}>
+                    {" "}
+                    {intl.formatMessage({
+                      id: "MONITORING.HOSTS.ADDTAG.OPTION4",
+                    })}
+                  </option>
+                  <option value={3}>
+                    {intl.formatMessage({
+                      id: "MONITORING.HOSTS.ADDTAG.OPTION5",
+                    })}
+                  </option>
+                  <option value={2}>
+                    {intl.formatMessage({
+                      id: "MONITORING.HOSTS.ADDTAG.OPTION6",
+                    })}
+                  </option>
                 </select>
-
-                <div style={{ width: "33%" }}>
+                 <div style={{ width: "33%" }}>
                   <input
                     type="email"
                     className="form-control py-2"
                     id={`exampleInputEmailValue${item.id}`}
                     aria-describedby="emailHelp"
-                    placeholder="مقدار"
+                    placeholder={intl.formatMessage({
+                      id: "MONITORING.HOSTS.ADDTAG.VALUE",
+                    })}
                     style={{ direction: "rtl" }}
                     dir="rtl"
                   />
                 </div>
-
                 <button
                   type="button"
                   className="btn btn-danger me-2 py-2"
                   onClick={() => tagsRemove(index)}
                 >
-                  حذف
+                  {intl.formatMessage({
+                    id: "MONITORING.HOSTS.ADDTAG.REMOVEBUTTON",
+                  })}
                 </button>
               </div>
             ))}
@@ -220,7 +252,9 @@ export function Overview() {
               tagsAppend({ tag: "", operator: 0, value: "" });
             }}
           >
-            اضافه کردن
+            {intl.formatMessage({
+              id: "MONITORING.HOSTS.ADDTAG.ADDBUTTON",
+            })}
           </button>
           <div className="mt-5 d-flex justify-content-start align-content-center gap-5 ">
             <div>
@@ -229,7 +263,11 @@ export function Overview() {
                 type="checkbox"
                 aria-label="Checkbox for following text input"
               />{" "}
-              <span className="me-2">نمایش میزبان ها در تعمیر و نگهداری</span>
+              <span className="me-2">
+                {intl.formatMessage({
+                  id: "MONITORING.HOSTS.FIRSTCHECKBOX",
+                })}
+              </span>
             </div>
             <div>
               <input
@@ -237,7 +275,11 @@ export function Overview() {
                 type="checkbox"
                 aria-label="Checkbox for following text input"
               />
-              <span className="me-2">نمایش مشکلات سرکوب شده</span>
+              <span className="me-2">
+                {intl.formatMessage({
+                  id: "MONITORING.HOSTS.SECONDCHECKBOX",
+                })}
+              </span>
             </div>
           </div>
         </div>
@@ -246,20 +288,24 @@ export function Overview() {
           <div className="row">
             <div className="col-6">
               <input
-                type="email"
+                type="text"
                 className="form-control py-2"
                 aria-describedby="emailHelp"
-                placeholder="اسم"
+                placeholder={intl.formatMessage({
+                  id: "MONITORING.HOSTS.NAME",
+                })}
                 style={{ direction: "rtl" }}
                 dir="rtl"
               />
             </div>
             <div className="col-6">
               <input
-                type="email"
+                type="text"
                 className="form-control py-2"
                 aria-describedby="emailHelp"
-                placeholder="IP"
+                placeholder={intl.formatMessage({
+                  id: "MONITORING.HOSTS.IP",
+                })}
                 style={{ direction: "rtl" }}
                 dir="rtl"
               />
@@ -268,36 +314,42 @@ export function Overview() {
           <div className="row">
             <div className="col-6">
               <input
-                type="email"
+                type="text"
                 className="form-control py-2"
                 aria-describedby="emailHelp"
-                placeholder="DNS"
+                placeholder={intl.formatMessage({
+                  id: "MONITORING.HOSTS.DNS",
+                })}
                 style={{ direction: "rtl" }}
                 dir="rtl"
               />
             </div>
             <div className="col-6">
               <input
-                type="email"
+                type="text"
                 className="form-control py-2"
                 aria-describedby="emailHelp"
-                placeholder="PORT"
+                placeholder={intl.formatMessage({
+                  id: "MONITORING.HOSTS.PORT",
+                })}
                 style={{ direction: "rtl" }}
                 dir="rtl"
               />
             </div>
           </div>
           <div className="row">
-            <p className="mt-5">سطح بحران</p>
+            <p className="mt-5">
+              {intl.formatMessage({
+                id: "MONITORING.HOSTS.SEVERITY",
+              })}
+            </p>
             {severitiesData.map((severity) => (
               <div className="col-md-6" key={severity.id}>
                 <div className="d-flex align-baseline ">
-                  <input
-                    className="form-check-input mt-2 "
-                    type="checkbox"
-                    aria-label="Checkbox for following text input"
-                    id={`severity-${severity.id}`}
-                  />
+                  <label className="checkbox d-flex checkbox-outline checkbox-success">
+                    <input type="checkbox" name="Checkboxes15" />
+                    <span />
+                  </label>
                   <span className="form-check-label m-2 ">
                     {severity.title}
                   </span>
