@@ -13,7 +13,6 @@
   "MENU.APPS": "Apps",
   "MENU.DASHBOARD": "داشبورد",
 
-
   "MONITORING.HOSTS.STATUS": "وضعیت",
   "MONITORING.HOSTS.STATUS.ANY": "همه",
   "MONITORING.HOSTS.STATUS.ENABLED": "فعال شده ها",
@@ -56,7 +55,6 @@
   "MONITORING.PROBLEMS.SUPPRESSEDPROBLEMS": "نمایش مشکلات رفع شده",
   "MONITORING.PROBLEMS.UNACKNOWLEDGED": "نمایش فقط تایید نشده",
   "MONITORING.PROBLEMS.INVENTORYLIST": "فهرست هاست",
-
 
   "AUTH.GENERAL.OR": "Or",
   "AUTH.GENERAL.SUBMIT_BUTTON": "Submit",
