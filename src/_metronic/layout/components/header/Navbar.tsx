@@ -23,7 +23,7 @@ const Navbar = () => {
       </div>
 
       <div className={clsx("app-navbar-item", itemClass)}>
-        <div id="kt_activities_toggle" className={btnClass}>
+        <div  className={btnClass}>
           <KTIcon iconName="chart-simple" className={btnIconClass} />
         </div>
       </div>

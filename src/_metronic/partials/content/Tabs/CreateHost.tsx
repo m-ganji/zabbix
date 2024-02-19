@@ -1,10 +1,7 @@
 import { AxiosResponse } from "axios";
 import { FC, useEffect, useState } from "react";
 import { instanceZabbix } from "../../../../services/axiosInstance";
-import Select, { ValueType } from "react-select";
-import makeAnimated from "react-select/animated";
-
-const animatedComponents = makeAnimated();
+import { MultipleSelect } from "../../../layout/components/multiple-select/MultipleSelect";
 
 interface ZabbixRequest {
   jsonrpc: string;
@@ -24,15 +21,9 @@ interface Option {
   value: string;
 }
 
-interface OptionType {
-  value: string;
-  label: string;
-}
-
 const CreateHost: FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [hostGroup, setHostGroup] = useState<Option[]>([]); // Correctly typed state
-  const [selectedHost, setSelectedHost] = useState<OptionType[] | null>([]);
 
   const [IsHostGpFetchLoading, setIsHostGpFetchLoading] =
     useState<boolean>(false);
@@ -71,21 +62,6 @@ const CreateHost: FC = () => {
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
-  };
-
-  const handleChange = (selectedOptions: ValueType<OptionType>) => {
-    setSelectedHost(selectedOptions as OptionType[]);
-  };
-
-  const customStyles = {
-    control: (provided: any) => ({
-      ...provided,
-      backgroundColor: "white", // Set background color of the control (the input)
-    }),
-    menu: (provided: any) => ({
-      ...provided,
-      backgroundColor: "white", // Set background color of the dropdown menu
-    }),
   };
 
   return (
@@ -200,37 +176,19 @@ const CreateHost: FC = () => {
               </div>
               <div className="row">
                 <div className="col w-50">
-                  <Select
-                    isMulti
+                  <MultipleSelect
                     options={hostGroup}
-                    value={selectedHost}
-                    onChange={handleChange}
-                    className="basic-multi-select"
-                    classNamePrefix="گروه های هاست"
-                    placeholder="گروه های هاست"
-                    components={animatedComponents}
-                    styles={customStyles} // Apply custom styles
+                    Loading={IsHostGpFetchLoading}
                   />
                 </div>
                 <div className="col">
-                  <select
-                    className="form-select form-select-lg"
-                    name="AuthenticationAlgorithm"
-                    id="AuthenticationAlgorithm"
-                  >
-                    <option value="-1" selected>
-                      پیش فرض
-                    </option>
-                    <option value="0">هیچکدام</option>
-                    <option value="1">MD2</option>
-                    <option value="2">MD5</option>
-                    <option value="4">Straight</option>
-                    <option value="5">OEM</option>
-                    <option value="6">RMCP+</option>
-                  </select>
+                  <MultipleSelect
+                    options={hostGroup}
+                    Loading={IsHostGpFetchLoading}
+                  />
                 </div>
               </div>
-              <div className="row mt-3">
+              <div className="row mt-3 position-relative" style={{ zIndex: 0 }}>
                 <div className="col">
                   <div dir="rtl" className="form-floating">
                     <textarea

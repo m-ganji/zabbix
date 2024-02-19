@@ -4,7 +4,7 @@ import { CreateHost } from "../Tabs/CreateHost";
 
 const Item1: FC = () => {
   return (
-    
+    <></>
   );
 };
 

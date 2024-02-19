@@ -1,6 +1,11 @@
 {
   "TRANSLATOR.SELECT": "زبان را انتخاب کنید",
   "MENU.NEW": "جدید",
+  "MENU.SELECT.ALL": "انتخاب همه",
+  "MENU.HOSTS":"هاست ها",
+  "MENU.SELECT.ALL.DEL": "حذف همه",
+  "MENU.SELECT": "انتخاب",
+  "MENU.LOAD": "بارگذاری...",
   "MENU.ACTIONS": "Actions",
   "MENU.CREATE_POST": "Create New Post",
   "MENU.PAGES": "Pages",
