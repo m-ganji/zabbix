@@ -13,7 +13,6 @@ interface FormValues {
 export function Overview() {
   const intl = useIntl();
 
-
   const [activeButtonTag, setActiveButtonTag] = useState("");
   const [activeSituation, setActiveSituation] = useState("");
   const { control } = useForm<FormValues>({
@@ -290,13 +289,9 @@ export function Overview() {
                       id: "MONITORING.HOSTS.ADDTAG.ADDBUTTON",
                     })}
                   </button>
-                  <div className="mt-5 d-flex justify-content-start align-content-center gap-5 ">
+                  <div className="mt-5 d-flex justify-content-start align-baseline gap-5 ">
                     <div>
-                      <input
-                        className="form-check-input mt-0"
-                        type="checkbox"
-                        aria-label="Checkbox for following text input"
-                      />{" "}
+                      <input type="checkbox" name="Checkboxes15" />
                       <span className="me-2">
                         {intl.formatMessage({
                           id: "MONITORING.HOSTS.FIRSTCHECKBOX",
@@ -304,11 +299,7 @@ export function Overview() {
                       </span>
                     </div>
                     <div>
-                      <input
-                        className="form-check-input mt-0"
-                        type="checkbox"
-                        aria-label="Checkbox for following text input"
-                      />
+                      <input type="checkbox" name="Checkboxes15" />
                       <span className="me-2">
                         {intl.formatMessage({
                           id: "MONITORING.HOSTS.SECONDCHECKBOX",
