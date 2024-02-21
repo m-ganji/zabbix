@@ -9,27 +9,45 @@ import { TablesWidget11 } from "../../../../_metronic/partials/widgets";
 import { PageTitle } from "../../../../_metronic/layout/core";
 import { ToolbarWrapper } from "../../../../_metronic/layout/components/toolbar";
 
+interface FormValues {
+  selectTags: string;
+  selectHosts: string;
+  search: {
+    name: string;
+  };
+  tag_name_format: number;
+  age: number;
+  age_state: number;
+  acknowledged: boolean;
+  suppressed: boolean;
+  symptom: boolean;
+  tag_priority: string;
+  evaltype: number;
+  tags: {
+    tag: string;
+    operator: number;
+    value: string;
+  }[];
+  inventory: {
+    field: string;
+    value: string;
+  }[];
+}
+
 export function Projects() {
   const intl = useIntl();
-  const { control } = useForm({
+  const { control } = useForm<FormValues>({
     defaultValues: {
       selectTags: "extend",
       selectHosts: "extend",
       search: { name: "" },
-      show_tags: 0,
-      show: 1,
       tag_name_format: 0,
       age: 14,
       age_state: 0,
       acknowledged: false,
       suppressed: false,
       symptom: false,
-      show_timeline: 0,
-      show_opdata: 0,
-      tag_priority: "",
-      highlight_row: 1,
       evaltype: 0,
-      compact_view: 0,
       tags: [{ tag: "", operator: 0, value: "" }],
       inventory: [{ field: "type", value: "" }],
     },
@@ -153,35 +171,35 @@ export function Projects() {
                         className="form-control py-2 w-100"
                         aria-describedby="emailHelp"
                         placeholder="اسم"
-                        style={{ direction: "rtl" }}
-                        dir="rtl"
                       />
                       <input
                         type="text"
                         className="form-control py-2"
                         aria-describedby="emailHelp"
                         placeholder="اسم"
-                        style={{ direction: "rtl" }}
-                        dir="rtl"
                       />
                       <input
                         type="text"
                         className="form-control py-2"
                         aria-describedby="emailHelp"
                         placeholder="اسم"
-                        style={{ direction: "rtl" }}
-                        dir="rtl"
                       />
-                      <input
-                        type="text"
-                        className="form-control py-2"
-                        aria-describedby="emailHelp"
-                        placeholder={intl.formatMessage({
-                          id: "MONITORING.PROBLEMS.PROBLEM",
-                        })}
-                        style={{ direction: "rtl" }}
-                        dir="rtl"
+                      <Controller
+                        control={control}
+                        name={`search.name`}
+                        render={({ field }) => (
+                          <input
+                            type="text"
+                            className="form-control py-2"
+                            aria-describedby="emailHelp"
+                            placeholder={intl.formatMessage({
+                              id: "MONITORING.PROBLEMS.PROBLEM",
+                            })}
+                            {...field}
+                          />
+                        )}
                       />
+
                       <div>
                         <p className="mt-5">
                           {intl.formatMessage({
