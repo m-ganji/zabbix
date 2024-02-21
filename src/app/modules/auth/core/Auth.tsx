@@ -41,7 +41,6 @@ const AuthProvider: FC<WithChildren> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<UserModel | undefined>();
   const saveAuth = (auth: AuthModel | undefined) => {
     setAuth(auth);
-    console.log(auth);
     if (auth) {
       authHelper.setAuth(auth);
     } else {
@@ -53,7 +52,6 @@ const AuthProvider: FC<WithChildren> = ({ children }) => {
     saveAuth(undefined);
     setCurrentUser(undefined);
   };
-  console.log(auth, saveAuth, currentUser, setCurrentUser, logout);
 
   return (
     <AuthContext.Provider

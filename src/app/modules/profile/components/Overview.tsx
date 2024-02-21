@@ -370,13 +370,7 @@ export function Overview() {
                     </p>
                     {severitiesData.map((severity, index) => (
                       <div
-                        className={`col-md-4 d-flex  ${
-                          index === 0 ? "justify-content-start" : ""
-                        } ${index === 3 ? "justify-content-start" : ""} ${
-                          index === 4 ? "justify-content-center" : ""
-                        } ${index === 5 ? "justify-content-end" : ""} ${
-                          index === 1 ? "justify-content-center" : ""
-                        } ${index === 2 ? "justify-content-end" : ""}`}
+                        className="col-md-4 d-flex"
                         key={severity.id}
                         key={severity.id}
                       >

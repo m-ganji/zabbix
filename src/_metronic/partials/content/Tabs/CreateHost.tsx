@@ -12,10 +12,7 @@ interface ZabbixRequest {
   };
   id: number;
 }
-interface ApiItem {
-  groupid: string;
-  name: string;
-}
+
 interface Option {
   label: string;
   value: string;
@@ -24,6 +21,7 @@ interface Option {
 const CreateHost: FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [hostGroup, setHostGroup] = useState<Option[]>([]); // Correctly typed state
+
   console.log(hostGroup);
 
   const [IsHostGpFetchLoading, setIsHostGpFetchLoading] =
@@ -36,26 +34,13 @@ const CreateHost: FC = () => {
   const fetchData = async () => {
     setIsHostGpFetchLoading(true);
     try {
-      const requestData: ZabbixRequest = {
-        jsonrpc: "2.0",
-        auth: "00adfa66232686959999fc40d1ab81edf3ff547181ad7e52df819b19031bb391",
-        method: "hostgroup.get",
-        params: {
-          output: "extend",
-        },
-        id: 1,
-      };
-      const response: AxiosResponse<{ result: ApiItem[] }> =
-        await instance.post("/core/hostgroup/get");
-      const apiData: ApiItem[] = response.data.result;
-      console.log(response);
 
-      const transformedData = apiData.map((item) => ({
-        label: item.name,
-        value: item.groupid,
-      }));
+    
 
-      setHostGroup(transformedData);
+      const response: AxiosResponse<{ result: [] }> =
+        await instance.post("/core/hostgroup/get", {});
+
+      setHostGroup(response.data);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
