@@ -7,6 +7,7 @@ import { getUserByToken, login } from "../core/_requests";
 import { toAbsoluteUrl } from "../../../../_metronic/helpers";
 import { useAuth } from "../core/Auth";
 import { instance } from "../../../../services/axiosInstance";
+import { useIntl } from "react-intl";
 
 // const loginSchema = Yup.object().shape({
 //   email: Yup.string()
@@ -23,6 +24,8 @@ import { instance } from "../../../../services/axiosInstance";
 const initialValues = {};
 
 export function Login() {
+  const intl = useIntl();
+
   const [loading, setLoading] = useState(false);
   const { saveAuth, setCurrentUser } = useAuth();
 
@@ -143,9 +146,15 @@ export function Login() {
 
       {/* begin::Form group */}
       <div className="fv-row mb-8">
-        <label className="form-label fs-6 fw-bolder text-gray-900">Email</label>
+        <label className="form-label fs-6 fw-bolder text-gray-900">
+          {intl.formatMessage({
+            id: "MENU.LOGIN.USERNAME",
+          })}
+        </label>
         <input
-          placeholder="Email"
+          placeholder={intl.formatMessage({
+            id: "MENU.LOGIN.USERNAME",
+          })}
           {...formik.getFieldProps("email")}
           className={clsx(
             "form-control bg-transparent",
@@ -169,9 +178,14 @@ export function Login() {
       {/* begin::Form group */}
       <div className="fv-row mb-3">
         <label className="form-label fw-bolder text-gray-900 fs-6 mb-0">
-          Password
+          {intl.formatMessage({
+            id: "MENU.LOGIN.PASSWORD",
+          })}
         </label>
         <input
+          placeholder={intl.formatMessage({
+            id: "MENU.LOGIN.PASSWORD",
+          })}
           type="password"
           autoComplete="off"
           {...formik.getFieldProps("password")}

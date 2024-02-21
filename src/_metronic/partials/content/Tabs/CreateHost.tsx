@@ -12,7 +12,10 @@ interface ZabbixRequest {
   };
   id: number;
 }
-
+interface ApiItem {
+  groupid: string;
+  name: string;
+}
 interface Option {
   label: string;
   value: string;
@@ -21,8 +24,6 @@ interface Option {
 const CreateHost: FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [hostGroup, setHostGroup] = useState<Option[]>([]); // Correctly typed state
-
-  console.log(hostGroup);
 
   const [IsHostGpFetchLoading, setIsHostGpFetchLoading] =
     useState<boolean>(false);
@@ -33,14 +34,20 @@ const CreateHost: FC = () => {
 
   const fetchData = async () => {
     setIsHostGpFetchLoading(true);
+
     try {
-
-    
-
-      const response: AxiosResponse<{ result: [] }> =
-        await instance.post("/core/hostgroup/get", {});
-
-      setHostGroup(response.data);
+      const response: AxiosResponse<{
+        map(
+          arg0: (item: any) => { label: string; value: string }
+        ): import("react").SetStateAction<Option[]>;
+        result: ApiItem[];
+      }> = await instance.post("/core/hostgroup/get", {});
+      setHostGroup(
+        response.data.map((item) => ({
+          label: item.name,
+          value: item.groupid,
+        }))
+      );
     } catch (error) {
       console.error("Error fetching data:", error);
     }

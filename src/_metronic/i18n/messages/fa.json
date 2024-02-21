@@ -14,7 +14,7 @@
   "MENU.APPS": "Apps",
   "MENU.DASHBOARD": "داشبورد",
   
-  "MENU.LOGIN.EMAIL": "ایمیل",
+  "MENU.LOGIN.USERNAME": "نام کاربری",
   "MENU.LOGIN.PASSWORD": "رمزعبور",
 
   "MONITORING.HOSTS.STATUS": "وضعیت",
