@@ -1,15 +1,19 @@
 import { useState } from "react";
 import { useIntl } from "react-intl";
+interface tags {
+  showTags: number;
+  setShowTags: CallableFunction;
+  tagNameVisible: number;
+  setTagNameVisible: CallableFunction;
+}
 
-export default function Index() {
+export default function Index(props: tags) {
   const [activeButtonTag, setActiveButtonTag] = useState("");
-  const [activeButtonShowTag, setActiveButtonShowTag] = useState("");
-  const [activeButtonTagName, setActiveButtonTagName] = useState("");
 
   const intl = useIntl();
 
   return (
-    <div className="d-flex justify-content-between">
+    <div className="d-flex flex-wrap column-gap-5">
       <div
         className="btn-group py-2 d-block "
         role="group"
@@ -25,7 +29,7 @@ export default function Index() {
         <button
           type="button"
           className={
-            "btn btn-primary py-2 rounded-end-2" +
+            "btn btn-light-primary py-2 rounded-end-2" +
             (activeButtonTag === "and/or" ? " active" : "")
           }
           onClick={() => {
@@ -40,7 +44,7 @@ export default function Index() {
         <button
           type="button"
           className={
-            "btn btn-primary py-2 rounded-start-2" +
+            "btn btn-light-primary py-2 rounded-start-2" +
             (activeButtonTag === "OR" ? " active" : "")
           }
           onClick={() => {
@@ -67,20 +71,11 @@ export default function Index() {
         <button
           type="button"
           className={
-            "btn btn-primary py-2 rounded-end-2" +
-            (activeButtonShowTag ===
-            intl.formatMessage({
-              id: "MONITORING.PROBLEMS.TAGS.SHOW.OPTION1",
-            })
-              ? " active"
-              : "")
+            "btn btn-light-primary py-2 rounded-end-2" +
+            (props.showTags === 0 ? " active" : "")
           }
           onClick={() => {
-            setActiveButtonShowTag(
-              intl.formatMessage({
-                id: "MONITORING.PROBLEMS.TAGS.SHOW.OPTION1",
-              })
-            );
+            props.setShowTags(0);
           }}
         >
           {intl.formatMessage({
@@ -90,20 +85,11 @@ export default function Index() {
         <button
           type="button"
           className={
-            "btn btn-primary py-2 rounded-start-2" +
-            (activeButtonShowTag ===
-            intl.formatMessage({
-              id: "MONITORING.PROBLEMS.TAGS.SHOW.OPTION2",
-            })
-              ? " active"
-              : "")
+            "btn btn-light-primary py-2" +
+            (props.showTags === 1 ? " active" : "")
           }
           onClick={() => {
-            setActiveButtonShowTag(
-              intl.formatMessage({
-                id: "MONITORING.PROBLEMS.TAGS.SHOW.OPTION2",
-              })
-            );
+            props.setShowTags(1);
           }}
         >
           {intl.formatMessage({
@@ -113,20 +99,11 @@ export default function Index() {
         <button
           type="button"
           className={
-            "btn btn-primary py-2 rounded-start-2" +
-            (activeButtonShowTag ===
-            intl.formatMessage({
-              id: "MONITORING.PROBLEMS.TAGS.SHOW.OPTION3",
-            })
-              ? " active"
-              : "")
+            "btn btn-light-primary py-2 " +
+            (props.showTags === 2 ? " active" : "")
           }
           onClick={() => {
-            setActiveButtonShowTag(
-              intl.formatMessage({
-                id: "MONITORING.PROBLEMS.TAGS.SHOW.OPTION3",
-              })
-            );
+            props.setShowTags(2);
           }}
         >
           {intl.formatMessage({
@@ -136,20 +113,11 @@ export default function Index() {
         <button
           type="button"
           className={
-            "btn btn-primary py-2 rounded-start-2" +
-            (activeButtonShowTag ===
-            intl.formatMessage({
-              id: "MONITORING.PROBLEMS.TAGS.SHOW.OPTION4",
-            })
-              ? " active"
-              : "")
+            "btn btn-light-primary py-2 rounded-start-2" +
+            (props.showTags === 3 ? " active" : "")
           }
           onClick={() => {
-            setActiveButtonShowTag(
-              intl.formatMessage({
-                id: "MONITORING.PROBLEMS.TAGS.SHOW.OPTION4",
-              })
-            );
+            props.setShowTags(3);
           }}
         >
           {intl.formatMessage({
@@ -171,20 +139,11 @@ export default function Index() {
         <button
           type="button"
           className={
-            "btn btn-primary py-2 rounded-end-2" +
-            (activeButtonTagName ===
-            intl.formatMessage({
-              id: "MONITORING.PROBLEMS.TAGS.NAME.COMPLETE",
-            })
-              ? " active"
-              : "")
+            "btn btn-light-primary py-2 rounded-end-2" +
+            (props.tagNameVisible === 0 ? " active" : "")
           }
           onClick={() => {
-            setActiveButtonTagName(
-              intl.formatMessage({
-                id: "MONITORING.PROBLEMS.TAGS.NAME.COMPLETE",
-              })
-            );
+            props.setTagNameVisible(0);
           }}
         >
           {intl.formatMessage({
@@ -194,20 +153,11 @@ export default function Index() {
         <button
           type="button"
           className={
-            "btn btn-primary py-2 rounded-start-2" +
-            (activeButtonTagName ===
-            intl.formatMessage({
-              id: "MONITORING.PROBLEMS.TAGS.NAME.SUMMARY",
-            })
-              ? " active"
-              : "")
+            "btn btn-light-primary py-2" +
+            (props.tagNameVisible === 1 ? " active" : "")
           }
           onClick={() => {
-            setActiveButtonTagName(
-              intl.formatMessage({
-                id: "MONITORING.PROBLEMS.TAGS.NAME.SUMMARY",
-              })
-            );
+            props.setTagNameVisible(1);
           }}
         >
           {intl.formatMessage({
@@ -217,20 +167,11 @@ export default function Index() {
         <button
           type="button"
           className={
-            "btn btn-primary py-2 rounded-start-2" +
-            (activeButtonTagName ===
-            intl.formatMessage({
-              id: "MONITORING.PROBLEMS.TAGS.NAME.NONE",
-            })
-              ? " active"
-              : "")
+            "btn btn-light-primary py-2 rounded-start-2" +
+            (props.tagNameVisible === 2 ? " active" : "")
           }
           onClick={() => {
-            setActiveButtonTagName(
-              intl.formatMessage({
-                id: "MONITORING.PROBLEMS.TAGS.NAME.NONE",
-              })
-            );
+            props.setTagNameVisible(2);
           }}
         >
           {intl.formatMessage({
