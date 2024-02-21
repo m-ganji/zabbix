@@ -8,7 +8,28 @@ import { ToolbarWrapper } from "../../../../_metronic/layout/components/toolbar"
 import { Button } from "react-bootstrap";
 
 interface FormValues {
-  tags: { tag: string; operator: number; value: string }[];
+  selectTags: string;
+  selectHosts: string;
+  search: {
+    name: string;
+  };
+  tag_name_format: number;
+  age: number;
+  age_state: number;
+  acknowledged: boolean;
+  suppressed: boolean;
+  symptom: boolean;
+  tag_priority: string;
+  evaltype: number;
+  tags: {
+    tag: string;
+    operator: number;
+    value: string;
+  }[];
+  inventory: {
+    field: string;
+    value: string;
+  }[];
 }
 
 export function Overview() {
@@ -16,11 +37,26 @@ export function Overview() {
 
   const [activeButtonTag, setActiveButtonTag] = useState("");
   const [activeSituation, setActiveSituation] = useState("");
-  const { control,handleSubmit } = useForm<FormValues>({
-    defaultValues: {
-      tags: [{ tag: "", operator: 0, value: "" }],
-    },
-  });
+  const [isTriggersLoaded, setisTriggersLoaded] = useState(true);
+
+  const { control, watch, setValue, handleSubmit, reset, unregister } =
+    useForm<FormValues>({
+      defaultValues: {
+        selectTags: "extend",
+        selectHosts: "extend",
+        search: { name: "" },
+        tag_name_format: 0,
+        age: 14,
+        age_state: 0,
+        acknowledged: false,
+        suppressed: false,
+        symptom: false,
+        tag_priority: "",
+        evaltype: 0,
+        tags: [],
+        inventory: [],
+      },
+    });
 
   const {
     fields: tagsField,
@@ -31,31 +67,48 @@ export function Overview() {
     name: "tags",
   });
 
-  const severitiesData: { id: number; title: string }[] = [
+  const severitiesData: {
+    id: number;
+    title: string;
+    color: string;
+    bg: string;
+  }[] = [
     {
       id: 0,
       title: intl.formatMessage({ id: "MONITORING.HOSTS.SEVERITY.OPTION1" }),
+      color: "info",
+      bg: "bg-green",
     },
 
     {
       id: 2,
       title: intl.formatMessage({ id: "MONITORING.HOSTS.SEVERITY.OPTION2" }),
+      color: "coral",
+      bg: "bg-yellow-500/70",
     },
     {
       id: 4,
       title: intl.formatMessage({ id: "MONITORING.HOSTS.SEVERITY.OPTION3" }),
+      color: "orange",
+      bg: "bg-yellow-700",
     },
     {
       id: 1,
       title: intl.formatMessage({ id: "MONITORING.HOSTS.SEVERITY.OPTION4" }),
+      color: "orangered",
+      bg: "bg-/80",
     },
     {
       id: 3,
       title: intl.formatMessage({ id: "MONITORING.HOSTS.SEVERITY.OPTION5" }),
+      color: "orangered",
+      bg: "bg-/80",
     },
     {
       id: 5,
       title: intl.formatMessage({ id: "MONITORING.HOSTS.SEVERITY.OPTION6" }),
+      color: "orangered",
+      bg: "bg-/80",
     },
   ];
 
