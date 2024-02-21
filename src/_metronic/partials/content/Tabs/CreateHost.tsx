@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios";
 import { FC, useEffect, useState } from "react";
-import { instanceZabbix } from "../../../../services/axiosInstance";
+import { instance } from "../../../../services/axiosInstance";
 import { MultipleSelect } from "../../../layout/components/multiple-select/MultipleSelect";
 
 interface ZabbixRequest {
@@ -12,10 +12,7 @@ interface ZabbixRequest {
   };
   id: number;
 }
-interface ApiItem {
-  groupid: string;
-  name: string;
-}
+
 interface Option {
   label: string;
   value: string;
@@ -24,6 +21,8 @@ interface Option {
 const CreateHost: FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [hostGroup, setHostGroup] = useState<Option[]>([]); // Correctly typed state
+
+  console.log(hostGroup);
 
   const [IsHostGpFetchLoading, setIsHostGpFetchLoading] =
     useState<boolean>(false);
@@ -35,25 +34,13 @@ const CreateHost: FC = () => {
   const fetchData = async () => {
     setIsHostGpFetchLoading(true);
     try {
-      const requestData: ZabbixRequest = {
-        jsonrpc: "2.0",
-        auth: "00adfa66232686959999fc40d1ab81edf3ff547181ad7e52df819b19031bb391",
-        method: "hostgroup.get",
-        params: {
-          output: "extend",
-        },
-        id: 1,
-      };
-      const response: AxiosResponse<{ result: ApiItem[] }> =
-        await instanceZabbix.post("/", requestData);
-      const apiData: ApiItem[] = response.data.result;
 
-      const transformedData = apiData.map((item) => ({
-        label: item.name,
-        value: item.groupid,
-      }));
+    
 
-      setHostGroup(transformedData);
+      const response: AxiosResponse<{ result: [] }> =
+        await instance.post("/core/hostgroup/get", {});
+
+      setHostGroup(response.data);
     } catch (error) {
       console.error("Error fetching data:", error);
     }

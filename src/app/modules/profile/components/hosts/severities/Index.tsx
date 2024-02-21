@@ -30,16 +30,15 @@ export default function Index() {
   ];
   return (
     <div className="row">
-      {severitiesData.map((severity) => (
-        <div className="col-md-6" key={severity.id}>
-          <div className="d-flex align-baseline ">
+      {severitiesData.map((severity, index) => (
+        <div className={`col-md-4 d-flex  `} key={severity.id}>
+          <div className="d-flex align-baseline">
             <input
-              className="form-check-input mt-0"
-              aria-label="Checkbox for following text input"
               type="checkbox"
+              name={`Checkboxes15-${severity.id}`}
               id={`severity-${severity.id}`}
             />
-            <span className="form-check-label m-2 ">{severity.title}</span>
+            <span className="form-check-label m-2">{severity.title}</span>
           </div>
         </div>
       ))}

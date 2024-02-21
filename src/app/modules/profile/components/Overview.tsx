@@ -421,14 +421,19 @@ export function Overview() {
                         id: "MONITORING.HOSTS.SEVERITY",
                       })}
                     </p>
-                    {severitiesData.map((severity) => (
-                      <div className="col-md-6" key={severity.id}>
+                    {severitiesData.map((severity, index) => (
+                      <div
+                        className="col-md-4 d-flex"
+                        key={severity.id}
+                        key={severity.id}
+                      >
                         <div className="d-flex align-baseline ">
-                          <label className="checkbox d-flex checkbox-outline checkbox-success">
-                            <input type="checkbox" name="Checkboxes15" />
-                            <span />
-                          </label>
-                          <span className="form-check-label m-2 ">
+                          <input
+                            type="checkbox"
+                            name={`Checkboxes15-${severity.id}`}
+                            id={`severity-${severity.id}`}
+                          />
+                          <span className="form-check-label m-2">
                             {severity.title}
                           </span>
                         </div>
