@@ -57,10 +57,10 @@ export function Projects() {
   return (
     <Content>
       <PageTitle breadcrumbs={[]}>
-        {intl.formatMessage({ id: "MENU.HOSTS" })}
+        {intl.formatMessage({ id: "MENU.PROBLEMS" })}
       </PageTitle>
       <ToolbarWrapper />
-      <div className="row w-100">
+      <div>
         <div
           className="accordion"
           style={{ boxShadow: "0 0 10px -10px black" }}
@@ -325,7 +325,6 @@ export function Projects() {
                         </button>
                       </div>
                     ))}
-
                     <button
                       type="button"
                       className="btn btn-success py-2 w-25"
@@ -349,13 +348,9 @@ export function Projects() {
                       style={{ direction: "rtl" }}
                       dir="rtl"
                     />
-                    <div className="flex items-center gap-3">
-                      <div className="d-flex align-baseline ">
-                        <input
-                          className="form-check-input mt-2 "
-                          type="checkbox"
-                          aria-label="Checkbox for following text input"
-                        />
+                    <div className="flex items-center align-baseline gap-3">
+                      <div className="d-flex  ">
+                        <input type="checkbox" name="Checkboxes15" />
                         <span className="form-check-label m-2 ">
                           {intl.formatMessage({
                             id: "MONITORING.PROBLEMS.AGE",
@@ -375,13 +370,9 @@ export function Projects() {
                         </span>
                       </div>
                     </div>
-                    <div className="d-flex align-baseline">
+                    <div className="d-flex align-baseline justify-content-between">
                       <div>
-                        <input
-                          className="form-check-input mt-2 "
-                          type="checkbox"
-                          aria-label="Checkbox for following text input"
-                        />
+                        <input type="checkbox" name="Checkboxes15" />
                         <span className="form-check-label m-2 ">
                           {intl.formatMessage({
                             id: "MONITORING.PROBLEMS.SYMPTOMS",
@@ -389,11 +380,7 @@ export function Projects() {
                         </span>
                       </div>
                       <div>
-                        <input
-                          className="form-check-input mt-2 "
-                          type="checkbox"
-                          aria-label="Checkbox for following text input"
-                        />{" "}
+                        <input type="checkbox" name="Checkboxes15" />
                         <span className="form-check-label m-2 ">
                           {intl.formatMessage({
                             id: "MONITORING.PROBLEMS.SUPPRESSEDPROBLEMS",
@@ -401,11 +388,7 @@ export function Projects() {
                         </span>
                       </div>
                       <div>
-                        <input
-                          className="form-check-input mt-2 "
-                          type="checkbox"
-                          aria-label="Checkbox for following text input"
-                        />
+                        <input type="checkbox" name="Checkboxes15" />
                         <span className="form-check-label m-2 ">
                           {intl.formatMessage({
                             id: "MONITORING.PROBLEMS.UNACKNOWLEDGED",

@@ -3,6 +3,7 @@
   "MENU.NEW": "جدید",
   "MENU.SELECT.ALL": "انتخاب همه",
   "MENU.HOSTS":"هاست ها",
+  "MENU.PROBLEMS":"مشکل ها",
   "MENU.SELECT.ALL.DEL": "حذف همه",
   "MENU.SELECT": "انتخاب",
   "MENU.LOAD": "بارگذاری...",
@@ -12,6 +13,9 @@
   "MENU.FEATURES": "Features",
   "MENU.APPS": "Apps",
   "MENU.DASHBOARD": "داشبورد",
+  
+  "MENU.LOGIN.EMAIL": "ایمیل",
+  "MENU.LOGIN.PASSWORD": "رمزعبور",
 
   "MONITORING.HOSTS.STATUS": "وضعیت",
   "MONITORING.HOSTS.STATUS.ANY": "همه",

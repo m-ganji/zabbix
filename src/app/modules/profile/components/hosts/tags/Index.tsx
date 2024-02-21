@@ -9,12 +9,11 @@ export default function Index() {
   const intl = useIntl();
 
   return (
-    <div className="d-flex ">
+    <div className="d-flex justify-content-between">
       <div
         className="btn-group py-2 d-block "
         role="group"
         aria-label="Basic example"
-        style={{ width: "33%" }}
       >
         <p>
           {intl.formatMessage({
@@ -58,7 +57,6 @@ export default function Index() {
         className="btn-group py-2 d-block "
         role="group"
         aria-label="Basic example"
-        style={{ width: "33%" }}
       >
         <p>
           {intl.formatMessage({
@@ -163,7 +161,6 @@ export default function Index() {
         className="btn-group py-2 d-block "
         role="group"
         aria-label="Basic example"
-        style={{ width: "33%" }}
       >
         <p>
           {intl.formatMessage({

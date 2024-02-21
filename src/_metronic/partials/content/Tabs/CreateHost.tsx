@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios";
 import { FC, useEffect, useState } from "react";
-import { instanceZabbix } from "../../../../services/axiosInstance";
+import { instance } from "../../../../services/axiosInstance";
 import { MultipleSelect } from "../../../layout/components/multiple-select/MultipleSelect";
 
 interface ZabbixRequest {
@@ -24,6 +24,7 @@ interface Option {
 const CreateHost: FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [hostGroup, setHostGroup] = useState<Option[]>([]); // Correctly typed state
+  console.log(hostGroup);
 
   const [IsHostGpFetchLoading, setIsHostGpFetchLoading] =
     useState<boolean>(false);
@@ -45,8 +46,9 @@ const CreateHost: FC = () => {
         id: 1,
       };
       const response: AxiosResponse<{ result: ApiItem[] }> =
-        await instanceZabbix.post("/", requestData);
+        await instance.post("/core/hostgroup/get");
       const apiData: ApiItem[] = response.data.result;
+      console.log(response);
 
       const transformedData = apiData.map((item) => ({
         label: item.name,
