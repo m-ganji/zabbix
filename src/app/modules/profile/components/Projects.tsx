@@ -5,15 +5,31 @@ import Tags from "./hosts/tags/Index";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { useIntl } from "react-intl";
 import InventoryList from "./InventoryList";
-import { TablesWidget11 } from "../../../../_metronic/partials/widgets";
+import { ProblemTable } from "../../../../_metronic/partials/widgets";
 import { PageTitle } from "../../../../_metronic/layout/core";
 import { ToolbarWrapper } from "../../../../_metronic/layout/components/toolbar";
 import { instance } from "../../../../services/axiosInstance";
 import { useNavigate } from "react-router-dom";
+import { MultipleSelect } from "../../../../_metronic/layout/components/multiple-select/MultipleSelect";
+import { useDispatch } from "react-redux";
+import { Form, Modal } from "react-bootstrap";
+import { fetchHostGroup } from "../../../../hostGroupSlice/hostGroupReducer";
+import { Loader } from "./../../../../_metronic/layout/components/loader/Loader";
+
+interface hostGroupItems {
+  value: string;
+  label: string;
+}
+interface HostsData {
+  id: number;
+  name: string;
+  // Add other properties as needed
+}
 
 interface FormValues {
   selectTags: string;
   selectHosts: string;
+  hostids: number[];
   search: {
     name: string;
   };
@@ -35,6 +51,7 @@ interface FormValues {
     value: string;
   }[];
   severities: number[];
+  objectids: [];
 }
 
 export interface Problem {
@@ -42,6 +59,7 @@ export interface Problem {
   cause_eventid: string;
   clock: string;
   correlationid: string;
+  hostids: [];
   eventid: string;
   hosts: {
     active_available: string;
@@ -95,6 +113,44 @@ export interface Problem {
 export function Projects() {
   const intl = useIntl();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [sortBasedOn, setSortBasedOn] = useState("");
+  const [hostGroupWithParam, setHostGroupWithParam] = useState([]);
+  const [hostGroupWithoutParam, setHostGroupWithoutParam] = useState([]);
+  const [Triggers, setTriggers] = useState([]);
+  const [IsTriggersLoading, setIsTriggersLoading] = useState<boolean>(false);
+  const [ProblemsData, setProblemsData] = useState<Problem[]>([]);
+  const [showTags, setShowTags] = useState<number>(3);
+  const [hostsData, setHostsData] = useState<HostsData[]>([]);
+  const [selectedHosts, setSelectedHosts] = useState<hostGroupItems[]>([]);
+  const [SelectedTriggers, setSelectedTriggers] = useState([]);
+  const [SelectedHostGpTriggers, setSelectedHostGpTriggers] = useState<
+    string | number
+  >(-1);
+  const [isLoaded, setIsLoaded] = useState<boolean>(false);
+  const [isError, setIsError] = useState<boolean>(false);
+  const [isHostsModalOpen, setisHostsModalOpen] = useState<boolean>(false);
+  const [isHostsDataLoading, setIsHostsDataLoading] = useState<boolean>(false);
+  const [isTriggersModalOpen, setIsTriggersModalOpen] =
+    useState<boolean>(false);
+  const [tagNameVisible, setTagNameVisible] = useState<number>(0);
+
+  useEffect(() => {
+    watch("hostids")?.length === 0 && unregister("hostids");
+    fetchPromsListData(watch());
+    dispatch(
+      fetchHostGroup({
+        with_triggers: true,
+        output: "extend",
+      })
+    ).then((response) => setHostGroupWithParam(response));
+
+    dispatch(fetchHostGroup({})).then((response) => {
+      console.log(response);
+
+      setHostGroupWithoutParam(response);
+    });
+  }, []);
 
   const { control, watch, setValue, handleSubmit, reset, unregister } =
     useForm<FormValues>({
@@ -112,10 +168,9 @@ export function Projects() {
         evaltype: 0,
         tags: [],
         inventory: [],
+        hostids: [],
       },
     });
-
-  const [sortBasedOn, setSortBasedOn] = useState("");
 
   const {
     fields: inventoryField,
@@ -134,20 +189,85 @@ export function Projects() {
     control,
     name: "tags",
   });
+  const currentHostids = watch("hostids") ? watch("hostids") : [];
+  const currentTriggersIds = watch("objectids") ? watch("objectids") : [];
 
-  const [ProblemsData, setProblemsData] = useState<Problem[]>([]);
-  const [isLoaded, setIsLoaded] = useState<boolean>(false);
-  const [isError, setIsError] = useState<boolean>(false);
-  const [showTags, setShowTags] = useState<number>(3);
-  const [tagNameVisible, setTagNameVisible] = useState<number>(0);
+  const handleCheckboxChange = (host) => {
+    console.log(selectedHosts);
+    setValue("hostids", [...currentHostids, host.hostid]);
 
-  useEffect(() => {
-    fetchPromsListData(watch());
-  }, []);
+    if (currentHostids.includes(host.hostid)) {
+      setSelectedHosts(selectedHosts.filter((id) => id.hostid !== host.hostid));
+    } else {
+      setSelectedHosts([
+        ...selectedHosts,
+        { label: host.host, value: host.hostid },
+      ]);
+    }
+  };
+  const handleCheckboxTriggersChange = (trigger) => {
+    console.log(currentTriggersIds);
+
+    setValue("objectids", [...currentTriggersIds, trigger.triggerid]);
+
+    if (currentTriggersIds.includes(trigger.triggerid)) {
+      setSelectedHosts(
+        SelectedTriggers.filter((id) => id.triggerid !== trigger.triggerid)
+      );
+    } else {
+      setSelectedTriggers([
+        ...SelectedTriggers,
+        { label: trigger.description, value: trigger.triggerid },
+      ]);
+    }
+  };
+
+  const fetchHostsData = async (params: string, with_triggers: boolean) => {
+    console.log(with_triggers);
+
+    setIsHostsDataLoading(true);
+    const param =
+      Number(params) === -1
+        ? with_triggers
+          ? { with_triggers: "extend" }
+          : {}
+        : with_triggers
+        ? { groupids: [params], with_triggers: "extend" }
+        : { groupids: [params] };
+
+    try {
+      const response = await instance.post("/core/hosts/get", param);
+      setHostsData(response.data);
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+    setIsHostsDataLoading(false);
+  };
+
+  const fetchTriggers = async (params: string) => {
+    setIsTriggersLoading(true);
+    console.log([params]);
+
+    try {
+      const response = await instance.post("/core/trigger/get", {
+        groupids: [SelectedHostGpTriggers],
+        hostids: [params],
+        selectHosts: "extend",
+        sortfield: "priority",
+      });
+      setTriggers(response.data);
+      console.log(response);
+    } catch (error) {
+      console.error(error);
+    }
+    setIsTriggersLoading(false);
+  };
 
   const fetchPromsListData = async (e: object) => {
     console.log(e);
     watch("severities")?.length === 0 && unregister("severities");
+
     const params = e ? e : watch();
     setIsError(false);
     setIsLoaded(false);
@@ -165,27 +285,7 @@ export function Projects() {
 
       if ((error as ApiError).response?.status === 401) {
         localStorage.removeItem("token");
-        navigate("/auth");
-        return (
-          <div
-            className="toast align-items-center"
-            role="alert"
-            aria-live="assertive"
-            aria-atomic="true"
-          >
-            <div className="d-flex">
-              <div className="toast-body">
-                Hello, world! This is a toast message.
-              </div>
-              <button
-                type="button"
-                className="btn-close me-2 m-auto"
-                data-bs-dismiss="toast"
-                aria-label="Close"
-              />
-            </div>
-          </div>
-        );
+        navigate("/");
       }
       setIsError(true);
     }
@@ -194,9 +294,9 @@ export function Projects() {
 
   const resetData = () => {
     setShowTags(0);
-    // setHostGp([]);
-    // setHostCheckState([]);
-    // setTriggerCheckState([]);
+    setSelectedHosts([]);
+    setSelectedHostGpTriggers(-1);
+    setSelectedTriggers([]);
     reset();
     fetchPromsListData(watch());
   };
@@ -295,21 +395,186 @@ export function Projects() {
                           </button>
                         </div>
                       </div>
-                      <input
-                        type="text"
-                        className="form-control py-2 w-100"
-                        placeholder="اسم"
+                      <MultipleSelect
+                        addAll={false}
+                        title="MENU.SELECT.HOSTS.GP"
+                        options={hostGroupWithoutParam?.payload}
+                        Loading={
+                          hostGroupWithoutParam?.meta?.requestStatus !=
+                          "fulfilled"
+                        }
                       />
-                      <input
-                        type="text"
-                        className="form-control py-2"
-                        placeholder="اسم"
-                      />
-                      <input
-                        type="text"
-                        className="form-control py-2"
-                        placeholder="اسم"
-                      />
+                      <div className="d-flex  gap-5">
+                        <MultipleSelect
+                          addAll={true}
+                          title="MENU.SELECT.HOSTS.GP"
+                          options={selectedHosts}
+                          Loading={false}
+                        />
+                        <button
+                          className="btn btn-light-primary"
+                          onClick={() => setisHostsModalOpen(true)}
+                        >
+                          {intl.formatMessage({
+                            id: "MENU.SELECT",
+                          })}
+                        </button>
+                      </div>
+                      <Modal
+                        show={isHostsModalOpen}
+                        onHide={() => setisHostsModalOpen(false)}
+                      >
+                        <Modal.Header closeButton>
+                          <Modal.Title>
+                            {intl.formatMessage({ id: "MENU.SELECT.HOSTS" })}
+                          </Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body dir="rtl">
+                          <Form.Select
+                            defaultValue={-1}
+                            onChange={(e) =>
+                              fetchHostsData(e.currentTarget.value, false)
+                            }
+                          >
+                            <option value={-1}>
+                              {intl.formatMessage({ id: "MENU.SELECT.ALL" })}
+                            </option>
+                            {hostGroupWithoutParam?.payload?.map(
+                              (item: hostGroupItems, index: number) => {
+                                return (
+                                  <option value={item.value} key={index}>
+                                    {item.label}
+                                  </option>
+                                );
+                              }
+                            )}
+                          </Form.Select>
+
+                          {!isHostsDataLoading ? (
+                            hostsData.map((host) => (
+                              <div
+                                key={host.hostid}
+                                className="w-100 justify-content-end my-3 gap-2 d-flex"
+                              >
+                                <label
+                                  className="form-check-label"
+                                  htmlFor={`host-${host.hostid}`}
+                                >
+                                  {host.host}
+                                </label>
+                                <input
+                                  type="checkbox"
+                                  id={`host-${host.hostid}`}
+                                  checked={currentHostids.includes(host.hostid)}
+                                  onChange={() => handleCheckboxChange(host)}
+                                />
+                              </div>
+                            ))
+                          ) : (
+                            <div className="d-flex pt-7 w-100 justify-content-center">
+                              <Loader />
+                            </div>
+                          )}
+                        </Modal.Body>
+                      </Modal>
+                      <div className="d-flex gap-5">
+                        <MultipleSelect
+                          title="MENU.SELECT.TRIGGERS"
+                          options={SelectedTriggers}
+                          Loading={false}
+                          addAll={true}
+                        />
+                        <button
+                          className="btn btn-light-primary h-25"
+                          onClick={() => setIsTriggersModalOpen(true)}
+                        >
+                          {intl.formatMessage({
+                            id: "MENU.SELECT",
+                          })}
+                        </button>
+                      </div>
+                      <Modal
+                        show={isTriggersModalOpen}
+                        onHide={() => setIsTriggersModalOpen(false)}
+                      >
+                        <Modal.Header closeButton>
+                          <Modal.Title>عامل های شروع</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body dir="rtl">
+                          <Form.Select
+                            onChange={(e) => {
+                              fetchHostsData(e.currentTarget.value, true);
+                              setSelectedHostGpTriggers(e.currentTarget.value);
+                            }}
+                            defaultValue={-1}
+                          >
+                            <option value={-1}>
+                              {intl.formatMessage({
+                                id: "MENU.SELECT.HOSTS.GP",
+                              })}
+                            </option>
+                            {hostGroupWithParam?.payload?.map(
+                              (item: hostGroupItems, index: number) => {
+                                return (
+                                  <option value={item.value} key={index}>
+                                    {item.label}
+                                  </option>
+                                );
+                              }
+                            )}
+                          </Form.Select>
+                          <Form.Select
+                            defaultValue={-1}
+                            className="mt-3"
+                            onChange={(e) =>
+                              fetchTriggers(e.currentTarget.value)
+                            }
+                          >
+                            <option value={-1}>
+                              {intl.formatMessage({ id: "MENU.SELECT.HOSTS" })}
+                            </option>
+                            {hostsData?.map(
+                              (item: hostGroupItems, index: number) => {
+                                return (
+                                  <option value={item.hostid} key={index}>
+                                    {item.host}
+                                  </option>
+                                );
+                              }
+                            )}
+                          </Form.Select>
+
+                          {!IsTriggersLoading ? (
+                            Triggers.map((item) => (
+                              <div
+                                key={item.triggerid}
+                                className="w-100 justify-content-end my-3 gap-2 d-flex"
+                              >
+                                <label
+                                  className="form-check-label"
+                                  htmlFor={`host-${item.triggerid}`}
+                                >
+                                  {item.description}
+                                </label>
+                                <input
+                                  type="checkbox"
+                                  id={`host-${item.triggerid}`}
+                                  checked={currentTriggersIds.includes(
+                                    item.triggerid
+                                  )}
+                                  onChange={() =>
+                                    handleCheckboxTriggersChange(item)
+                                  }
+                                />
+                              </div>
+                            ))
+                          ) : (
+                            <div className="d-flex pt-7 w-100 justify-content-center">
+                              <Loader />
+                            </div>
+                          )}
+                        </Modal.Body>
+                      </Modal>
                       <Controller
                         control={control}
                         name={`search.name`}
@@ -393,11 +658,11 @@ export function Projects() {
                       })}
                     </button>
                     <p className="mb-3">
-                        {intl.formatMessage({
-                          id: "MONITORING.PROBLEMS.TAGS",
-                        })}
-                        :
-                      </p>
+                      {intl.formatMessage({
+                        id: "MONITORING.PROBLEMS.TAGS",
+                      })}
+                      :
+                    </p>
                     {tagsField.map((item, index) => (
                       <div className="d-flex mb-3 gap-3 " key={item.id}>
                         <div style={{ width: "33%" }}>
@@ -588,7 +853,7 @@ export function Projects() {
           </div>
         </div>
       </div>
-      <TablesWidget11
+      <ProblemTable
         isLoaded={isLoaded}
         ProblemsData={ProblemsData}
         isError={isError}

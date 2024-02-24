@@ -1,58 +1,17 @@
-import { AxiosResponse } from "axios";
 import { FC, useEffect, useState } from "react";
-import { instance } from "../../../../services/axiosInstance";
 import { MultipleSelect } from "../../../layout/components/multiple-select/MultipleSelect";
-
-interface ZabbixRequest {
-  jsonrpc: string;
-  auth: string;
-  method: string;
-  params: {
-    output: string;
-  };
-  id: number;
-}
-interface ApiItem {
-  groupid: string;
-  name: string;
-}
-interface Option {
-  label: string;
-  value: string;
-}
+import { useDispatch, useSelector } from "react-redux";
+import { fetchHostGroup } from "../../../../hostGroupSlice/hostGroupReducer";
 
 const CreateHost: FC = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [hostGroup, setHostGroup] = useState<Option[]>([]); // Correctly typed state
+  const dispatch = useDispatch();
 
-  const [IsHostGpFetchLoading, setIsHostGpFetchLoading] =
-    useState<boolean>(false);
+  const hostGroupData = useSelector((state) => state.hostGroup);
 
   useEffect(() => {
-    fetchData();
-  }, []);
-
-  const fetchData = async () => {
-    setIsHostGpFetchLoading(true);
-
-    try {
-      const response: AxiosResponse<{
-        map(
-          arg0: (item: any) => { label: string; value: string }
-        ): import("react").SetStateAction<Option[]>;
-        result: ApiItem[];
-      }> = await instance.post("/core/hostgroup/get", {});
-      setHostGroup(
-        response.data.map((item) => ({
-          label: item.name,
-          value: item.groupid,
-        }))
-      );
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-    setIsHostGpFetchLoading(false);
-  };
+    dispatch(fetchHostGroup({}));
+  }, [dispatch]);
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -171,14 +130,16 @@ const CreateHost: FC = () => {
               <div className="row">
                 <div className="col w-50">
                   <MultipleSelect
-                    options={hostGroup}
-                    Loading={IsHostGpFetchLoading}
+                    title="MENU.SELECT.HOSTS.GP"
+                    options={hostGroupData.data}
+                    Loading={hostGroupData.status != "succeeded"}
                   />
                 </div>
                 <div className="col">
                   <MultipleSelect
-                    options={hostGroup}
-                    Loading={IsHostGpFetchLoading}
+                    title="MENU.SELECT.TEMPLATES"
+                    options={hostGroupData.data}
+                    Loading={hostGroupData.status != "succeeded"}
                   />
                 </div>
               </div>
@@ -207,8 +168,9 @@ const CreateHost: FC = () => {
                   className="form-select form-select-lg"
                   name="AuthenticationAlgorithm"
                   id="AuthenticationAlgorithm"
+                  defaultValue="-1"
                 >
-                  <option value="-1" selected>
+                  <option value="-1">
                     پیش فرض
                   </option>
                   <option value="0">هیچکدام</option>
@@ -227,8 +189,9 @@ const CreateHost: FC = () => {
                   className="form-select form-select-lg"
                   name="AuthenticationAlgorithm"
                   id="AuthenticationAlgorithm"
+                  defaultValue="-1"
                 >
-                  <option value="-1" selected>
+                  <option value="-1">
                     پیش فرض
                   </option>
                   <option value="0">CallBack</option>

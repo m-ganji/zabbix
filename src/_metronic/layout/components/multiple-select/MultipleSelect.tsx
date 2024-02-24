@@ -7,13 +7,19 @@ interface Option {
   label: string;
 }
 
-const MultiSelect: React.FC<{ options: Option[]; Loading: boolean }> = ({
-  options,
-  Loading,
-}) => {
-  const [selectedOptions, setSelectedOptions] = useState<Option[]>([]);
-  const [isOpen, setIsOpen] = useState(false);
-
+const MultiSelect: React.FC<{
+  options: Option[];
+  Loading: boolean;
+  title: string;
+  addAll: boolean;
+}> = ({ title, options, Loading, addAll }) => {
+  
+  const [selectedOptions, setSelectedOptions] = useState<Option[]>(
+    addAll ? options : []
+    );
+    const [isOpen, setIsOpen] = useState(false);
+    
+    console.log(selectedOptions);
   const toggleOption = (option: Option) => {
     const isSelected = selectedOptions.some(
       (selectedOption) => selectedOption.value === option.value
@@ -53,14 +59,18 @@ const MultiSelect: React.FC<{ options: Option[]; Loading: boolean }> = ({
     <Dropdown show={isOpen} onToggle={toggleDropdown}>
       <Dropdown.Toggle
         className="w-100 d-flex bg-transparent text-reset border align-items-center justify-content-between"
-        id="dropdown-basic"
         variant="reset"
       >
         {selectedOptions.length > 0 ? (
           <div className="d-flex flex-wrap gap-2">
             {selectedOptions.map((option) => (
-              <div className="d-flex gap-1" key={option.value}>
-                <p className="m-0">{option.label}</p>
+              <div dir="ltr" className="d-flex gap-1" key={option.value}>
+                <p
+                  style={{ textOverflow: "ellipsis" }}
+                  className="m-0 w-150px overflow-hidden"
+                >
+                  {option.label}
+                </p>
                 <img
                   src="/media/icons/duotune/general/close-circle.svg"
                   onClick={() => deleteOption(option)}
@@ -70,7 +80,7 @@ const MultiSelect: React.FC<{ options: Option[]; Loading: boolean }> = ({
             ))}
           </div>
         ) : (
-          intl.formatMessage({ id: "MENU.SELECT" })
+          intl.formatMessage({ id: title })
         )}
       </Dropdown.Toggle>
       <Dropdown.Menu dir="rtl" className="w-100 text-center p-0">
@@ -114,14 +124,21 @@ const MultiSelect: React.FC<{ options: Option[]; Loading: boolean }> = ({
   );
 };
 
-const MultipleSelect: React.FC<{ options: Option[]; Loading: boolean }> = ({
-  options,
-  Loading,
-}) => {
+const MultipleSelect: React.FC<{
+  options: Option[];
+  Loading: boolean;
+  title: string;
+  addAll: boolean;
+}> = ({ options, Loading, title, addAll }) => {
   return (
-    <Form>
+    <Form className="w-100">
       <Form.Group controlId="multiSelect">
-        <MultiSelect options={options} Loading={Loading} />
+        <MultiSelect
+          title={title}
+          addAll={addAll}
+          options={options}
+          Loading={Loading}
+        />
       </Form.Group>
     </Form>
   );
