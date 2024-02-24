@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Content } from "../../../../_metronic/layout/components/content";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
-import { TablesWidget11 } from "../../../../_metronic/partials/widgets";
+import { TablesWidget10, TablesWidget11, TablesWidget12, TablesWidget13 } from "../../../../_metronic/partials/widgets";
 import { PageTitle } from "../../../../_metronic/layout/core";
 import { useIntl } from "react-intl";
 import { ToolbarWrapper } from "../../../../_metronic/layout/components/toolbar";
@@ -616,7 +616,7 @@ export function Overview() {
           </div>
         </div>
 
-        <TablesWidget11 isLoaded={true}/>
+        <TablesWidget12 />
       </form>
     </Content>
   );
