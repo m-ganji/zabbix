@@ -616,7 +616,7 @@ export function Overview() {
           </div>
         </div>
 
-        <TablesWidget11 className="mt-5" />
+        <TablesWidget11 isLoaded={true}/>
       </form>
     </Content>
   );

@@ -1,5 +1,4 @@
 import React from "react";
-import { KTIcon } from "../../../helpers";
 import { Problem } from "../../../../app/modules/profile/components/Projects";
 import moment from "jalali-moment";
 
@@ -59,7 +58,7 @@ const TablesWidget11: React.FC<TablesWidget11Props> = ({
           <span className="text-muted mt-1 fw-semibold fs-7">
             {ProblemsData?.length === 0
               ? `مشکلی یافت نشد`
-              : `مجموع ${ProblemsData.length} عدد مشکل یافت شد.`}
+              : `مجموع ${ProblemsData?.length} عدد مشکل یافت شد.`}
           </span>
         </div>
       </div>
@@ -70,7 +69,7 @@ const TablesWidget11: React.FC<TablesWidget11Props> = ({
         <div className="table-responsive text-center">
           {/* begin::Table */}
           {isLoaded ? (
-            ProblemsData.length === 0 ? (
+            ProblemsData?.length === 0 ? (
               <p>not found</p>
             ) : (
               <table className="table align-middle gs-0 gy-4">
