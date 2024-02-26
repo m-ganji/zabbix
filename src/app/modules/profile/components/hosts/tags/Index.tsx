@@ -14,11 +14,7 @@ export default function Index(props: tags) {
 
   return (
     <div className="d-flex flex-wrap column-gap-5">
-      <div
-        className="btn-group py-2 d-block "
-        role="group"
-        aria-label="Basic example"
-      >
+      <div className="btn-group py-2 d-block " role="group">
         <p>
           {intl.formatMessage({
             id: "MONITORING.PROBLEMS.TAGS",
@@ -57,11 +53,7 @@ export default function Index(props: tags) {
           })}
         </button>
       </div>
-      <div
-        className="btn-group py-2 d-block "
-        role="group"
-        aria-label="Basic example"
-      >
+      <div className="btn-group py-2 d-block " role="group">
         <p>
           {intl.formatMessage({
             id: "MONITORING.PROBLEMS.TAGS.SHOW.TITLE",
@@ -125,11 +117,7 @@ export default function Index(props: tags) {
           })}
         </button>
       </div>
-      <div
-        className="btn-group py-2 d-block "
-        role="group"
-        aria-label="Basic example"
-      >
+      <div className="btn-group py-2 d-block disabled " role="group">
         <p>
           {intl.formatMessage({
             id: "MONITORING.PROBLEMS.TAGS.NAME.TITLE",
@@ -145,6 +133,7 @@ export default function Index(props: tags) {
           onClick={() => {
             props.setTagNameVisible(0);
           }}
+          disabled={props.showTags === 0}
         >
           {intl.formatMessage({
             id: "MONITORING.PROBLEMS.TAGS.NAME.COMPLETE",
@@ -159,6 +148,7 @@ export default function Index(props: tags) {
           onClick={() => {
             props.setTagNameVisible(1);
           }}
+          disabled={props.showTags === 0}
         >
           {intl.formatMessage({
             id: "MONITORING.PROBLEMS.TAGS.NAME.SUMMARY",
@@ -173,6 +163,7 @@ export default function Index(props: tags) {
           onClick={() => {
             props.setTagNameVisible(2);
           }}
+          disabled={props.showTags === 0}
         >
           {intl.formatMessage({
             id: "MONITORING.PROBLEMS.TAGS.NAME.NONE",

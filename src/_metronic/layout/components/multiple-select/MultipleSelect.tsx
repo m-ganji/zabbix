@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Dropdown, Spinner } from "react-bootstrap";
 import { useIntl } from "react-intl";
 
@@ -14,21 +14,21 @@ const MultiSelect: React.FC<{
   addAll: boolean;
   DataName: string;
   setData: CallableFunction;
-  currentData: [];
+  currentData: number[];
 }> = ({ title, options, Loading, addAll, DataName, setData, currentData }) => {
   const [selectedOptions, setSelectedOptions] = useState<Option[]>([]);
   const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    setSelectedOptions(addAll ? [...options] : []);
+  }, [addAll, options]);
 
   const toggleOption = (option: Option) => {
     const isSelected = selectedOptions.some(
       (selectedOption) => selectedOption.value === option.value
     );
-    console.log(option);
-    if (isSelected) {
-      console.log(
-        currentData.filter((selectedOption) => selectedOption !== option.value)
-      );
 
+    if (isSelected) {
       setData(
         DataName,
         selectedOptions.filter(
@@ -59,6 +59,8 @@ const MultiSelect: React.FC<{
   };
 
   const deleteAllOptions = () => {
+    console.log(selectedOptions);
+
     setSelectedOptions([]);
     setData(DataName, []);
   };
@@ -89,9 +91,9 @@ const MultiSelect: React.FC<{
         variant="reset"
         onChange={(e) => console.log(e.currentTarget.value)}
       >
-        {(addAll ? options : selectedOptions)?.length > 0 ? (
+        {selectedOptions?.length > 0 ? (
           <div className="d-flex flex-wrap gap-2">
-            {(addAll ? options : selectedOptions).map((option) => (
+            {selectedOptions.map((option) => (
               <div
                 dir="ltr"
                 className="d-flex gap-1"
