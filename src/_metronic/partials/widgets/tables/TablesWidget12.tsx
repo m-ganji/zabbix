@@ -1,6 +1,6 @@
 import { KTIcon } from "../../../helpers";
 
-const TablesWidget12 = () => {
+const TablesWidget12 = ({ data }) => {
   return (
     <div style={{ boxShadow: "0 0 10px -10px black" }} className={`card mt-5`}>
       {/* begin::Header */}
@@ -32,7 +32,7 @@ const TablesWidget12 = () => {
             {/* begin::Table head */}
             <thead>
               <tr className="fw-bold text-muted bg-light">
-                <th className="ps-4 min-w-125px">نام</th>
+                <th className="text-center min-w-100px">نام</th>
                 <th className="text-center min-w-100px">رابط</th>
                 <th className="text-center min-w-100px">دسترسی</th>
                 <th className="text-center min-w-150px">برچسب ها</th>
@@ -47,70 +47,76 @@ const TablesWidget12 = () => {
             {/* end::Table head */}
             {/* begin::Table body */}
             <tbody>
-              <tr>
-                <td className="text-center">
-                  <span className="text-muted fw-semibold text-muted d-block fs-7">
-                    هاست 22
-                  </span>
-                </td>
-                <td className="text-center">
-                  <a
-                    href="#"
-                    className="text-gray-900 fw-bold text-hover-primary d-block mb-1 fs-6"
-                  >
-                    -
-                  </a>
-                </td>
-                <td className="text-center">
-                  <span className="text-muted fw-semibold text-muted d-block fs-7">
-                    Rejected
-                  </span>
-                </td>
-                <td className="text-center">
-                  <span className="text-muted fw-semibold text-muted d-block fs-7">
-                    Insurance
-                  </span>
-                </td>
-                <td className="text-center">
-                  <span className="badge badge-light-primary fs-7 fw-semibold">
-                    Approved
-                  </span>
-                </td>
-                <td className="text-center">
-                  <a
-                    href="#"
-                    className="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"
-                  >
-                    <KTIcon iconName="switch" className="fs-3" />
-                  </a>
-                </td>
-                <td className="text-center">
-                  <span className="badge badge-light-primary fs-7 fw-semibold">
-                    Approved
-                  </span>
-                </td>
-                <td className="text-center">
-                  <a
-                    href="#"
-                    className="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"
-                  >
-                    <KTIcon iconName="switch" className="fs-3" />
-                  </a>
-                </td>
-                <td className="text-center">
-                  <span className="badge badge-light-primary fs-7 fw-semibold">
-                    Approved
-                  </span>
-                </td>
-                <td className="text-center">
-                  <a
-                    href="#"
-                    className="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"
-                  >
-                    <KTIcon iconName="switch" className="fs-3" />
-                  </a>
-                </td>
-              </tr>
+              {data.map((item) => (
+                <tr key={item.id || Math.random()}>
+                  <td className="text-center">
+                    <span className="text-muted fw-semibold text-muted d-block fs-7">
+                      {item.name}
+                    </span>
+                  </td>
+                  <td className="text-center">
+                    <a
+                      href={item.link}
+                      className="text-gray-900 fw-bold text-hover-primary d-block mb-1 fs-6"
+                    >
+                      {/* {item.interfaces?.map((i, interfaceIndex) => (
+                        <p>
+                          {i.port} : {i.ip}
+                          {console.log(i)}
+                        </p>
+                      ))} */}
+                    </a>
+                  </td>
+                  <td className="text-center">
+                    <span className="text-muted fw-semibold text-muted d-block fs-7">
+                      {item.inventory_mode}
+                    </span>
+                  </td>
+                  <td className="text-center">
+                    <span className="text-muted fw-semibold text-muted d-block fs-7">
+                      {/* {item.tags?.map((value, tagIndex) => (
+                        <p>
+                          {value.tag} : {value.value}
+                        </p>
+                      ))} */}
+                    </span>
+                  </td>
+                  <td className="text-center">
+                    <span
+                      className={`badge badge-light-${
+                        item.statusColor || "primary"
+                      } fs-7 fw-semibold`}
+                    >
+                      {item.status === 0 ? <>✅</> : <>❌</>}
+                    </span>
+                  </td>
+                  <td className="text-center">آخرین دیتا</td>
+                  <td className="text-center">
+                    <span
+                      className={`badge badge-light-${
+                        item.issuesColor || "primary"
+                      } fs-7 fw-semibold`}
+                    >
+                      {item.problems}
+                    </span>
+                  </td>
+                  <td className="text-center">
+                    {item.graphs?.length > 0 ? (
+                      item.graphs.length
+                    ) : (
+                      <span className="text-gray-400">بدون گراف</span>
+                    )}
+                  </td>
+                  <td className="text-center">
+                    {item.dashboards?.length > 0 ? (
+                      item.dashboards?.length
+                    ) : (
+                      <span className="text-gray-400">بدون داشبورد</span>
+                    )}
+                  </td>
+                  <td className="text-center">وب</td>
+                </tr>
+              ))}
             </tbody>
             {/* end::Table body */}
           </table>

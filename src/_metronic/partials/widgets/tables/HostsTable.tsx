@@ -76,17 +76,16 @@ const ProblemTable: React.FC<ProblemTableProps> = ({
                 {/* begin::Table head */}
                 <thead>
                   <tr className="fw-bold text-muted bg-light">
-                    <th className="ps-4 min-w-125px">تاریخ</th>
-                    <th className="text-center min-w-100px">مشکل</th>
-                    <th className="text-center min-w-100px">سطح بحران</th>
-                    <th className="text-center min-w-50px">بهبودی</th>
+                    <th className="ps-4 min-w-125px">نام</th>
+                    <th className="text-center min-w-100px">رابط</th>
+                    <th className="text-center min-w-100px">دسترسی</th>
+                    <th className="text-center min-w-150px">برچسب ها</th>
                     <th className="text-center min-w-100px">وضعیت</th>
-                    <th className="text-center min-w-50px">اطلاعات</th>
-                    <th className="text-center min-w-100px">هاست</th>
-                    <th className="text-center min-w-100px">مدت زمان</th>
-                    <th className="text-center min-w-100px">بروز رسانی</th>
-                    <th className="text-center min-w-10px">اقدامات</th>
-                    <th className="text-center min-w-200px">برچسب ها</th>
+                    <th className="text-center min-w-125px">آخرین داده ها</th>
+                    <th className="text-center min-w-150px">مشکلات</th>
+                    <th className="text-center min-w-100px">نمودارها</th>
+                    <th className="text-center min-w-100px">داشبوردها</th>
+                    <th className="text-center min-w-150px">وب</th>
                   </tr>
                 </thead>
                 {/* end::Table head */}
