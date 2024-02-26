@@ -1,27 +1,43 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Content } from "../../../../_metronic/layout/components/content";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
-import { TablesWidget10, TablesWidget11, TablesWidget12, TablesWidget13 } from "../../../../_metronic/partials/widgets";
+import {
+  TablesWidget10,
+  TablesWidget11,
+  TablesWidget12,
+  TablesWidget13,
+} from "../../../../_metronic/partials/widgets";
 import { PageTitle } from "../../../../_metronic/layout/core";
 import { useIntl } from "react-intl";
 import { ToolbarWrapper } from "../../../../_metronic/layout/components/toolbar";
 import { Button } from "react-bootstrap";
 import { instance } from "../../../../services/axiosInstance";
+import { MultipleSelect } from "../../../../_metronic/layout/components/multiple-select/MultipleSelect";
+import { fetchHostGroup } from "../../../../hostGroupSlice/hostGroupReducer";
+import { useDispatch } from "react-redux";
+import Severities from "./hosts/severities/Index";
 
 interface FormValues {
   status: string;
   evaltype: string;
-  name: string;
   maintenance_status: string;
   show_suppressed: string;
+  name: string;
   ip: string;
   dns: string;
   port: string;
-  // severities: string[];
+  severities: number[];
   groupids: string[];
   filter: []; // Define the type appropriately
   tags: string[];
   inventory: { field: string; value: string }[];
+}
+
+interface Severity {
+  id: number;
+  title: string;
+  color: string;
+  bg: string;
 }
 
 export function Overview() {
@@ -29,23 +45,22 @@ export function Overview() {
 
   const [activeButtonTag, setActiveButtonTag] = useState<string>("");
   const [activeSituation, setActiveSituation] = useState<string>("");
+  const [hostGroups, setHostGroups] = useState([]);
+
+  const dispatch = useDispatch();
 
   const { control, watch, setValue, handleSubmit, reset, unregister } =
     useForm<FormValues>({
       defaultValues: {
         status: "",
         evaltype: "",
-        name: "",
         maintenance_status: "",
         show_suppressed: "",
-        ip: "",
-        dns: "",
-        port: "",
+        search: { name: "", ip: "", dns: "", port: "" },
         // severities: [],
-        groupids: [],
-        filter: [],
+        // groupids: [],
+        filter: { status: "" },
         tags: [],
-        inventory: [{ field: "type", value: "" }],
       },
     });
 
@@ -58,58 +73,13 @@ export function Overview() {
     name: "tags",
   });
 
-  const severitiesData: {
-    id: number;
-    title: string;
-    color: string;
-    bg: string;
-  }[] = [
-    {
-      id: 0,
-      title: intl.formatMessage({ id: "MONITORING.HOSTS.SEVERITY.OPTION1" }),
-      color: "info",
-      bg: "bg-green",
-    },
-
-    {
-      id: 2,
-      title: intl.formatMessage({ id: "MONITORING.HOSTS.SEVERITY.OPTION2" }),
-      color: "coral",
-      bg: "bg-yellow-500/70",
-    },
-    {
-      id: 4,
-      title: intl.formatMessage({ id: "MONITORING.HOSTS.SEVERITY.OPTION3" }),
-      color: "orange",
-      bg: "bg-yellow-700",
-    },
-    {
-      id: 1,
-      title: intl.formatMessage({ id: "MONITORING.HOSTS.SEVERITY.OPTION4" }),
-      color: "orangered",
-      bg: "bg-/80",
-    },
-    {
-      id: 3,
-      title: intl.formatMessage({ id: "MONITORING.HOSTS.SEVERITY.OPTION5" }),
-      color: "orangered",
-      bg: "bg-/80",
-    },
-    {
-      id: 5,
-      title: intl.formatMessage({ id: "MONITORING.HOSTS.SEVERITY.OPTION6" }),
-      color: "orangered",
-      bg: "bg-/80",
-    },
-  ];
-
   const dataHost = async (data) => {
     console.log(data);
-
     try {
-      const response = await instance.post("/core/hosts/get", { data });
+      const response = await instance.post("/core/hosts/get", data);
       console.log(response);
       return response;
+
       // setIsLoaded(true);
       // setHostData(response.data || []);
     } catch (error) {
@@ -119,6 +89,10 @@ export function Overview() {
       // setIsError(true);
     }
   };
+
+  useEffect(() => {
+    dispatch(fetchHostGroup({})).then((response) => setHostGroups(response));
+  }, []);
 
   return (
     <Content>
@@ -167,7 +141,7 @@ export function Overview() {
                           aria-label="Basic example"
                         >
                           <Controller
-                            name="status"
+                            name="filter.status"
                             control={control}
                             defaultValue=""
                             render={() => (
@@ -178,7 +152,7 @@ export function Overview() {
                                   (activeSituation === "همه" ? " active" : "")
                                 }
                                 onClick={() => {
-                                  setValue("status", -1);
+                                  setValue("filter.status", -1);
                                   setActiveSituation("همه");
                                 }}
                                 data-bs-toggle="button"
@@ -190,7 +164,7 @@ export function Overview() {
                             )}
                           />
                           <Controller
-                            name="status"
+                            name="filter.status"
                             control={control}
                             defaultValue=""
                             render={() => (
@@ -203,7 +177,7 @@ export function Overview() {
                                     : "")
                                 }
                                 onClick={() => {
-                                  setValue("status", 0);
+                                  setValue("filter.status", 0);
                                   setActiveSituation("فعال شده ها");
                                 }}
                                 data-bs-toggle="button"
@@ -216,7 +190,7 @@ export function Overview() {
                           />
 
                           <Controller
-                            name="status"
+                            name="filter.status"
                             control={control}
                             defaultValue=""
                             render={() => (
@@ -229,7 +203,7 @@ export function Overview() {
                                     : "")
                                 }
                                 onClick={() => {
-                                  setValue("status", 1);
+                                  setValue("filter.status", 1);
                                   setActiveSituation("غیر فعال ها");
                                 }}
                                 data-bs-toggle="button"
@@ -384,16 +358,24 @@ export function Overview() {
                           />
 
                           <div style={{ width: "33%" }}>
-                            <input
-                              type="email"
-                              className="form-control py-2"
-                              id={`exampleInputEmailValue${item.id}`}
-                              aria-describedby="emailHelp"
-                              placeholder={intl.formatMessage({
-                                id: "MONITORING.HOSTS.ADDTAG.VALUE",
-                              })}
-                              style={{ direction: "rtl" }}
-                              dir="rtl"
+                            <Controller
+                              name={`tags[${index}].value`}
+                              control={control}
+                              defaultValue=""
+                              render={({ field }) => (
+                                <input
+                                  {...field}
+                                  type="text"
+                                  className="form-control py-2"
+                                  id={`exampleInputEmailValue${item.id}`}
+                                  aria-describedby="emailHelp"
+                                  placeholder={intl.formatMessage({
+                                    id: "MONITORING.HOSTS.ADDTAG.VALUE",
+                                  })}
+                                  style={{ direction: "rtl" }}
+                                  dir="rtl"
+                                />
+                              )}
                             />
                           </div>
                           <button
@@ -477,7 +459,7 @@ export function Overview() {
                     <div className="row">
                       <div className="col-6">
                         <Controller
-                          name="name"
+                          name="search.name"
                           control={control}
                           defaultValue=""
                           render={({ field }) => (
@@ -499,7 +481,7 @@ export function Overview() {
                       </div>
                       <div className="col-6">
                         <Controller
-                          name="ip"
+                          name="search.ip"
                           control={control}
                           defaultValue=""
                           render={({ field }) => (
@@ -522,7 +504,7 @@ export function Overview() {
                     <div className="row">
                       <div className="col-6">
                         <Controller
-                          name="dns"
+                          name="search.dns"
                           control={control}
                           defaultValue=""
                           render={({ field }) => (
@@ -542,13 +524,13 @@ export function Overview() {
                       </div>
                       <div className="col-6">
                         <Controller
-                          name="port"
+                          name="search.port"
                           control={control}
                           defaultValue=""
                           render={({ field }) => (
                             <input
                               type="text"
-                              className="form-control py-2"
+                              className="form-control py-2 mb-5"
                               aria-describedby="emailHelp"
                               placeholder={intl.formatMessage({
                                 id: "MONITORING.HOSTS.PORT",
@@ -560,6 +542,13 @@ export function Overview() {
                           )}
                         />
                       </div>
+                      {hostGroups.payload && (
+                        <MultipleSelect
+                          addAll={false}
+                          title="MENU.SELECT.HOSTS.GP"
+                          options={hostGroups.payload}
+                        />
+                      )}
                     </div>
                     <div className="row">
                       <p className="mt-5">
@@ -567,55 +556,35 @@ export function Overview() {
                           id: "MONITORING.HOSTS.SEVERITY",
                         })}
                       </p>
-                      {severitiesData.map((severity, index) => (
-                        <div className="col-md-4 d-flex" key={severity.id}>
-                          <div className="d-flex align-baseline ">
-                            <input
-                              type="checkbox"
-                              name={`Checkboxes15-${severity.id}`}
-                              id={`severity-${severity.id}`}
-                            />
-                            <span className="form-check-label m-2">
-                              {severity.title}
-                            </span>
-                          </div>
-                        </div>
-                      ))}
+                      <Severities watch={watch} setValue={setValue} />
                     </div>
                   </div>
                 </div>
               </div>
             </div>{" "}
             <div className="d-flex justify-content-center mb-5 gap-5 ">
-              <Button
-              // variant="outlined"
-              // className="bg-[#041118] hover:bg-[#041018b9] self-end h-10 hover:bg-[#041018] duration-300 font-[Yekan] text-white border-none whitespace-nowrap px-6"
-              >
-                روش ذخیره
-              </Button>
-              <Button
-                // variant="outlined"
-                // className="bg-[#041118] hover:bg-[#041018b9] self-end h-10 hover:bg-[#041018] duration-300 font-[Yekan] text-white border-none whitespace-nowrap px-6"
+              <button
+                type="button"
                 onClick={handleSubmit((data) => {
-                  dataHost(data); // Passing form data to dataHost function
+                  dataHost(data);
                 })}
+                className="btn btn-light-success"
               >
                 تایید
-              </Button>
-              <Button
-              // onClick={() => {
-              //   reset();
-              //   handleSubmit(fetchData());
-              // }}
-              // variant="outlined"
-              // className="bg-[#041118] hover:bg-[#041018b9] self-end h-10 hover:bg-[#041018] duration-300 font-[Yekan] text-white border-none whitespace-nowrap px-6"
+              </button>
+              <button
+                type="button"
+                // onClick={resetData}
+                className="btn btn-light-danger"
               >
                 باز نشانی
-              </Button>
+              </button>
+              <button type="button" className="btn btn-light-primary">
+                ذخیره
+              </button>
             </div>
           </div>
         </div>
-
         <TablesWidget12 />
       </form>
     </Content>

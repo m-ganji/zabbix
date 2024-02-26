@@ -205,6 +205,7 @@ export function Projects() {
       ]);
     }
   };
+  
   const handleCheckboxTriggersChange = (trigger) => {
     console.log(currentTriggersIds);
 
