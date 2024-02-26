@@ -75,6 +75,7 @@ export default function Index({
       )
     );
   };
+  
   return (
     <div className="row">
       {severitiesData.map((severity) => (
