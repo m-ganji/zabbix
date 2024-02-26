@@ -12,7 +12,7 @@
     width: $scrolltop-size;
     height: $scrolltop-size;
     bottom: $scrolltop-bottom;
-    right: $scrolltop-end;    
+    left: $scrolltop-end;    
     background-color: var(--#{$prefix}scrolltop-bg-color);
     box-shadow: var(--#{$prefix}scrolltop-box-shadow);
     opacity: $scrolltop-opacity;

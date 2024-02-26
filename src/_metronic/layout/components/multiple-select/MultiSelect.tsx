@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Form, Dropdown, Spinner } from "react-bootstrap";
+import React, { useEffect, useState } from "react";
+import { Dropdown, Spinner } from "react-bootstrap";
 import { useIntl } from "react-intl";
 
 interface Option {
@@ -7,37 +7,71 @@ interface Option {
   label: string;
 }
 
-const MultiSelect: React.FC<{ options: Option[]; Loading: boolean }> = ({
-  options,
-  Loading,
-}) => {
+const MultiSelect: React.FC<{
+  options: Option[];
+  Loading: boolean;
+  title: string;
+  addAll: boolean;
+  DataName: string;
+  setData: CallableFunction;
+  currentData: number[];
+}> = ({ title, options, Loading, addAll, DataName, setData, currentData }) => {
   const [selectedOptions, setSelectedOptions] = useState<Option[]>([]);
   const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    setSelectedOptions(addAll ? [...options] : []);
+  }, [addAll, options]);
 
   const toggleOption = (option: Option) => {
     const isSelected = selectedOptions.some(
       (selectedOption) => selectedOption.value === option.value
     );
-    setSelectedOptions(
-      isSelected
-        ? selectedOptions.filter(
-            (selectedOption) => selectedOption.value !== option.value
-          )
-        : [...selectedOptions, option]
-    );
+
+    if (isSelected) {
+      setData(
+        DataName,
+        selectedOptions.filter(
+          (selectedOption) => selectedOption.value !== option.value
+        )
+      );
+      setSelectedOptions(
+        selectedOptions.filter(
+          (selectedOption) => selectedOption.value !== option.value
+        )
+      );
+    } else {
+      console.log(currentData);
+
+      setData(DataName, [...currentData, option.value]);
+      setSelectedOptions([...selectedOptions, option]);
+    }
   };
 
   const toggleAllOptions = () => {
     setSelectedOptions(
       selectedOptions.length === options.length ? [] : [...options]
     );
+    setData(
+      DataName,
+      currentData.length === options.length ? [] : options.map((i) => i.value)
+    );
   };
 
   const deleteAllOptions = () => {
+    console.log(selectedOptions);
+
     setSelectedOptions([]);
+    setData(DataName, []);
   };
 
   const deleteOption = (option: Option) => {
+    setData(
+      DataName,
+      selectedOptions.filter(
+        (selectedOption) => selectedOption.value !== option.value
+      )
+    );
     setSelectedOptions(
       selectedOptions.filter(
         (selectedOption) => selectedOption.value !== option.value
@@ -48,19 +82,30 @@ const MultiSelect: React.FC<{ options: Option[]; Loading: boolean }> = ({
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
+
   const intl = useIntl();
   return (
     <Dropdown show={isOpen} onToggle={toggleDropdown}>
       <Dropdown.Toggle
-        className="w-100 d-flex bg-transparent text-reset border align-items-center justify-content-between"
-        id="dropdown-basic"
+        className="w-100 py-3 d-flex bg-transparent text-reset border align-items-center justify-content-between"
         variant="reset"
+        onChange={(e) => console.log(e.currentTarget.value)}
       >
-        {selectedOptions.length > 0 ? (
+        {selectedOptions?.length > 0 ? (
           <div className="d-flex flex-wrap gap-2">
             {selectedOptions.map((option) => (
-              <div className="d-flex gap-1" key={option.value}>
-                <p className="m-0">{option.label}</p>
+              <div
+                dir="ltr"
+                className="d-flex gap-1"
+                style={{ maxWidth: "130px" }}
+                key={option.value}
+              >
+                <p
+                  style={{ textOverflow: "ellipsis" }}
+                  className="m-0  overflow-hidden"
+                >
+                  {option.label}
+                </p>
                 <img
                   src="/media/icons/duotune/general/close-circle.svg"
                   onClick={() => deleteOption(option)}
@@ -70,7 +115,7 @@ const MultiSelect: React.FC<{ options: Option[]; Loading: boolean }> = ({
             ))}
           </div>
         ) : (
-          intl.formatMessage({ id: "MENU.SELECT" })
+          intl.formatMessage({ id: title })
         )}
       </Dropdown.Toggle>
       <Dropdown.Menu dir="rtl" className="w-100 text-center p-0">
@@ -114,17 +159,4 @@ const MultiSelect: React.FC<{ options: Option[]; Loading: boolean }> = ({
   );
 };
 
-const MultipleSelect: React.FC<{ options: Option[]; Loading: boolean }> = ({
-  options,
-  Loading,
-}) => {
-  return (
-    <Form>
-      <Form.Group controlId="multiSelect">
-        <MultiSelect options={options} Loading={Loading} />
-      </Form.Group>
-    </Form>
-  );
-};
-
-export { MultipleSelect };
+export { MultiSelect };

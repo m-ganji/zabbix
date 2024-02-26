@@ -7,6 +7,7 @@ import {
   ThemeModeSwitcher,
 } from "../../../partials";
 import { useLayout } from "../../core";
+import { useState } from "react";
 
 const itemClass = "ms-1 ms-md-4";
 const btnClass =
@@ -16,6 +17,17 @@ const btnIconClass = "fs-2";
 
 const Navbar = () => {
   const { config } = useLayout();
+  const [isFullSC, setisFullSC] = useState(false);
+
+  const resize = () => {
+    setisFullSC(!isFullSC);
+    if (isFullSC) {
+      document.exitFullscreen();
+    } else {
+      document.documentElement.requestFullscreen();
+    }
+  };
+
   return (
     <div className="app-navbar flex-shrink-0">
       <div className={clsx("app-navbar-item align-items-stretch", itemClass)}>
@@ -23,7 +35,7 @@ const Navbar = () => {
       </div>
 
       <div className={clsx("app-navbar-item", itemClass)}>
-        <div  className={btnClass}>
+        <div className={btnClass}>
           <KTIcon iconName="chart-simple" className={btnIconClass} />
         </div>
       </div>
@@ -47,6 +59,15 @@ const Navbar = () => {
         >
           <KTIcon iconName="message-text-2" className={btnIconClass} />
           <span className="bullet bullet-dot bg-success h-6px w-6px position-absolute translate-middle top-0 start-50 animation-blink" />
+        </div>
+      </div>
+
+      <div onClick={resize} className={clsx("app-navbar-item", itemClass)}>
+        <div className={clsx("position-relative", btnClass)}>
+          <KTIcon
+            iconName={`${!isFullSC ? "arrow-two-diagonals" : "arrow-diagonal"}`}
+            className={btnIconClass}
+          />
         </div>
       </div>
 

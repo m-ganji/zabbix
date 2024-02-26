@@ -63,7 +63,7 @@ const SidebarMenuMain = () => {
       <SidebarMenuItemWithSub
         to="/crafted/pages/wizards"
         title="خدمات"
-        hasBullet={true}
+        icon="abstract-43"
       >
         <SidebarMenuItem
           to="/crafted/pages/wizards/horizontal"

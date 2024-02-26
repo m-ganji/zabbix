@@ -1,64 +1,17 @@
-import { AxiosResponse } from "axios";
 import { FC, useEffect, useState } from "react";
-import { instanceZabbix } from "../../../../services/axiosInstance";
-import { MultipleSelect } from "../../../layout/components/multiple-select/MultipleSelect";
-
-interface ZabbixRequest {
-  jsonrpc: string;
-  auth: string;
-  method: string;
-  params: {
-    output: string;
-  };
-  id: number;
-}
-interface ApiItem {
-  groupid: string;
-  name: string;
-}
-interface Option {
-  label: string;
-  value: string;
-}
+import { MultiSelect } from "../../../layout/components/multiple-select/MultiSelect";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchHostGroup } from "../../../../hostGroupSlice/hostGroupReducer";
 
 const CreateHost: FC = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [hostGroup, setHostGroup] = useState<Option[]>([]); // Correctly typed state
+  const dispatch = useDispatch();
 
-  const [IsHostGpFetchLoading, setIsHostGpFetchLoading] =
-    useState<boolean>(false);
+  const hostGroupData = useSelector((state) => state.hostGroup);
 
   useEffect(() => {
-    fetchData();
-  }, []);
-
-  const fetchData = async () => {
-    setIsHostGpFetchLoading(true);
-    try {
-      const requestData: ZabbixRequest = {
-        jsonrpc: "2.0",
-        auth: "00adfa66232686959999fc40d1ab81edf3ff547181ad7e52df819b19031bb391",
-        method: "hostgroup.get",
-        params: {
-          output: "extend",
-        },
-        id: 1,
-      };
-      const response: AxiosResponse<{ result: ApiItem[] }> =
-        await instanceZabbix.post("/", requestData);
-      const apiData: ApiItem[] = response.data.result;
-
-      const transformedData = apiData.map((item) => ({
-        label: item.name,
-        value: item.groupid,
-      }));
-
-      setHostGroup(transformedData);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-    setIsHostGpFetchLoading(false);
-  };
+    dispatch(fetchHostGroup({}));
+  }, [dispatch]);
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -176,15 +129,19 @@ const CreateHost: FC = () => {
               </div>
               <div className="row">
                 <div className="col w-50">
-                  <MultipleSelect
-                    options={hostGroup}
-                    Loading={IsHostGpFetchLoading}
+                  <MultiSelect
+                    title="MENU.SELECT.HOSTS.GP"
+                    options={hostGroupData.data}
+                    Loading={hostGroupData.status != "succeeded"}
+                    addAll={false}
                   />
                 </div>
                 <div className="col">
-                  <MultipleSelect
-                    options={hostGroup}
-                    Loading={IsHostGpFetchLoading}
+                  <MultiSelect
+                    title="MENU.SELECT.TEMPLATES"
+                    options={hostGroupData.data}
+                    Loading={hostGroupData.status != "succeeded"}
+                    addAll={false}
                   />
                 </div>
               </div>
@@ -213,10 +170,9 @@ const CreateHost: FC = () => {
                   className="form-select form-select-lg"
                   name="AuthenticationAlgorithm"
                   id="AuthenticationAlgorithm"
+                  defaultValue="-1"
                 >
-                  <option value="-1" selected>
-                    پیش فرض
-                  </option>
+                  <option value="-1">پیش فرض</option>
                   <option value="0">هیچکدام</option>
                   <option value="1">MD2</option>
                   <option value="2">MD5</option>
@@ -233,10 +189,9 @@ const CreateHost: FC = () => {
                   className="form-select form-select-lg"
                   name="AuthenticationAlgorithm"
                   id="AuthenticationAlgorithm"
+                  defaultValue="-1"
                 >
-                  <option value="-1" selected>
-                    پیش فرض
-                  </option>
+                  <option value="-1">پیش فرض</option>
                   <option value="0">CallBack</option>
                   <option value="1">کاربر</option>
                   <option value="2">اپراتور</option>
