@@ -10,11 +10,11 @@ import { PageTitle } from "../../../../_metronic/layout/core";
 import { ToolbarWrapper } from "../../../../_metronic/layout/components/toolbar";
 import { instance } from "../../../../services/axiosInstance";
 import { useNavigate } from "react-router-dom";
-import { MultipleSelect } from "../../../../_metronic/layout/components/multiple-select/MultipleSelect";
+import { MultiSelect } from "../../../../_metronic/layout/components/multiple-select/MultipleSelect";
 import { useDispatch } from "react-redux";
 import { Form, Modal } from "react-bootstrap";
 import { fetchHostGroup } from "../../../../hostGroupSlice/hostGroupReducer";
-import { Loader } from "./../../../../_metronic/layout/components/loader/Loader";
+import { Loader } from "../../../../_metronic/layout/components/loader/Loader";
 
 interface hostGroupItems {
   value: string;
@@ -52,6 +52,7 @@ interface FormValues {
   }[];
   severities: number[];
   objectids: [];
+  groupids: [];
 }
 
 export interface Problem {
@@ -191,6 +192,7 @@ export function Projects() {
   });
   const currentHostids = watch("hostids") ? watch("hostids") : [];
   const currentTriggersIds = watch("objectids") ? watch("objectids") : [];
+  const currentGroupids = watch("groupids") ? watch("groupids") : [];
 
   const handleCheckboxChange = (host) => {
     console.log(selectedHosts);
@@ -266,7 +268,6 @@ export function Projects() {
 
   const fetchPromsListData = async (e: object) => {
     console.log(e);
-    watch("severities")?.length === 0 && unregister("severities");
 
     const params = e ? e : watch();
     setIsError(false);
@@ -301,6 +302,12 @@ export function Projects() {
     fetchPromsListData(watch());
   };
 
+  const submit = () => {
+    watch("severities")?.length === 0 && unregister("severities");
+    currentGroupids.length === 0 && unregister("groupids");
+    handleSubmit(fetchPromsListData)();
+  };
+
   return (
     <Content>
       <PageTitle breadcrumbs={[]}>
@@ -330,10 +337,10 @@ export function Projects() {
               data-bs-parent="#monitoring-hosts"
             >
               <div className="accordion-body">
-                <div className="row">
+                <div className="row gap-2">
                   <div className="col">
                     <div
-                      className="btn-group py-2 d-flex flex-column gap-5 "
+                      className="btn-group py-2 d-flex flex-column gap-3"
                       role="group"
                       aria-label="Basic example"
                     >
@@ -395,7 +402,8 @@ export function Projects() {
                           </button>
                         </div>
                       </div>
-                      <MultipleSelect
+
+                      <MultiSelect
                         addAll={false}
                         title="MENU.SELECT.HOSTS.GP"
                         options={hostGroupWithoutParam?.payload}
@@ -403,16 +411,21 @@ export function Projects() {
                           hostGroupWithoutParam?.meta?.requestStatus !=
                           "fulfilled"
                         }
+                        DataName="groupids"
+                        setData={setValue}
+                        currentData={currentGroupids}
                       />
-                      <div className="d-flex  gap-5">
-                        <MultipleSelect
-                          addAll={true}
-                          title="MENU.SELECT.HOSTS.GP"
-                          options={selectedHosts}
-                          Loading={false}
-                        />
+                      <div className="row column-gap-3 m-0">
+                        <div className="col p-0">
+                          <MultiSelect
+                            addAll={true}
+                            title="MENU.SELECT.HOSTS.GP"
+                            options={selectedHosts}
+                            Loading={false}
+                          />
+                        </div>
                         <button
-                          className="btn btn-light-primary"
+                          className="btn h-25 py-3 btn-light-primary px-0 col-2"
                           onClick={() => setisHostsModalOpen(true)}
                         >
                           {intl.formatMessage({
@@ -477,15 +490,17 @@ export function Projects() {
                           )}
                         </Modal.Body>
                       </Modal>
-                      <div className="d-flex gap-5">
-                        <MultipleSelect
-                          title="MENU.SELECT.TRIGGERS"
-                          options={SelectedTriggers}
-                          Loading={false}
-                          addAll={true}
-                        />
+                      <div className="row column-gap-3 m-0">
+                        <div className="col pe-0">
+                          <MultiSelect
+                            title="MENU.SELECT.TRIGGERS"
+                            options={SelectedTriggers}
+                            Loading={false}
+                            addAll={true}
+                          />
+                        </div>
                         <button
-                          className="btn btn-light-primary h-25"
+                          className="btn col-2 btn-light-primary h-25 py-3"
                           onClick={() => setIsTriggersModalOpen(true)}
                         >
                           {intl.formatMessage({
@@ -600,37 +615,49 @@ export function Projects() {
                       </div>
                     </div>
                   </div>
-                  <div className="col d-flex gap-5 flex-column ">
+                  <div className="col d-flex row-gap-2 flex-column ">
                     <div>
-                      <p className="mb-3">
+                      <p className="m-0">
                         {intl.formatMessage({
                           id: "MONITORING.PROBLEMS.INVENTORYLIST",
-                        })}
+                        })}{" "}
+                        :
                       </p>
                       {inventoryField.map((item, index) => (
-                        <div className="d-flex mb-3 gap-3 " key={item.id}>
-                          <select
-                            className="form-select form-select-sm"
-                            id={`floatingSelect${item.id}`}
-                            aria-label="Floating label select example"
-                            style={{ width: "45%" }}
-                          >
-                            {InventoryList.map((item) => (
-                              <option key={item.id} value={item.id}>
-                                {item.title}
-                              </option>
-                            ))}
-                          </select>
-                          <div style={{ width: "45%" }}>
-                            <input
-                              type="email"
-                              className="form-control py-2"
-                              id={`exampleInputEmailValue${item.id}`}
-                              placeholder={intl.formatMessage({
-                                id: "MONITORING.HOSTS.ADDTAG.VALUE",
-                              })}
-                              style={{ direction: "rtl" }}
-                              dir="rtl"
+                        <div className="d-flex mb-3 row" key={item.id}>
+                          <Controller
+                            control={control}
+                            name={`inventory[${index}].field`}
+                            render={({ field }) => (
+                              <select
+                                className="form-select form-select-sm col"
+                                id={`floatingSelect${item.id}`}
+                                aria-label="Floating label select example"
+                                {...field}
+                              >
+                                {InventoryList.map((item) => (
+                                  <option key={item.id} value={item.id}>
+                                    {item.title}
+                                  </option>
+                                ))}
+                              </select>
+                            )}
+                          />
+
+                          <div className="col">
+                            <Controller
+                              control={control}
+                              name={`inventory[${index}].value`}
+                              render={({ field }) => (
+                                <input
+                                  className="form-control py-2"
+                                  id={`exampleInputEmailValue${item.id}`}
+                                  placeholder={intl.formatMessage({
+                                    id: "MONITORING.HOSTS.ADDTAG.VALUE",
+                                  })}
+                                  {...field}
+                                />
+                              )}
                             />
                           </div>
                           <button
@@ -657,81 +684,104 @@ export function Projects() {
                         id: "MONITORING.HOSTS.ADDTAG.ADDBUTTON",
                       })}
                     </button>
-                    <p className="mb-3">
+                    <p className="m-0">
                       {intl.formatMessage({
                         id: "MONITORING.PROBLEMS.TAGS",
                       })}
                       :
                     </p>
                     {tagsField.map((item, index) => (
-                      <div className="d-flex mb-3 gap-3 " key={item.id}>
-                        <div style={{ width: "33%" }}>
-                          <input
-                            type="email"
-                            className="form-control py-2"
-                            id={`exampleInputEmail${item.id}`}
-                            placeholder={intl.formatMessage({
-                              id: "MONITORING.HOSTS.ADDTAG.TITLE",
-                            })}
-                          />
-                        </div>
-                        <select
-                          className="form-select form-select-sm"
-                          id={`floatingSelect${item.id}`}
-                          aria-label="Floating label select example"
-                          style={{ width: "33%" }}
+                      <div className="d-grid">
+                        <div
+                          dir="rtl"
+                          className="row mb-3 gap-3 "
+                          key={item.id}
                         >
-                          <option value={4}>
-                            {intl.formatMessage({
-                              id: "MONITORING.HOSTS.ADDTAG.OPTION1",
-                            })}
-                          </option>
-                          <option value={1}>
-                            {intl.formatMessage({
-                              id: "MONITORING.HOSTS.ADDTAG.OPTION2",
-                            })}
-                          </option>
-                          <option selected value={0}>
-                            {intl.formatMessage({
-                              id: "MONITORING.HOSTS.ADDTAG.OPTION3",
-                            })}
-                          </option>
-                          <option value={5}>
-                            {" "}
-                            {intl.formatMessage({
-                              id: "MONITORING.HOSTS.ADDTAG.OPTION4",
-                            })}
-                          </option>
-                          <option value={3}>
-                            {intl.formatMessage({
-                              id: "MONITORING.HOSTS.ADDTAG.OPTION5",
-                            })}
-                          </option>
-                          <option value={2}>
-                            {intl.formatMessage({
-                              id: "MONITORING.HOSTS.ADDTAG.OPTION6",
-                            })}
-                          </option>
-                        </select>
-                        <div style={{ width: "33%" }}>
-                          <input
-                            type="email"
-                            className="form-control py-2"
-                            id={`exampleInputEmailValue${item.id}`}
-                            placeholder={intl.formatMessage({
-                              id: "MONITORING.HOSTS.ADDTAG.VALUE",
-                            })}
+                          <div className="col p-0">
+                            <Controller
+                              control={control}
+                              name={`tags[${index}].tag`}
+                              render={({ field }) => (
+                                <input
+                                  type="email"
+                                  className="form-control py-2"
+                                  placeholder={intl.formatMessage({
+                                    id: "MONITORING.HOSTS.ADDTAG.TITLE",
+                                  })}
+                                  {...field}
+                                />
+                              )}
+                            />
+                          </div>
+                          <Controller
+                            control={control}
+                            name={`tags[${index}].operator`}
+                            render={({ field }) => (
+                              <select
+                                className="form-select form-select-sm text-center col p-0"
+                                id={`floatingSelect${item.id}`}
+                                aria-label="Floating label select example"
+                                {...field}
+                              >
+                                <option value={"4"}>
+                                  {intl.formatMessage({
+                                    id: "MONITORING.HOSTS.ADDTAG.OPTION1",
+                                  })}
+                                </option>
+                                <option value={"1"}>
+                                  {intl.formatMessage({
+                                    id: "MONITORING.HOSTS.ADDTAG.OPTION2",
+                                  })}
+                                </option>
+                                <option selected value={"0"}>
+                                  {intl.formatMessage({
+                                    id: "MONITORING.HOSTS.ADDTAG.OPTION3",
+                                  })}
+                                </option>
+                                <option value={"5"}>
+                                  {intl.formatMessage({
+                                    id: "MONITORING.HOSTS.ADDTAG.OPTION4",
+                                  })}
+                                </option>
+                                <option value={"3"}>
+                                  {intl.formatMessage({
+                                    id: "MONITORING.HOSTS.ADDTAG.OPTION5",
+                                  })}
+                                </option>
+                                <option value={"2"}>
+                                  {intl.formatMessage({
+                                    id: "MONITORING.HOSTS.ADDTAG.OPTION6",
+                                  })}
+                                </option>
+                              </select>
+                            )}
                           />
+                          <div className="col p-0">
+                            <Controller
+                              control={control}
+                              name={`tags[${index}].value`}
+                              render={({ field }) => (
+                                <input
+                                  type="email"
+                                  className="form-control py-2"
+                                  placeholder={intl.formatMessage({
+                                    id: "MONITORING.HOSTS.ADDTAG.VALUE",
+                                  })}
+                                  {...field}
+                                />
+                              )}
+                            />
+                          </div>
+                          <button
+                            type="button"
+                            className="btn btn-light-danger py-2 col p-0"
+                            onClick={() => tagsRemove(index)}
+                          >
+                            {intl.formatMessage({
+                              id: "MONITORING.HOSTS.ADDTAG.REMOVEBUTTON",
+                            })}
+                          </button>
                         </div>
-                        <button
-                          type="button"
-                          className="btn btn-light-danger me-2 py-2"
-                          onClick={() => tagsRemove(index)}
-                        >
-                          {intl.formatMessage({
-                            id: "MONITORING.HOSTS.ADDTAG.REMOVEBUTTON",
-                          })}
-                        </button>
                       </div>
                     ))}
                     <button
@@ -762,7 +812,7 @@ export function Projects() {
                       dir="rtl"
                     />
                     <div className="flex items-center align-baseline gap-3">
-                      <div className="d-flex  ">
+                      <div className="d-flex my-2">
                         <Controller
                           control={control}
                           name={`age_state`}
@@ -831,19 +881,22 @@ export function Projects() {
                   <div className="d-flex w-100 justify-content-center mt-10 column-gap-5">
                     <button
                       type="button"
-                      onClick={handleSubmit(fetchPromsListData)}
-                      className="btn btn-light-success"
+                      onClick={submit}
+                      className="btn py-2 btn-light-success"
                     >
                       تایید
                     </button>
                     <button
                       type="button"
                       onClick={resetData}
-                      className="btn btn-light-danger"
+                      className="btn py-2 btn-light-danger"
                     >
                       باز نشانی
                     </button>
-                    <button type="button" className="btn btn-light-primary">
+                    <button
+                      type="button"
+                      className="btn py-2 btn-light-primary"
+                    >
                       ذخیره
                     </button>
                   </div>
