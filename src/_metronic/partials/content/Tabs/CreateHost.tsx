@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from "react";
-import { MultipleSelect } from "../../../layout/components/multiple-select/MultipleSelect";
+import { MultiSelect } from "../../../layout/components/multiple-select/MultipleSelect";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchHostGroup } from "../../../../hostGroupSlice/hostGroupReducer";
 
@@ -129,17 +129,19 @@ const CreateHost: FC = () => {
               </div>
               <div className="row">
                 <div className="col w-50">
-                  <MultipleSelect
+                  <MultiSelect
                     title="MENU.SELECT.HOSTS.GP"
                     options={hostGroupData.data}
                     Loading={hostGroupData.status != "succeeded"}
+                    addAll={false}
                   />
                 </div>
                 <div className="col">
-                  <MultipleSelect
+                  <MultiSelect
                     title="MENU.SELECT.TEMPLATES"
                     options={hostGroupData.data}
                     Loading={hostGroupData.status != "succeeded"}
+                    addAll={false}
                   />
                 </div>
               </div>
@@ -170,9 +172,7 @@ const CreateHost: FC = () => {
                   id="AuthenticationAlgorithm"
                   defaultValue="-1"
                 >
-                  <option value="-1">
-                    پیش فرض
-                  </option>
+                  <option value="-1">پیش فرض</option>
                   <option value="0">هیچکدام</option>
                   <option value="1">MD2</option>
                   <option value="2">MD5</option>
@@ -191,9 +191,7 @@ const CreateHost: FC = () => {
                   id="AuthenticationAlgorithm"
                   defaultValue="-1"
                 >
-                  <option value="-1">
-                    پیش فرض
-                  </option>
+                  <option value="-1">پیش فرض</option>
                   <option value="0">CallBack</option>
                   <option value="1">کاربر</option>
                   <option value="2">اپراتور</option>
