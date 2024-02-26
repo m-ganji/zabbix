@@ -23,7 +23,13 @@ interface hostGroupItems {
 interface HostsData {
   id: number;
   name: string;
-  // Add other properties as needed
+  host: string;
+  hostid: string;
+}
+interface Triggers {
+  id: number;
+  triggerid: string;
+  description: string;
 }
 
 interface FormValues {
@@ -34,7 +40,7 @@ interface FormValues {
     name: string;
   };
   tag_name_format: number;
-  age: string;
+  time_from: string;
   age_state: string;
   acknowledged: boolean;
   suppressed: boolean;
@@ -60,7 +66,7 @@ export interface Problem {
   cause_eventid: string;
   clock: string;
   correlationid: string;
-  hostids: [];
+  hostids: object[];
   eventid: string;
   hosts: {
     active_available: string;
@@ -135,6 +141,7 @@ export function Projects() {
   const [isTriggersModalOpen, setIsTriggersModalOpen] =
     useState<boolean>(false);
   const [tagNameVisible, setTagNameVisible] = useState<number>(0);
+  const [age, setAge] = useState(0);
 
   useEffect(() => {
     watch("hostids")?.length === 0 && unregister("hostids");
@@ -160,7 +167,7 @@ export function Projects() {
         selectHosts: "extend",
         search: { name: "" },
         tag_name_format: 0,
-        age: "14",
+        time_from: "14",
         age_state: "0",
         acknowledged: false,
         suppressed: false,
@@ -305,8 +312,21 @@ export function Projects() {
 
   const submit = () => {
     watch("severities")?.length === 0 && unregister("severities");
+    currentHostids.length === 0 && unregister("hostids");
     currentGroupids.length === 0 && unregister("groupids");
+    currentTriggersIds.length === 0 && unregister("objectids");
     handleSubmit(fetchPromsListData)();
+  };
+
+  const handleAgeData = (e: object) => {
+    const today = new Date();
+    setAge(e.currentTarget.value);
+    const DaysAgo = new Date(
+      today.setDate(today.getDate() - e.currentTarget.value)
+    );
+    console.log(DaysAgo);
+
+    setValue("time_from", Date.parse(new Date(DaysAgo)));
   };
 
   return (
@@ -423,6 +443,9 @@ export function Projects() {
                             title="MENU.SELECT.HOSTS.GP"
                             options={selectedHosts}
                             Loading={false}
+                            DataName="hostids"
+                            setData={setValue}
+                            currentData={currentHostids}
                           />
                         </div>
                         <button
@@ -498,6 +521,9 @@ export function Projects() {
                             options={SelectedTriggers}
                             Loading={false}
                             addAll={true}
+                            DataName="objectids"
+                            setData={setValue}
+                            currentData={currentTriggersIds}
                           />
                         </div>
                         <button
@@ -550,10 +576,10 @@ export function Projects() {
                               {intl.formatMessage({ id: "MENU.SELECT.HOSTS" })}
                             </option>
                             {hostsData?.map(
-                              (item: hostGroupItems, index: number) => {
+                              (host: HostsData, index: number) => {
                                 return (
-                                  <option value={item.hostid} key={index}>
-                                    {item.host}
+                                  <option value={host.hostid} key={index}>
+                                    {host.host}
                                   </option>
                                 );
                               }
@@ -561,7 +587,7 @@ export function Projects() {
                           </Form.Select>
 
                           {!IsTriggersLoading ? (
-                            Triggers.map((item) => (
+                            Triggers.map((item: Triggers) => (
                               <div
                                 key={item.triggerid}
                                 className="w-100 justify-content-end my-3 gap-2 d-flex"
@@ -802,15 +828,20 @@ export function Projects() {
                       tagNameVisible={tagNameVisible}
                       setTagNameVisible={setTagNameVisible}
                     />
-                    <input
-                      type="text"
-                      className="form-control py-2"
-                      // id={`exampleInputEmailValue${item.id}`}
-                      placeholder={intl.formatMessage({
-                        id: "MONITORING.HOSTS.ADDTAG.VALUE",
-                      })}
-                      style={{ direction: "rtl" }}
-                      dir="rtl"
+
+                    <Controller
+                      control={control}
+                      name={`tag_priority`}
+                      render={({ field }) => (
+                        <input
+                          type="text"
+                          className="form-control py-2"
+                          placeholder={intl.formatMessage({
+                            id: "MONITORING.HOSTS.ADDTAG.VALUE",
+                          })}
+                          {...field}
+                        />
+                      )}
                     />
                     <div className="flex items-center align-baseline gap-3">
                       <div className="d-flex my-2">
@@ -833,18 +864,12 @@ export function Projects() {
                             id: "MONITORING.PROBLEMS.AGE",
                           })}
                         </span>
-                        <Controller
-                          control={control}
-                          name={`age`}
-                          render={({ field }) => (
-                            <input
-                              type="number"
-                              className="form-control py-2 text-center w-25 py-2"
-                              {...field}
-                            />
-                          )}
+                        <input
+                          type="number"
+                          className="form-control py-2 text-center w-25 py-2"
+                          onChange={handleAgeData}
+                          value={age}
                         />
-
                         <span className="form-check-label m-2 ">
                           {intl.formatMessage({
                             id: "MONITORING.PROBLEMS.DAYS",
