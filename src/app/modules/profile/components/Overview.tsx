@@ -12,7 +12,7 @@ import { useIntl } from "react-intl";
 import { ToolbarWrapper } from "../../../../_metronic/layout/components/toolbar";
 import { Button } from "react-bootstrap";
 import { instance } from "../../../../services/axiosInstance";
-import { MultipleSelect } from "../../../../_metronic/layout/components/multiple-select/MultipleSelect";
+import { MultiSelect } from "../../../../_metronic/layout/components/multiple-select/MultiSelect";
 import { fetchHostGroup } from "../../../../hostGroupSlice/hostGroupReducer";
 import { useDispatch } from "react-redux";
 import Severities from "./hosts/severities/Index";
@@ -543,7 +543,7 @@ export function Overview() {
                         />
                       </div>
                       {hostGroups.payload && (
-                        <MultipleSelect
+                        <MultiSelect
                           addAll={false}
                           title="MENU.SELECT.HOSTS.GP"
                           options={hostGroups.payload}

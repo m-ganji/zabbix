@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from "react";
-import { MultiSelect } from "../../../layout/components/multiple-select/MultipleSelect";
+import { MultiSelect } from "../../../layout/components/multiple-select/MultiSelect";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchHostGroup } from "../../../../hostGroupSlice/hostGroupReducer";
 

@@ -10,7 +10,7 @@ import { PageTitle } from "../../../../_metronic/layout/core";
 import { ToolbarWrapper } from "../../../../_metronic/layout/components/toolbar";
 import { instance } from "../../../../services/axiosInstance";
 import { useNavigate } from "react-router-dom";
-import { MultiSelect } from "../../../../_metronic/layout/components/multiple-select/MultipleSelect";
+import { MultiSelect } from "../../../../_metronic/layout/components/multiple-select/MultiSelect";
 import { useDispatch } from "react-redux";
 import { Form, Modal } from "react-bootstrap";
 import { fetchHostGroup } from "../../../../hostGroupSlice/hostGroupReducer";
@@ -207,7 +207,7 @@ export function Projects() {
       ]);
     }
   };
-  
+
   const handleCheckboxTriggersChange = (trigger) => {
     console.log(currentTriggersIds);
 
