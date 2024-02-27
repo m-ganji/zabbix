@@ -34,12 +34,12 @@ const SidebarMenuMain = () => {
         icon="element-plus"
       >
         <SidebarMenuItem
-          to="/crafted/pages/profile/overview"
+          to="/Hosts"
           title="هاست"
           hasBullet={true}
         />
         <SidebarMenuItem
-          to="/crafted/pages/profile/projects"
+          to="/Problems"
           title="مشکلات"
           hasBullet={true}
         />
