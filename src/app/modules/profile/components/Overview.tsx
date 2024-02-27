@@ -2,10 +2,8 @@ import { useEffect, useState } from "react";
 import { Content } from "../../../../_metronic/layout/components/content";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
 import {
-  TablesWidget10,
-  TablesWidget11,
+  ProblemTable,
   TablesWidget12,
-  TablesWidget13,
 } from "../../../../_metronic/partials/widgets";
 import { PageTitle } from "../../../../_metronic/layout/core";
 import { useIntl } from "react-intl";
@@ -41,14 +39,6 @@ interface Severity {
 }
 
 export function Overview() {
-  const intl = useIntl();
-
-  const [activeButtonTag, setActiveButtonTag] = useState<string>("");
-  const [activeSituation, setActiveSituation] = useState<string>("");
-  const [hostGroups, setHostGroups] = useState([]);
-
-  const dispatch = useDispatch();
-
   const { control, watch, setValue, handleSubmit, reset, unregister } =
     useForm<FormValues>({
       defaultValues: {
@@ -64,6 +54,17 @@ export function Overview() {
       },
     });
 
+  const intl = useIntl();
+
+  const [isLoaded, setIsLoaded] = useState<boolean>(false);
+  const [isError, setIsError] = useState<boolean>(false);
+  const [HostsData, setHostsData] = useState<string>("");
+  const [data, setData] = useState([]);
+  const [activeButtonTag, setActiveButtonTag] = useState<string>("");
+  const [activeSituation, setActiveSituation] = useState<string>("");
+  const [hostGroups, setHostGroups] = useState([]);
+  const currentGroupids = watch("groupids") ? watch("groupids") : [];
+  const dispatch = useDispatch();
   const {
     fields: tagsField,
     append: tagsAppend,
@@ -75,18 +76,19 @@ export function Overview() {
 
   const dataHost = async (data) => {
     console.log(data);
+    setIsLoaded(false);
+    setIsError(false);
     try {
       const response = await instance.post("/core/hosts/get", data);
-      console.log(response);
+      console.log(response.data.length);
+      setData(response.data);
       return response;
 
       // setIsLoaded(true);
-      // setHostData(response.data || []);
     } catch (error) {
       console.error("Error fetching host data:", error);
       throw error;
       // setIsLoaded(true);
-      // setIsError(true);
     }
   };
 
@@ -547,6 +549,12 @@ export function Overview() {
                           addAll={false}
                           title="MENU.SELECT.HOSTS.GP"
                           options={hostGroups.payload}
+                          DataName="groupids"
+                          setData={setValue}
+                          currentData={currentGroupids}
+                          Loading={
+                            hostGroups?.meta?.requestStatus != "fulfilled"
+                          }
                         />
                       )}
                     </div>
@@ -574,7 +582,7 @@ export function Overview() {
               </button>
               <button
                 type="button"
-                // onClick={resetData}
+                onClick={reset}
                 className="btn btn-light-danger"
               >
                 باز نشانی
@@ -585,7 +593,7 @@ export function Overview() {
             </div>
           </div>
         </div>
-        <TablesWidget12 />
+        <TablesWidget12 data={data} />
       </form>
     </Content>
   );
