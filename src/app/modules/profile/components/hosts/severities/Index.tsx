@@ -17,44 +17,37 @@ export default function Index({
     id: number;
     title: string;
     color: string;
-    bg: string;
   }[] = [
     {
       id: 0,
       title: intl.formatMessage({ id: "MONITORING.HOSTS.SEVERITY.OPTION1" }),
       color: "info",
-      bg: "bg-green",
     },
 
     {
       id: 2,
       title: intl.formatMessage({ id: "MONITORING.HOSTS.SEVERITY.OPTION2" }),
       color: "coral",
-      bg: "bg-yellow-500/70",
     },
     {
       id: 4,
       title: intl.formatMessage({ id: "MONITORING.HOSTS.SEVERITY.OPTION3" }),
       color: "orange",
-      bg: "bg-yellow-700",
     },
     {
       id: 1,
       title: intl.formatMessage({ id: "MONITORING.HOSTS.SEVERITY.OPTION4" }),
       color: "orangered",
-      bg: "bg-/80",
     },
     {
       id: 3,
       title: intl.formatMessage({ id: "MONITORING.HOSTS.SEVERITY.OPTION5" }),
       color: "orangered",
-      bg: "bg-/80",
     },
     {
       id: 5,
       title: intl.formatMessage({ id: "MONITORING.HOSTS.SEVERITY.OPTION6" }),
       color: "orangered",
-      bg: "bg-/80",
     },
   ];
   const watchSeverities = watch("severities");
@@ -75,7 +68,7 @@ export default function Index({
       )
     );
   };
-  
+
   return (
     <div className="row">
       {severitiesData.map((severity) => (

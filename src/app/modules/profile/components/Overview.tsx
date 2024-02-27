@@ -471,7 +471,7 @@ export function Overview() {
                                 className="form-control py-2"
                                 aria-describedby="emailHelp"
                                 placeholder={intl.formatMessage({
-                                  id: "MONITORING.HOSTS.NAME",
+                                  id: "NAME",
                                 })}
                                 style={{ direction: "rtl" }}
                                 dir="rtl"

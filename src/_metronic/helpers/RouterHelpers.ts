@@ -1,16 +1,15 @@
 export function getCurrentUrl(pathname: string) {
-  return pathname.split(/[?#]/)[0]
+  return pathname.split(/[?#]/)
 }
 
 export function checkIsActive(pathname: string, url: string) {
   const current = getCurrentUrl(pathname)
-  console.log(url);
   
   if (!current || !url) {
     return false
   }
 
-  if (current === url) {
+  if (current.toLocaleString() === url) {
     return true
   }
 

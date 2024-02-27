@@ -33,19 +33,11 @@ const SidebarMenuMain = () => {
         fontIcon="bi-archive"
         icon="element-plus"
       >
-        <SidebarMenuItem
-          to="/Hosts"
-          title="هاست"
-          hasBullet={true}
-        />
-        <SidebarMenuItem
-          to="/Problems"
-          title="مشکلات"
-          hasBullet={true}
-        />
+        <SidebarMenuItem to="/Hosts" title="هاست" hasBullet={true} />
+        <SidebarMenuItem to="/Problems" title="مشکلات" hasBullet={true} />
         <SidebarMenuItem
           to="/crafted/pages/profile/campaigns"
-          title="آخرین مشکلات"
+          title="آخرین داده ها"
           hasBullet={true}
         />
         <SidebarMenuItem
@@ -54,7 +46,7 @@ const SidebarMenuMain = () => {
           hasBullet={true}
         />
         <SidebarMenuItem
-          to="/crafted/pages/profile/connections"
+          to="/Discovery"
           title="اکتشاف"
           hasBullet={true}
         />
@@ -143,7 +135,7 @@ const SidebarMenuMain = () => {
           title="اعضا"
           hasBullet={true}
         />
-            <SidebarMenuItem
+        <SidebarMenuItem
           to="/crafted/widgets/lists"
           title="توکن API "
           hasBullet={true}

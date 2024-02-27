@@ -9,19 +9,33 @@ interface Option {
 
 const MultiSelect: React.FC<{
   options: Option[];
-  Loading: boolean;
+  Loading: null | boolean | string;
   title: string;
   addAll: boolean;
   DataName: string;
   setData: CallableFunction;
   currentData: number[];
-}> = ({ title, options, Loading, addAll, DataName, setData, currentData }) => {
+  reset: boolean;
+}> = ({
+  title,
+  options,
+  Loading,
+  addAll,
+  DataName,
+  setData,
+  currentData,
+  reset,
+}) => {
   const [selectedOptions, setSelectedOptions] = useState<Option[]>([]);
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    setSelectedOptions(addAll ? [...options] : []);
-  }, [addAll, options]);
+    console.log(reset);
+
+    setSelectedOptions([]);
+
+    addAll && setSelectedOptions([...options]);
+  }, [addAll, options, reset]);
 
   const toggleOption = (option: Option) => {
     const isSelected = selectedOptions.some(
@@ -60,7 +74,6 @@ const MultiSelect: React.FC<{
 
   const deleteAllOptions = () => {
     console.log(selectedOptions);
-
     setSelectedOptions([]);
     setData(DataName, []);
   };
@@ -82,6 +95,7 @@ const MultiSelect: React.FC<{
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
+  console.log(selectedOptions);
 
   const intl = useIntl();
   return (
@@ -89,7 +103,6 @@ const MultiSelect: React.FC<{
       <Dropdown.Toggle
         className="w-100 py-3 d-flex bg-transparent text-reset border align-items-center justify-content-between"
         variant="reset"
-        onChange={(e) => console.log(e.currentTarget.value)}
       >
         {selectedOptions?.length > 0 ? (
           <div className="d-flex flex-wrap gap-2">

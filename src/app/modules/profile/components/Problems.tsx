@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Content } from "../../../../_metronic/layout/components/content";
 import Severities from "./hosts/severities/Index";
 import Tags from "./hosts/tags/Index";
@@ -20,6 +20,7 @@ interface hostGroupItems {
   value: string;
   label: string;
 }
+
 interface HostsData {
   id: number;
   name: string;
@@ -30,6 +31,12 @@ interface Triggers {
   id: number;
   triggerid: string;
   description: string;
+}
+interface HostGroupData {
+  payload: [];
+  meta: {
+    requestStatus: string;
+  };
 }
 
 interface FormValues {
@@ -55,6 +62,9 @@ interface FormValues {
   inventory: {
     field: string;
     value: string;
+    [index: number]: {
+      field: string;
+    };
   }[];
   severities: number[];
   objectids: [];
@@ -121,9 +131,11 @@ export function Problems() {
   const intl = useIntl();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
   const [sortBasedOn, setSortBasedOn] = useState("");
   const [hostGroupWithParam, setHostGroupWithParam] = useState([]);
-  const [hostGroupWithoutParam, setHostGroupWithoutParam] = useState([]);
+  const [hostGroupWithoutParam, setHostGroupWithoutParam] =
+    useState<HostGroupData | null>(null);
   const [Triggers, setTriggers] = useState([]);
   const [IsTriggersLoading, setIsTriggersLoading] = useState<boolean>(false);
   const [ProblemsData, setProblemsData] = useState<Problem[]>([]);
@@ -138,6 +150,7 @@ export function Problems() {
   const [isError, setIsError] = useState<boolean>(false);
   const [isHostsModalOpen, setisHostsModalOpen] = useState<boolean>(false);
   const [isHostsDataLoading, setIsHostsDataLoading] = useState<boolean>(false);
+  const [resetMultiSelect, setResetMultiSelect] = useState(false);
   const [isTriggersModalOpen, setIsTriggersModalOpen] =
     useState<boolean>(false);
   const [tagNameVisible, setTagNameVisible] = useState<number>(0);
@@ -302,12 +315,14 @@ export function Problems() {
   };
 
   const resetData = () => {
+    setResetMultiSelect(true);
+    reset();
+    fetchPromsListData(watch());
     setShowTags(0);
     setSelectedHosts([]);
     setSelectedHostGpTriggers(-1);
     setSelectedTriggers([]);
-    reset();
-    fetchPromsListData(watch());
+    resetMultiSelect && setResetMultiSelect(false);
   };
 
   const submit = () => {
@@ -318,7 +333,7 @@ export function Problems() {
     handleSubmit(fetchPromsListData)();
   };
 
-  const handleAgeData = (e: object) => {
+  const handleAgeData = (e) => {
     const today = new Date();
     setAge(e.currentTarget.value);
     const DaysAgo = new Date(
@@ -327,6 +342,27 @@ export function Problems() {
     console.log(DaysAgo);
 
     setValue("time_from", Date.parse(new Date(DaysAgo)));
+  };
+
+  const getPriorityBackgroundColor = (priority: string): string => {
+    // Define color range from blue to red
+    const colors = [
+      "primary",
+      "success",
+      "warning",
+      "danger",
+      "danger",
+      "danger",
+    ];
+
+    // Ensure priority falls within valid range
+    const index = Math.min(
+      Math.max(Number(priority) - 1, 0),
+      colors.length - 1
+    );
+
+    // Return corresponding color
+    return colors[index];
   };
 
   return (
@@ -425,12 +461,19 @@ export function Problems() {
                       </div>
 
                       <MultiSelect
+                        reset={resetMultiSelect}
                         addAll={false}
                         title="MENU.SELECT.HOSTS.GP"
-                        options={hostGroupWithoutParam?.payload}
+                        options={
+                          hostGroupWithoutParam
+                            ? hostGroupWithoutParam.payload
+                            : []
+                        }
                         Loading={
-                          hostGroupWithoutParam?.meta?.requestStatus !=
-                          "fulfilled"
+                          hostGroupWithoutParam &&
+                          hostGroupWithoutParam.meta &&
+                          hostGroupWithoutParam.meta.requestStatus !==
+                            "fulfilled"
                         }
                         DataName="groupids"
                         setData={setValue}
@@ -439,6 +482,7 @@ export function Problems() {
                       <div className="row column-gap-3 m-0">
                         <div className="col p-0">
                           <MultiSelect
+                            reset={false}
                             addAll={true}
                             title="MENU.SELECT.HOSTS.GP"
                             options={selectedHosts}
@@ -518,6 +562,7 @@ export function Problems() {
                         <div className="col pe-0">
                           <MultiSelect
                             title="MENU.SELECT.TRIGGERS"
+                            reset={false}
                             options={SelectedTriggers}
                             Loading={false}
                             addAll={true}
@@ -527,7 +572,7 @@ export function Problems() {
                           />
                         </div>
                         <button
-                          className="btn col-2 btn-light-primary h-25 py-3"
+                          className="btn h-25 py-3 btn-light-primary px-0 col-2"
                           onClick={() => setIsTriggersModalOpen(true)}
                         >
                           {intl.formatMessage({
@@ -585,19 +630,31 @@ export function Problems() {
                               }
                             )}
                           </Form.Select>
+                          <p className="mt-2">راهنمای رنگ ها :</p>
+                          <div className="d-flex flex-wrap gap-2">
+                            <span className="badge badge-light-primary">
+                              اطلاع
+                            </span>
+                            <span className="badge badge-light-success">
+                              هشدار
+                            </span>
+                            <span className="badge badge-light-warning">
+                              عادی
+                            </span>
+                            <span className="badge badge-light-danger">
+                              بالا
+                            </span>
+                          </div>
 
                           {!IsTriggersLoading ? (
                             Triggers.map((item: Triggers) => (
                               <div
                                 key={item.triggerid}
-                                className="w-100 justify-content-end my-3 gap-2 d-flex"
+                                className={`w-100 justify-content-end my-3 gap-2 badge d-flex badge-light-${getPriorityBackgroundColor(
+                                  item.priority
+                                )}`}
                               >
-                                <label
-                                  className="form-check-label"
-                                  htmlFor={`host-${item.triggerid}`}
-                                >
-                                  {item.description}
-                                </label>
+                                {item.description}
                                 <input
                                   type="checkbox"
                                   id={`host-${item.triggerid}`}
@@ -647,7 +704,7 @@ export function Problems() {
                       <p className="m-0">
                         {intl.formatMessage({
                           id: "MONITORING.PROBLEMS.INVENTORYLIST",
-                        })}{" "}
+                        })}
                         :
                       </p>
                       {inventoryField.map((item, index) => (

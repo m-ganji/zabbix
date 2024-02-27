@@ -3,8 +3,8 @@ import { PageLink, PageTitle } from "../../../_metronic/layout/core";
 import { Overview } from "./components/Overview";
 import { Problems } from "./components/Problems";
 import { Campaigns } from "./components/Campaigns";
-import { Documents } from "./components/Documents";
-import { Connections } from "./components/Connections";
+import { Maps } from "./components/Maps";
+import { Discovery } from "./components/Discovery";
 
 const profileBreadCrumbs: Array<PageLink> = [
   {
@@ -56,7 +56,7 @@ const ProfilePage = () => (
         element={
           <>
             <PageTitle breadcrumbs={profileBreadCrumbs}>Documents</PageTitle>
-            <Documents />
+            <Maps />
           </>
         }
       />
@@ -65,7 +65,7 @@ const ProfilePage = () => (
         element={
           <>
             <PageTitle breadcrumbs={profileBreadCrumbs}>Connections</PageTitle>
-            <Connections />
+            <Discovery />
           </>
         }
       />

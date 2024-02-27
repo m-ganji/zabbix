@@ -9,6 +9,7 @@ import { WithChildren } from "../../_metronic/helpers";
 import BuilderPageWrapper from "../pages/layout-builder/BuilderPageWrapper";
 import { Problems } from "../modules/profile/components/Problems";
 import { Overview } from "../modules/profile/components/Overview";
+import { Discovery } from "../modules/profile/components/Discovery";
 
 const PrivateRoutes = () => {
   const ProfilePage = lazy(() => import("../modules/profile/ProfilePage"));
@@ -31,6 +32,7 @@ const PrivateRoutes = () => {
         <Route path="menu-test" element={<MenuTestPage />} />
         <Route path="problems" element={<Problems />} />
         <Route path="Hosts" element={<Overview />} />
+        <Route path="Discovery" element={<Discovery />} />
         {/* Lazy Modules */}
 
         <Route
