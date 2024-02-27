@@ -13,38 +13,6 @@ import Encription from "./Headers/Encription";
 import Setvalue from "./Headers/Setvalue";
 
 const CreateHost: FC = () => {
-  const intl = useIntl();
-  const [showPassword, setShowPassword] = useState(false);
-  const [templates, setTemplates] = useState<object>();
-  const dispatch = useDispatch();
-
-  const hostGroupData = useSelector((state) => state.hostGroup);
-
-  useEffect(() => {
-    dispatch(fetchHostGroup({}));
-  }, [dispatch]);
-
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
-
-  useEffect(() => {
-    const handleGetTemplates = async () => {
-      try {
-        const response = await instance.post("/core/templates/get", {});
-        const mapped = response.data.map((e) => ({ label: e.name }));
-        setTemplates(mapped);
-        // const labels = response.data.map((template) => template.name);
-        console.log(response.data);
-      } catch (error) {
-        console.error(error);
-        throw error;
-      }
-    };
-
-    handleGetTemplates();
-  }, []);
-
   return (
     <div dir="rtl">
       <div className="card-header border-0 pt-5 w-100 ">
