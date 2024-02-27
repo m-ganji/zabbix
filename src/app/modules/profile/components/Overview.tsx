@@ -50,7 +50,6 @@ export function Overview() {
 
   const [isLoaded, setIsLoaded] = useState<boolean>(true);
   const [isError, setIsError] = useState<boolean>(false);
-  const [isReset, setIsReset] = useState<boolean>(false);
   const [data, setData] = useState([]);
   const [defaultData, setDefaultData] = useState([]);
   const [activeButtonTag, setActiveButtonTag] = useState<string>("");
@@ -457,7 +456,6 @@ export function Overview() {
                       </div>
                     </div>
                   </div>
-
                   <div className="col d-flex gap-5 flex-column">
                     <div className="row">
                       <div className="col-6">
