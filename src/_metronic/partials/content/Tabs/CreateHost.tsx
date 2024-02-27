@@ -127,6 +127,7 @@ const CreateHost: FC = () => {
                   />
                 </div>
               </div>
+
               <div className="row">
                 <div className="col w-50">
                   <MultiSelect

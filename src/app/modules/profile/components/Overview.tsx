@@ -29,10 +29,10 @@ interface FormValues {
 }
 
 export function Overview() {
-  const { control, watch, setValue, handleSubmit, reset, unregister } =
+  const { control, watch, setValue, handleSubmit, reset } =
     useForm<FormValues>({
       defaultValues: {
-        // selectProb lems: "extend",
+        selectProblems: "extend",
         selectGraphs: "extend",
         selectTags: "extend",
         selectDashboards: "extend",
@@ -50,6 +50,7 @@ export function Overview() {
 
   const [isLoaded, setIsLoaded] = useState<boolean>(true);
   const [isError, setIsError] = useState<boolean>(false);
+  const [isReset, setIsReset] = useState<boolean>(false);
   const [data, setData] = useState([]);
   const [defaultData, setDefaultData] = useState([]);
   const [activeButtonTag, setActiveButtonTag] = useState<string>("");
@@ -72,9 +73,9 @@ export function Overview() {
     setIsError(false);
     try {
       const response = await instance.post("/core/hosts/get", data);
-      console.log(response.data);
       setData(response.data);
       setIsLoaded(false);
+      console.log(response.data);
       return response;
     } catch (error) {
       console.error("Error fetching host data:", error);
@@ -83,24 +84,13 @@ export function Overview() {
     }
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await instance.post("/core/hosts/get", {
-          selectGraphs: "extend",
-          selectTags: "extend",
-          selectDashboards: "extend",
-          selectInterfaces: "extend",
-        });
-        setDefaultData(response.data);
-        setIsLoaded(false);
-        console.log(response);
-      } catch (error) {
-        console.error("Error fetching default data:", error);
-      }
-    };
+  const resetData = () => {
+    reset();
+    dataHost(watch());
+  };
 
-    fetchData(); // Call fetchData function to fetch data when component mounts
+  useEffect(() => {
+    dataHost(watch());
   }, []);
 
   useEffect(() => {
@@ -591,21 +581,24 @@ export function Overview() {
               >
                 تایید
               </button>
+
               <button
                 type="button"
-                onClick={reset}
+                onClick={resetData}
                 className="btn btn-light-danger"
               >
                 باز نشانی
               </button>
+
               <button type="button" className="btn btn-light-primary">
                 ذخیره
               </button>
             </div>
           </div>
         </div>
+        {/* {data.length == 0 && <p>هاستی یافت نشد</p>} */}
         {!isLoaded ? (
-          <TableHosts data={data.length == 0 ? defaultData : data} />
+          <TableHosts data={data} />
         ) : (
           <div className="d-flex pt-7 w-100 justify-content-center">
             <Loader />
