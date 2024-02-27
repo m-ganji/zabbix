@@ -1,19 +1,16 @@
 import { useEffect, useState } from "react";
 import { Content } from "../../../../_metronic/layout/components/content";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
-import {
-  ProblemTable,
-  TablesWidget12,
-} from "../../../../_metronic/partials/widgets";
+import { TableHosts } from "../../../../_metronic/partials/widgets";
 import { PageTitle } from "../../../../_metronic/layout/core";
 import { useIntl } from "react-intl";
 import { ToolbarWrapper } from "../../../../_metronic/layout/components/toolbar";
-import { Button } from "react-bootstrap";
 import { instance } from "../../../../services/axiosInstance";
 import { MultiSelect } from "../../../../_metronic/layout/components/multiple-select/MultiSelect";
 import { fetchHostGroup } from "../../../../hostGroupSlice/hostGroupReducer";
 import { useDispatch } from "react-redux";
 import Severities from "./hosts/severities/Index";
+import { Loader } from "../../../../_metronic/layout/components/loader/Loader";
 
 interface FormValues {
   status: string;
@@ -26,29 +23,24 @@ interface FormValues {
   port: string;
   severities: number[];
   groupids: string[];
-  filter: []; // Define the type appropriately
+  filter: [];
   tags: string[];
   inventory: { field: string; value: string }[];
 }
 
-interface Severity {
-  id: number;
-  title: string;
-  color: string;
-  bg: string;
-}
-
 export function Overview() {
-  const { control, watch, setValue, handleSubmit, reset, unregister } =
+  const { control, watch, setValue, handleSubmit, reset } =
     useForm<FormValues>({
       defaultValues: {
-        status: "",
+        selectProblems: "extend",
+        selectGraphs: "extend",
+        selectTags: "extend",
+        selectDashboards: "extend",
+        selectInterfaces: "extend",
         evaltype: "",
         maintenance_status: "",
         show_suppressed: "",
         search: { name: "", ip: "", dns: "", port: "" },
-        // severities: [],
-        // groupids: [],
         filter: { status: "" },
         tags: [],
       },
@@ -56,10 +48,10 @@ export function Overview() {
 
   const intl = useIntl();
 
-  const [isLoaded, setIsLoaded] = useState<boolean>(false);
+  const [isLoaded, setIsLoaded] = useState<boolean>(true);
   const [isError, setIsError] = useState<boolean>(false);
-  const [HostsData, setHostsData] = useState<string>("");
   const [data, setData] = useState([]);
+  const [defaultData, setDefaultData] = useState([]);
   const [activeButtonTag, setActiveButtonTag] = useState<string>("");
   const [activeSituation, setActiveSituation] = useState<string>("");
   const [hostGroups, setHostGroups] = useState([]);
@@ -76,21 +68,29 @@ export function Overview() {
 
   const dataHost = async (data) => {
     console.log(data);
-    setIsLoaded(false);
+    setIsLoaded(true);
     setIsError(false);
     try {
       const response = await instance.post("/core/hosts/get", data);
-      console.log(response.data.length);
       setData(response.data);
+      setIsLoaded(false);
+      console.log(response.data);
       return response;
-
-      // setIsLoaded(true);
     } catch (error) {
       console.error("Error fetching host data:", error);
+      setIsError(true);
       throw error;
-      // setIsLoaded(true);
     }
   };
+
+  const resetData = () => {
+    reset();
+    dataHost(watch());
+  };
+
+  useEffect(() => {
+    dataHost(watch());
+  }, []);
 
   useEffect(() => {
     dispatch(fetchHostGroup({})).then((response) => setHostGroups(response));
@@ -154,7 +154,7 @@ export function Overview() {
                                   (activeSituation === "همه" ? " active" : "")
                                 }
                                 onClick={() => {
-                                  setValue("filter.status", -1);
+                                  setValue("filter.status", [0, 1]);
                                   setActiveSituation("همه");
                                 }}
                                 data-bs-toggle="button"
@@ -456,7 +456,6 @@ export function Overview() {
                       </div>
                     </div>
                   </div>
-
                   <div className="col d-flex gap-5 flex-column">
                     <div className="row">
                       <div className="col-6">
@@ -580,20 +579,29 @@ export function Overview() {
               >
                 تایید
               </button>
+
               <button
                 type="button"
-                onClick={reset}
+                onClick={resetData}
                 className="btn btn-light-danger"
               >
                 باز نشانی
               </button>
+
               <button type="button" className="btn btn-light-primary">
                 ذخیره
               </button>
             </div>
           </div>
         </div>
-        <TablesWidget12 data={data} />
+        {/* {data.length == 0 && <p>هاستی یافت نشد</p>} */}
+        {!isLoaded ? (
+          <TableHosts data={data} />
+        ) : (
+          <div className="d-flex pt-7 w-100 justify-content-center">
+            <Loader />
+          </div>
+        )}
       </form>
     </Content>
   );

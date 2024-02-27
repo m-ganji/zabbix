@@ -154,7 +154,7 @@ const MultiSelect: React.FC<{
               </Dropdown.Item>
             </div>
             <Dropdown.Divider />
-            {options.map((option) => (
+            {options?.map((option) => (
               <Dropdown.Item
                 key={option.value}
                 onClick={() => toggleOption(option)}
