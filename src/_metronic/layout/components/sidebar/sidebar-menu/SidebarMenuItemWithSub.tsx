@@ -21,7 +21,7 @@ const SidebarMenuItemWithSub: React.FC<Props & WithChildren> = ({
   hasBullet,
 }) => {
   const {pathname} = useLocation()
-  const isActive = checkIsActive(pathname, to)
+  const isActive = true
   const {config} = useLayout()
   const {app} = config
 

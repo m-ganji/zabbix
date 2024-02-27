@@ -1,16 +1,15 @@
 import { Navigate, Routes, Route, Outlet } from "react-router-dom";
 import { PageLink, PageTitle } from "../../../_metronic/layout/core";
 import { Overview } from "./components/Overview";
-import { Projects } from "./components/Projects";
+import { Problems } from "./components/Problems";
 import { Campaigns } from "./components/Campaigns";
 import { Documents } from "./components/Documents";
 import { Connections } from "./components/Connections";
-import { ProfileHeader } from "./ProfileHeader";
 
 const profileBreadCrumbs: Array<PageLink> = [
   {
     title: "Profile",
-    path: "/crafted/pages/profile/overview",
+    path: "/Hosts",
     isSeparator: false,
     isActive: false,
   },
@@ -24,13 +23,7 @@ const profileBreadCrumbs: Array<PageLink> = [
 
 const ProfilePage = () => (
   <Routes>
-    <Route
-      element={
-        <div className="mt-5 ">
-          <Outlet />
-        </div>
-      }
-    >
+    <Route element={<Outlet />}>
       <Route
         path="overview"
         element={
@@ -41,11 +34,11 @@ const ProfilePage = () => (
         }
       />
       <Route
-        path="projects"
+        path="problems"
         element={
           <>
             <PageTitle breadcrumbs={profileBreadCrumbs}>Projects</PageTitle>
-            <Projects />
+            <Problems />
           </>
         }
       />
@@ -78,7 +71,7 @@ const ProfilePage = () => (
       />
       <Route
         index
-        element={<Navigate to="/crafted/pages/profile/overview" />}
+        element={<Navigate to="/Hosts" />}
       />
     </Route>
   </Routes>

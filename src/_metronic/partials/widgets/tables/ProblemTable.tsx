@@ -1,5 +1,5 @@
 import React from "react";
-import { Problem } from "../../../../app/modules/profile/components/Projects";
+import { Problem } from "../../../../app/modules/profile/components/Problems";
 import moment from "jalali-moment";
 
 interface ProblemTableProps {
@@ -171,8 +171,11 @@ const ProblemTable: React.FC<ProblemTableProps> = ({
                           {showTags !== 0 &&
                             (showTags === 3 ? (
                               <div className=" h-40px px-2 overflow-y-scroll ">
-                                {data.tags.slice(0, 3).map((value,index) => (
-                                  <p key={index} className="badge badge-light-success mx-1 fs-7 fw-semibold">
+                                {data.tags.slice(0, 3).map((value, index) => (
+                                  <p
+                                    key={index}
+                                    className="badge badge-light-success mx-1 fs-7 fw-semibold"
+                                  >
                                     {tagNameVisible === 0 &&
                                       value.tag + ":" + value.value}
                                     {tagNameVisible === 1 &&
