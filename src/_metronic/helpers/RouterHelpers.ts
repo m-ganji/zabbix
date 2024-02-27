@@ -4,7 +4,7 @@ export function getCurrentUrl(pathname: string) {
 
 export function checkIsActive(pathname: string, url: string) {
   const current = getCurrentUrl(pathname)
-  console.log(pathname);
+  console.log(url);
   
   if (!current || !url) {
     return false

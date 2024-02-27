@@ -21,10 +21,11 @@ const SidebarMenuItemWithSub: React.FC<Props & WithChildren> = ({
   hasBullet,
 }) => {
   const {pathname} = useLocation()
-  const isActive = true
+  const isActive = checkIsActive(pathname, to)
   const {config} = useLayout()
   const {app} = config
-
+  console.log(to);
+  
   return (
     <div
       className={clsx('menu-item', {'here show': isActive}, 'menu-accordion')}
