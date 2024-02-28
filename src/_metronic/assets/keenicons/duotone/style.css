@@ -8819,3 +8819,9 @@ input {
 .ki-duotone i {
   font-style: normal;
 }
+.modal-header {
+  flex-direction: row-reverse;
+}
+.modal-header .btn-close {
+  margin: 0 !important;
+}

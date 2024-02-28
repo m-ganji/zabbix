@@ -180,9 +180,9 @@ const ProfileHeader: FC = () => {
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
-                      (location.pathname === '/crafted/pages/profile/documents' && 'active')
+                      (location.pathname === '/Maps' && 'active')
                     }
-                    to='/crafted/pages/profile/documents'
+                    to='/Maps'
                   >
                     Documents
                   </Link>
