@@ -3,8 +3,6 @@ import clsx from 'clsx'
 import {useEffect, useRef} from 'react'
 import {ILayout, useLayout} from '../../core'
 import {SidebarMenu} from './sidebar-menu/SidebarMenu'
-import {SidebarFooter} from './SidebarFooter'
-import {SidebarLogo} from './SidebarLogo'
 
 const Sidebar = () => {
   const {config} = useLayout()
@@ -26,10 +24,8 @@ const Sidebar = () => {
           id='kt_app_sidebar'
           className={clsx('app-sidebar', config.app?.sidebar?.default?.class)}
         >
-          {/* <SidebarLogo sidebarRef={sidebarRef} /> */}
           <h3 className='text-center py-4 mt-4 fs-5'>فناوران توسعه امن</h3>
           <SidebarMenu />
-          <SidebarFooter />
         </div>
       )}
     </>

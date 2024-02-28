@@ -17,7 +17,6 @@ body.page-loading {
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  font-family: Inter, Helvetica, 'sans-serif';
   background-color: #f9f9f9;
   color: #5e6278;
   line-height: 1;
@@ -26,7 +25,7 @@ body.page-loading {
 }
 
 .page-loading .splash-screen span {
-  color: #5e6278;
+  color: #ffffff;
   transition: none !important;
   -webkit-font-smoothing: antialiased;
 }
@@ -34,7 +33,7 @@ body.page-loading {
 .page-loading .splash-screen img {
   margin-left: calc(100vw - 100%);
   margin-bottom: 30px;
-  height: 30px !important;
+  width: 250px;
 }
 
 html[data-bs-theme='dark'] .page-loading .splash-screen {

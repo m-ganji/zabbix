@@ -1,15 +1,23 @@
 import { useState } from "react";
 import { useIntl } from "react-intl";
+import ToggleBtns from "../../../../../../_metronic/layout/components/ToggleBtn/ToggleBtn";
 interface tags {
   showTags: number;
   setShowTags: CallableFunction;
   tagNameVisible: number;
   setTagNameVisible: CallableFunction;
+  setValue: CallableFunction;
+  activeButtonTag: string;
 }
 
-export default function Index(props: tags) {
-  const [activeButtonTag, setActiveButtonTag] = useState("");
-
+export default function Index({
+  setTagNameVisible,
+  setShowTags,
+  showTags,
+  tagNameVisible,
+  setValue,
+  activeButtonTag,
+}: tags) {
   const intl = useIntl();
 
   return (
@@ -21,37 +29,21 @@ export default function Index(props: tags) {
           })}
           :
         </p>
-
-        <button
-          type="button"
-          className={
-            "btn btn-light-primary py-2 rounded-end-2" +
-            (activeButtonTag === "and/or" ? " active" : "")
-          }
-          onClick={() => {
-            console.log("and/or");
-            setActiveButtonTag("and/or");
-          }}
-        >
-          {intl.formatMessage({
-            id: "MONITORING.PROBLEMS.TAGS.AND",
-          })}
-        </button>
-        <button
-          type="button"
-          className={
-            "btn btn-light-primary py-2 rounded-start-2" +
-            (activeButtonTag === "OR" ? " active" : "")
-          }
-          onClick={() => {
-            console.log("OR");
-            setActiveButtonTag("OR");
-          }}
-        >
-          {intl.formatMessage({
-            id: "MONITORING.PROBLEMS.TAGS.OR",
-          })}
-        </button>
+        <ToggleBtns
+          options={[
+            {
+              value: "0",
+              label: "MONITORING.PROBLEMS.TAGS.AND",
+            },
+            {
+              value: "1",
+              label: "MONITORING.PROBLEMS.TAGS.OR",
+            },
+          ]}
+          data="evaltype"
+          setData={setValue}
+          initialData={activeButtonTag}
+        />
       </div>
       <div className="btn-group py-2 d-block " role="group">
         <p>
@@ -60,115 +52,56 @@ export default function Index(props: tags) {
           })}
           :
         </p>
-        <button
-          type="button"
-          className={
-            "btn btn-light-primary py-2 rounded-end-2" +
-            (props.showTags === 0 ? " active" : "")
-          }
-          onClick={() => {
-            props.setShowTags(0);
-          }}
-        >
-          {intl.formatMessage({
-            id: "MONITORING.PROBLEMS.TAGS.SHOW.OPTION1",
-          })}
-        </button>
-        <button
-          type="button"
-          className={
-            "btn btn-light-primary py-2" +
-            (props.showTags === 1 ? " active" : "")
-          }
-          onClick={() => {
-            props.setShowTags(1);
-          }}
-        >
-          {intl.formatMessage({
-            id: "MONITORING.PROBLEMS.TAGS.SHOW.OPTION2",
-          })}
-        </button>
-        <button
-          type="button"
-          className={
-            "btn btn-light-primary py-2 " +
-            (props.showTags === 2 ? " active" : "")
-          }
-          onClick={() => {
-            props.setShowTags(2);
-          }}
-        >
-          {intl.formatMessage({
-            id: "MONITORING.PROBLEMS.TAGS.SHOW.OPTION3",
-          })}
-        </button>
-        <button
-          type="button"
-          className={
-            "btn btn-light-primary py-2 rounded-start-2" +
-            (props.showTags === 3 ? " active" : "")
-          }
-          onClick={() => {
-            props.setShowTags(3);
-          }}
-        >
-          {intl.formatMessage({
-            id: "MONITORING.PROBLEMS.TAGS.SHOW.OPTION4",
-          })}
-        </button>
+        <ToggleBtns
+          options={[
+            {
+              value: 0,
+              label: "MONITORING.PROBLEMS.TAGS.SHOW.OPTION1",
+            },
+            {
+              value: 1,
+              label: "MONITORING.PROBLEMS.TAGS.SHOW.OPTION2",
+            },
+            {
+              value: 2,
+              label: "MONITORING.PROBLEMS.TAGS.SHOW.OPTION3",
+            },
+            {
+              value: 3,
+              label: "MONITORING.PROBLEMS.TAGS.SHOW.OPTION4",
+            },
+          ]}
+          data=""
+          setData={setShowTags}
+          initialData={showTags}
+        />
       </div>
       <div className="btn-group py-2 d-block disabled " role="group">
         <p>
           {intl.formatMessage({
-            id: "MONITORING.PROBLEMS.TAGS.NAME.TITLE",
+            id: "MONITORING.PROBLEMS.TAGS.SHOW.TITLE",
           })}
           :
         </p>
-        <button
-          type="button"
-          className={
-            "btn btn-light-primary py-2 rounded-end-2" +
-            (props.tagNameVisible === 0 ? " active" : "")
-          }
-          onClick={() => {
-            props.setTagNameVisible(0);
-          }}
-          disabled={props.showTags === 0}
-        >
-          {intl.formatMessage({
-            id: "MONITORING.PROBLEMS.TAGS.NAME.COMPLETE",
-          })}
-        </button>
-        <button
-          type="button"
-          className={
-            "btn btn-light-primary py-2" +
-            (props.tagNameVisible === 1 ? " active" : "")
-          }
-          onClick={() => {
-            props.setTagNameVisible(1);
-          }}
-          disabled={props.showTags === 0}
-        >
-          {intl.formatMessage({
-            id: "MONITORING.PROBLEMS.TAGS.NAME.SUMMARY",
-          })}
-        </button>
-        <button
-          type="button"
-          className={
-            "btn btn-light-primary py-2 rounded-start-2" +
-            (props.tagNameVisible === 2 ? " active" : "")
-          }
-          onClick={() => {
-            props.setTagNameVisible(2);
-          }}
-          disabled={props.showTags === 0}
-        >
-          {intl.formatMessage({
-            id: "MONITORING.PROBLEMS.TAGS.NAME.NONE",
-          })}
-        </button>
+        <ToggleBtns
+          options={[
+            {
+              value: 0,
+              label: "MONITORING.PROBLEMS.TAGS.NAME.COMPLETE",
+            },
+            {
+              value: 1,
+              label: "MONITORING.PROBLEMS.TAGS.NAME.SUMMARY",
+            },
+            {
+              value: 2,
+              label: "MONITORING.PROBLEMS.TAGS.NAME.NONE",
+            },
+          ]}
+          data=""
+          setData={setTagNameVisible}
+          initialData={tagNameVisible}
+        />
       </div>
     </div>
   );

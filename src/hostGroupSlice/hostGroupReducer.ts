@@ -11,6 +11,8 @@ export const fetchHostGroup = createAsyncThunk(
     console.log(props);
     
     const response = await instance.post('/core/hostgroup/get',props);
+    console.log(response);
+    
     return response.data.map((item:hostGroupItems) => ({
       label: item.name,
       value: item.groupid,
@@ -22,21 +24,21 @@ const hostGroupSlice = createSlice({
   name: 'hostGroup',
   initialState: {
     data: [],
-    status: 'idle',
+    loading: false,
     error: null,
   },
   reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(fetchHostGroup.pending, (state) => {        
-        state.status = 'loading';
+        state.loading = true;
       })
       .addCase(fetchHostGroup.fulfilled, (state, action) => {
-        state.status = 'succeeded';
+        state.loading = false;
         state.data = action.payload;
       })
       .addCase(fetchHostGroup.rejected, (state, action) => {
-        state.status = 'failed';
+        state.loading = false;
         state.error = action.error.message;
       });
   },

@@ -147,7 +147,7 @@ const ProfileHeader: FC = () => {
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
-                      (location.pathname === '/crafted/pages/profile/overview' && 'active')
+                      (location.pathname === '/Hosts' && 'active')
                     }
                     to='/crafted/pages/profile/overview'
                   >
@@ -158,9 +158,9 @@ const ProfileHeader: FC = () => {
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
-                      (location.pathname === '/crafted/pages/profile/projects' && 'active')
+                      (location.pathname === '/Problems' && 'active')
                     }
-                    to='/crafted/pages/profile/projects'
+                    to='/problems'
                   >
                     Projects
                   </Link>
@@ -180,9 +180,9 @@ const ProfileHeader: FC = () => {
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
-                      (location.pathname === '/crafted/pages/profile/documents' && 'active')
+                      (location.pathname === '/Maps' && 'active')
                     }
-                    to='/crafted/pages/profile/documents'
+                    to='/Maps'
                   >
                     Documents
                   </Link>
@@ -191,9 +191,9 @@ const ProfileHeader: FC = () => {
                   <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
-                      (location.pathname === '/crafted/pages/profile/connections' && 'active')
+                      (location.pathname === '/Discovery' && 'active')
                     }
-                    to='/crafted/pages/profile/connections'
+                    to='/Discovery'
                   >
                     Connections
                   </Link>

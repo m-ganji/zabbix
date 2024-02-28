@@ -59,10 +59,10 @@ export * from './tables/TablesWidget5'
 export * from './tables/TablesWidget6'
 export * from './tables/TablesWidget7'
 export * from './tables/TablesWidget8'
-export * from './tables/TablesWidget9'
-export * from './tables/TablesWidget10'
+export * from './tables/UsersTable'
+export * from './tables/DiscoveryTable'
 export * from './tables/ProblemTable'
-export * from './tables/TablesWidget12'
+export * from './tables/TableHosts'
 export * from './tables/TablesWidget13'
 
 // engage
