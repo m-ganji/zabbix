@@ -3,7 +3,7 @@ import { Content } from "../../../_metronic/layout/components/content";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { useIntl } from "react-intl";
 import { useNavigate } from "react-router-dom";
-import { MultiSelect } from "../../../_metronic/layout/components/multiple-select/MultiSelect";
+import { MultiSelect } from "../../../_metronic/layout/components/MultiSelect/MultiSelect";
 import { MapsTable } from "../../../_metronic/partials/widgets/tables/MapsTable";
 import { Modal } from "react-bootstrap";
 import { KTIcon } from "../../../_metronic/helpers";
