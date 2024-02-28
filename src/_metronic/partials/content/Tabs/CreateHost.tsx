@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from "react";
-import { MultiSelect } from "../../../layout/components/multiple-select/MultiSelect";
+import { MultiSelect } from "../../../layout/components/MultiSelect/MultiSelect";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchHostGroup } from "../../../../hostGroupSlice/hostGroupReducer";
 import { instance } from "../../../../services/axiosInstance";
@@ -11,8 +11,36 @@ import Macros from "./Headers/Macros";
 import Inventory from "./Headers/Inventory";
 import Encription from "./Headers/Encription";
 import Setvalue from "./Headers/Setvalue";
+import { useForm } from "react-hook-form";
 
 const CreateHost: FC = () => {
+  const { control, handleSubmit, reset, watch } = useForm<FormValues>({
+    defaultValues: {
+      name: "",
+      groups: [
+        {
+          groupid: "",
+        },
+      ],
+    },
+  });
+
+  const onSubmit = async (data) => {
+    console.log(data);
+    console.log(watch("name"));
+
+    try {
+      const response = await instance.post("/core/hosts/create", data);
+      console.log(response);
+    } catch (error) {
+      console.error("Error occurred:", error);
+    }
+  };
+
+  const logData = (data: string) => {
+    console.log("Data from Controller:", data);
+  };
+
   return (
     <div dir="rtl">
       <div className="card-header border-0 pt-5 w-100 ">
@@ -87,7 +115,7 @@ const CreateHost: FC = () => {
       <div className="card-body pt-0">
         <div className="tab-content">
           <div className="tab-pane active show" id="tab-hosts">
-            <Hosts />
+            <Hosts logData={logData} />
           </div>
           <div className="tab-pane container" id="tab-ipmi">
             <IPMI />
@@ -107,6 +135,23 @@ const CreateHost: FC = () => {
           <div className="tab-pane" id="tab-set-value">
             <Setvalue />
           </div>
+        </div>
+        <div className="position-absolute bottom-0 left-0 d-flex gap-3 mb-3 ">
+          <button
+            type="button"
+            onClick={handleSubmit(onSubmit)}
+            className="btn btn-light-success"
+          >
+            اضافه کردن
+          </button>
+
+          <button
+            type="button"
+            // onClick={resetData}
+            className="btn btn-light-danger"
+          >
+            انصراف
+          </button>
         </div>
       </div>
     </div>

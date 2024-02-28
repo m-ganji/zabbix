@@ -1,11 +1,20 @@
 import { useEffect, useState } from "react";
-import { MultiSelect } from "../../../../layout/components/multiple-select/MultiSelect";
+import { MultiSelect } from "../../../../layout/components/MultiSelect/MultiSelect";
 import { useIntl } from "react-intl";
 import { instance } from "../../../../../services/axiosInstance";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchHostGroup } from "../../../../../hostGroupSlice/hostGroupReducer";
+import { Controller, useFieldArray, useForm } from "react-hook-form";
 
-export default function Hosts() {
+export default function Hosts({ logData }) {
+  const { control, handleSubmit, reset, watch, setValue } = useForm<FormValues>(
+    {
+      defaultValues: {
+        host: "",
+      },
+    }
+  );
+
   const intl = useIntl();
   const [templates, setTemplates] = useState<object>();
   const dispatch = useDispatch();
@@ -44,6 +53,7 @@ export default function Hosts() {
             >
               <i className="bi bi-hdd-network" />
             </span>
+
             <input
               type="text"
               className="form-control rounded-start-2 rounded-end-0"
@@ -60,6 +70,7 @@ export default function Hosts() {
             >
               <i className="bi bi-bullseye" />
             </span>
+
             <input
               type="text"
               className="form-control rounded-start-2 rounded-end-0"
@@ -67,6 +78,7 @@ export default function Hosts() {
               aria-label="نام نمایشی"
               aria-describedby="tab-hosts"
               autoComplete="off"
+              onChange={() => setValue("name", field.value)}
               required
             />
           </div>
@@ -76,16 +88,16 @@ export default function Hosts() {
           <div className="col w-50">
             <MultiSelect
               title="MENU.SELECT.HOSTS.GP"
-              options={templates}
-              Loading={hostGroupData.status != "succeeded"}
+              options={hostGroupData.data}
+              Loading={false}
               addAll={false}
             />
           </div>
           <div className="col">
             <MultiSelect
               title="MENU.SELECT.TEMPLATES"
-              options={hostGroupData.data}
-              Loading={hostGroupData.status != "succeeded"}
+              options={templates}
+              Loading={false}
               addAll={false}
             />
           </div>

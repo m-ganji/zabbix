@@ -8,7 +8,7 @@ import { getCSSVariableValue } from "../../_metronic/assets/ts/_utils";
 import { WithChildren } from "../../_metronic/helpers";
 import BuilderPageWrapper from "../pages/layout-builder/BuilderPageWrapper";
 import { Problems } from "../modules/profile/components/Problems";
-import { Overview } from "../modules/profile/components/Overview";
+import { Overview } from "../modules/profile/components/Hosts";
 import { Discovery } from "../modules/profile/components/Discovery";
 
 const PrivateRoutes = () => {

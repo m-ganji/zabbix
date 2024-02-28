@@ -1,4 +1,3 @@
-import React from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { useIntl } from "react-intl";
 
@@ -6,7 +5,16 @@ export default function Tags() {
   const intl = useIntl();
 
   const { control, watch, setValue, handleSubmit, reset } = useForm<FormValues>(
-    { tags: [] }
+    {
+      defaultValues: {
+        tags: [
+          {
+            tag: "",
+            value: "",
+          },
+        ],
+      },
+    }
   );
 
   const {
@@ -19,10 +27,10 @@ export default function Tags() {
   });
 
   return (
-    <div>
+    <>
       {tagsField.map((item, index) => (
         <div className="d-flex mb-3 gap-3" key={item.id}>
-          <div style={{ width: "33%" }}>
+          <div style={{ width: "50%" }}>
             <Controller
               name={`tags[${index}].tag`}
               control={control}
@@ -35,7 +43,7 @@ export default function Tags() {
                   id={`exampleInputEmail${item.id}`}
                   aria-describedby="emailHelp"
                   placeholder={intl.formatMessage({
-                    id: "MONITORING.HOSTS.ADDTAG.VALUE",
+                    id: "MONITORING.HOSTS.CREATEHOST.HOST.NAME",
                   })}
                   style={{ direction: "rtl" }}
                   dir="rtl"
@@ -44,56 +52,7 @@ export default function Tags() {
             />
           </div>
 
-          <Controller
-            name={`tags[${index}].operator`}
-            control={control}
-            render={({ field }) => (
-              <select
-                className="form-select form-select-sm"
-                id={`floatingSelect${item.id}`}
-                aria-label="Floating label select example"
-                style={{ width: "33%" }}
-                onChange={(e) => {
-                  const newValue = parseInt(e.target.value, 10);
-                  field.onChange(newValue);
-                }}
-              >
-                <option value={4}>
-                  {intl.formatMessage({
-                    id: "MONITORING.HOSTS.ADDTAG.OPTION1",
-                  })}
-                </option>
-                <option value={1}>
-                  {intl.formatMessage({
-                    id: "MONITORING.HOSTS.ADDTAG.OPTION2",
-                  })}
-                </option>
-                <option selected value={0}>
-                  {intl.formatMessage({
-                    id: "MONITORING.HOSTS.ADDTAG.OPTION3",
-                  })}
-                </option>
-                <option value={5}>
-                  {" "}
-                  {intl.formatMessage({
-                    id: "MONITORING.HOSTS.ADDTAG.OPTION4",
-                  })}
-                </option>
-                <option value={3}>
-                  {intl.formatMessage({
-                    id: "MONITORING.HOSTS.ADDTAG.OPTION5",
-                  })}
-                </option>
-                <option value={2}>
-                  {intl.formatMessage({
-                    id: "MONITORING.HOSTS.ADDTAG.OPTION6",
-                  })}
-                </option>
-              </select>
-            )}
-          />
-
-          <div style={{ width: "33%" }}>
+          <div style={{ width: "50%" }}>
             <Controller
               name={`tags[${index}].value`}
               control={control}
@@ -125,6 +84,17 @@ export default function Tags() {
           </button>
         </div>
       ))}
-    </div>
+      <button
+        type="button"
+        className="btn btn-success py-2"
+        onClick={() => {
+          tagsAppend({ tag: "", value: "" });
+        }}
+      >
+        {intl.formatMessage({
+          id: "MONITORING.HOSTS.ADDTAG.ADDBUTTON",
+        })}
+      </button>
+    </>
   );
 }

@@ -5,7 +5,7 @@ import { useIntl } from "react-intl";
 import { PageTitle } from "../../../../_metronic/layout/core";
 import { ToolbarWrapper } from "../../../../_metronic/layout/components/toolbar";
 import { useNavigate } from "react-router-dom";
-import { MultiSelect } from "../../../../_metronic/layout/components/multiple-select/MultiSelect";
+import { MultiSelect } from "../../../../_metronic/layout/components/MultiSelect/MultiSelect";
 import { DiscoveryTable } from "../../../../_metronic/partials/widgets";
 
 interface FormValues {
@@ -127,7 +127,7 @@ export function Discovery() {
         </div>
       </div>
       {/* Table */}
-      <DiscoveryTable/>
+      <DiscoveryTable />
     </Content>
   );
 }

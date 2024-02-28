@@ -1,6 +1,6 @@
 import { Navigate, Routes, Route, Outlet } from "react-router-dom";
 import { PageLink, PageTitle } from "../../../_metronic/layout/core";
-import { Overview } from "./components/Overview";
+import { Overview } from "./components/Hosts";
 import { Problems } from "./components/Problems";
 import { Campaigns } from "./components/Campaigns";
 import { Maps } from "./components/Maps";
@@ -69,10 +69,7 @@ const ProfilePage = () => (
           </>
         }
       />
-      <Route
-        index
-        element={<Navigate to="/Hosts" />}
-      />
+      <Route index element={<Navigate to="/Hosts" />} />
     </Route>
   </Routes>
 );

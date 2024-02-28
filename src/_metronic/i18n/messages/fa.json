@@ -1,14 +1,14 @@
 {
   "TRANSLATOR.SELECT": "زبان را انتخاب کنید",
   "NAME": "اسم",
-  "WIDTH":"عرض",
-  "HEIGHT":"ارتفاع",
+  "WIDTH": "عرض",
+  "HEIGHT": "ارتفاع",
   "MENU.NEW": "جدید",
-  "IMPORT" : "وارد كردن",
+  "IMPORT": "وارد كردن",
   "MENU.SELECT": "انتخاب",
   "MENU.SELECT.ALL": "انتخاب همه",
-  "MENU.HOSTS":"هاست ها",
-  "MENU.PROBLEMS":"مشکل ها",
+  "MENU.HOSTS": "هاست ها",
+  "MENU.PROBLEMS": "مشکل ها",
   "MENU.SELECT.ALL.DEL": "حذف همه",
   "MENU.SELECT.HOSTS.GP": "انتخاب گروه های هاست",
   "MENU.SELECT.HOSTS": "انتخاب هاست ها",
@@ -54,10 +54,21 @@
   "MONITORING.HOSTS.SEVERITY.OPTION4": "اطلاعات",
   "MONITORING.HOSTS.SEVERITY.OPTION5": "عادی",
   "MONITORING.HOSTS.SEVERITY.OPTION6": "بسیار بالا",
-  
+
   "MONITORING.HOSTS.CREATEHOST.HOST": "هاست",
+  "MONITORING.HOSTS.CREATEHOST.HOST.NAME": "نام",
   "MONITORING.HOSTS.CREATEHOST.HOST.ACTIVE": "فعال",
   "MONITORING.HOSTS.CREATEHOST.IPMI": "IPMI",
+  "MONITORING.HOSTS.CREATEHOST.MACROS.HOSTMACROS": "هاست ماکرو",
+  "MONITORING.HOSTS.CREATEHOST.MACROS.INHERITED": "هاست ماکرو و میزبان",
+  "MONITORING.HOSTS.CREATEHOST.INVENTORY.DISABLED": "غیرفعال",
+  "MONITORING.HOSTS.CREATEHOST.INVENTORY.MANUAL": "دستی",
+  "MONITORING.HOSTS.CREATEHOST.INVENTORY.AUTOMATIC": "اتوماتیک",
+  "MONITORING.HOSTS.CREATEHOST.ENCRYPTION.TO": "متصل به هاست",
+  "MONITORING.HOSTS.CREATEHOST.ENCRYPTION.NOENCRYPTION": "بدون رمزگذاری",
+  "MONITORING.HOSTS.CREATEHOST.ENCRYPTION.PSK": "PSK",
+  "MONITORING.HOSTS.CREATEHOST.ENCRYPTION.CERTIFICATE": "گواهی نامه",
+  "MONITORING.HOSTS.CREATEHOST.ENCRYPTION.FROM": "متصل از هاست",
 
   "MONITORING.PROBLEMS.SHOWBASEDON": "نمایش بر اساس :",
   "MONITORING.PROBLEMS.SHOWBASEDON.RECENTPROBLEMS": "آخرین مشکلات",
@@ -85,8 +96,8 @@
   "MONITORING.DISCOVERY": "اکتشاف",
   "MONITORING.DISCOVERY.SELECT": "انتخاب اکتشاف",
   "MONITORING.DISCOVERY.DEVICE": "دستگاه کشف شده",
-  "MONITORING.MAPS" : "نقشه ها",
-  "MONITORING.MAPS.CREATE" : "ساخت نقشه",
+  "MONITORING.MAPS": "نقشه ها",
+  "MONITORING.MAPS.CREATE": "ساخت نقشه",
   "AUTH.GENERAL.OR": "یا",
   "AUTH.GENERAL.SUBMIT_BUTTON": "ارسال",
   "AUTH.GENERAL.NO_ACCOUNT": "حساب کاربری ندارید؟",
@@ -146,6 +157,4 @@
   "ECOMMERCE.CUSTOMERS.UPDATE_STATUS.MESSAGE": "وضعیت مشتریان انتخاب شده با موفقیت به‌روزرسانی شد",
   "ECOMMERCE.CUSTOMERS.EDIT.UPDATE_MESSAGE": "مشتری به‌روزرسانی شده است",
   "ECOMMERCE.CUSTOMERS.EDIT.ADD_MESSAGE": "مشتری ایجاد شده است"
-  
-  
 }
