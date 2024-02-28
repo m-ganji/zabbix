@@ -8,8 +8,6 @@ import {
   TablesWidget6,
   TablesWidget7,
   TablesWidget8,
-  TablesWidget9,
-  TablesWidget10,
   TableHosts,
   TablesWidget13,
   ProblemTable,
@@ -85,14 +83,6 @@ const Tables: FC = () => {
           {/* end::Col */}
         </div>
         {/* end::Row */}
-
-        <TablesWidget9 className="mb-5 mb-xl-8" />
-
-        <TablesWidget10 className="mb-5 mb-xl-8" />
-
-        <ProblemTable className="mb-5 mb-xl-8" />
-
-        <TableHosts className="mb-5 mb-xl-8" />
 
         <TablesWidget13 className="mb-5 mb-xl-8" />
       </Content>

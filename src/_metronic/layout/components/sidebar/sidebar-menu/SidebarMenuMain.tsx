@@ -31,17 +31,17 @@ const SidebarMenuMain = () => {
         to="/crafted/pages"
         title="نظارت"
         fontIcon="bi-archive"
-        icon="element-plus"
+        icon="eye"
       >
         <SidebarMenuItem to="/Hosts" title="هاست" hasBullet={true} />
         <SidebarMenuItem to="/Problems" title="مشکلات" hasBullet={true} />
         <SidebarMenuItem
-          to="/crafted/pages/profile/campaigns"
+          to="/LatestData"
           title="آخرین داده ها"
           hasBullet={true}
         />
         <SidebarMenuItem
-          to="/crafted/pages/profile/documents"
+          to="/Maps"
           title="نقشه ها"
           hasBullet={true}
         />
@@ -71,8 +71,7 @@ const SidebarMenuMain = () => {
       <SidebarMenuItemWithSub
         to="/crafted/accounts"
         title="دیتا"
-        icon="profile-circle"
-        fontIcon="bi-person"
+        icon="data"
       >
         <SidebarMenuItem
           to="/crafted/account/overview"
@@ -103,8 +102,8 @@ const SidebarMenuMain = () => {
       <SidebarMenuItemWithSub
         to="/error"
         title="اعلاتات"
-        fontIcon="bi-sticky"
-        icon="cross-circle"
+        fontIcon=""
+        icon="notification"
       >
         <SidebarMenuItem to="/error/404" title="اقدامات" hasBullet={true} />
         <SidebarMenuItem
@@ -117,7 +116,7 @@ const SidebarMenuMain = () => {
       <SidebarMenuItemWithSub
         to="/crafted/widgets"
         title="اعضا"
-        icon="element-7"
+        icon="people"
         fontIcon="bi-layers"
       >
         <SidebarMenuItem
@@ -162,7 +161,7 @@ const SidebarMenuMain = () => {
         to="/apps/chat"
         title="پشتیبانی"
         fontIcon="bi-chat-left"
-        icon="message-text-2"
+        icon="information-3"
       >
         <SidebarMenuItem
           to="/apps/chat/private-chat"
@@ -182,13 +181,13 @@ const SidebarMenuMain = () => {
       </SidebarMenuItemWithSub>
       <SidebarMenuItem
         to="/apps/user-management/users"
-        icon="abstract-28"
+        icon="profile-circle"
         title="پروفایل"
         fontIcon="bi-layers"
       />
       <SidebarMenuItem
         to="#"
-        icon="abstract-28"
+        icon="exit-right"
         title="خروج از اکانت"
         fontIcon="bi-layers"
       />

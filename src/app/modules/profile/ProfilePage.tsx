@@ -3,7 +3,7 @@ import { PageLink, PageTitle } from "../../../_metronic/layout/core";
 import { Overview } from "./components/Hosts";
 import { Problems } from "./components/Problems";
 import { Campaigns } from "./components/Campaigns";
-import { Maps } from "./components/Maps";
+import { Maps } from "../../pages/Maps";
 import { Discovery } from "./components/Discovery";
 
 const profileBreadCrumbs: Array<PageLink> = [
@@ -52,7 +52,7 @@ const ProfilePage = () => (
         }
       />
       <Route
-        path="documents"
+        path="maps"
         element={
           <>
             <PageTitle breadcrumbs={profileBreadCrumbs}>Documents</PageTitle>

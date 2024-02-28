@@ -10,6 +10,8 @@ import BuilderPageWrapper from "../pages/layout-builder/BuilderPageWrapper";
 import { Problems } from "../modules/profile/components/Problems";
 import { Overview } from "../modules/profile/components/Hosts";
 import { Discovery } from "../modules/profile/components/Discovery";
+import { Maps } from "../pages/Maps";
+import { LatestData } from "../modules/profile/components/LatestData";
 
 const PrivateRoutes = () => {
   const ProfilePage = lazy(() => import("../modules/profile/ProfilePage"));
@@ -33,6 +35,8 @@ const PrivateRoutes = () => {
         <Route path="problems" element={<Problems />} />
         <Route path="Hosts" element={<Overview />} />
         <Route path="Discovery" element={<Discovery />} />
+        <Route path="Maps" element={<Maps />} />
+        <Route path="LatestData" element={<LatestData />} />
         {/* Lazy Modules */}
 
         <Route

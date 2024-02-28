@@ -15,6 +15,7 @@ import { useDispatch } from "react-redux";
 import { Form, Modal } from "react-bootstrap";
 import { fetchHostGroup } from "../../../../hostGroupSlice/hostGroupReducer";
 import { Loader } from "../../../../_metronic/layout/components/loader/Loader";
+import ToggleBtns from "../../../../_metronic/layout/components/ToggleBtn/ToggleBtn";
 
 interface hostGroupItems {
   value: string;
@@ -49,11 +50,12 @@ interface FormValues {
   tag_name_format: number;
   time_from: string;
   age_state: string;
+  recent: string;
   acknowledged: boolean;
   suppressed: boolean;
   symptom: boolean;
   tag_priority: string;
-  evaltype: number;
+  evaltype: string;
   tags: {
     tag: string;
     operator: number;
@@ -186,10 +188,11 @@ export function Problems() {
         suppressed: false,
         symptom: false,
         tag_priority: "",
-        evaltype: 0,
+        evaltype: "0",
         tags: [],
         inventory: [],
         hostids: [],
+        recent: "1",
       },
     });
 
@@ -407,59 +410,27 @@ export function Problems() {
                             id: "MONITORING.PROBLEMS.SHOWBASEDON",
                           })}
                         </p>
-                        <div
-                          className="btn-group pb-2"
-                          role="group"
-                          aria-label="Basic example"
-                        >
-                          <button
-                            type="button"
-                            className={
-                              "btn btn-light-primary rounded-end-2 py-2" +
-                              (sortBasedOn === "همه" ? " active" : "")
-                            }
-                            onClick={() => {
-                              setSortBasedOn("همه");
-                            }}
-                            data-bs-toggle="button"
-                          >
-                            {intl.formatMessage({
-                              id: "MONITORING.PROBLEMS.SHOWBASEDON.RECENTPROBLEMS",
-                            })}
-                          </button>
-                          <button
-                            type="button"
-                            className={
-                              "btn btn-light-primary py-2" +
-                              (sortBasedOn === "فعال شده ها" ? " active" : "")
-                            }
-                            onClick={() => {
-                              setSortBasedOn("فعال شده ها");
-                            }}
-                            data-bs-toggle="button"
-                          >
-                            {intl.formatMessage({
-                              id: "MONITORING.PROBLEMS.SHOWBASEDON.PROBLEMS",
-                            })}
-                          </button>
-                          <button
-                            type="button"
-                            className={
-                              "btn btn-light-primary rounded-start-2 py-2" +
-                              (sortBasedOn === "غیر فعال ها" ? " active" : "")
-                            }
-                            onClick={() => {
-                              setSortBasedOn("غیر فعال ها");
-                            }}
-                            data-bs-toggle="button"
-                          >
-                            {intl.formatMessage({
-                              id: "MONITORING.PROBLEMS.SHOWBASEDON.HISTORY",
-                            })}
-                          </button>
-                        </div>
+                        <ToggleBtns
+                          options={[
+                            {
+                              value: "1",
+                              label:
+                                "MONITORING.PROBLEMS.SHOWBASEDON.RECENTPROBLEMS",
+                            },
+                            {
+                              value: "2",
+                              label: "MONITORING.PROBLEMS.SHOWBASEDON.PROBLEMS",
+                            },
+                            {
+                              value: "3",
+                              label: "MONITORING.PROBLEMS.SHOWBASEDON.HISTORY",
+                            },
+                          ]}
+                          data="recent"
+                          setData={setValue}
+                          initialData={watch("recent")}
+                        />
                       </div>
-
                       <MultiSelect
                         reset={resetMultiSelect}
                         addAll={false}
@@ -884,6 +855,8 @@ export function Problems() {
                       setShowTags={setShowTags}
                       tagNameVisible={tagNameVisible}
                       setTagNameVisible={setTagNameVisible}
+                      setValue={setValue}
+                      activeButtonTag={watch("evaltype")}
                     />
 
                     <Controller
@@ -967,7 +940,7 @@ export function Problems() {
                       onClick={submit}
                       className="btn py-2 btn-light-success"
                     >
-                      تایید
+                      {intl.formatMessage({ id: "SUBMIT" })}
                     </button>
                     <button
                       type="button"

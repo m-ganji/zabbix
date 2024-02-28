@@ -1,10 +1,7 @@
 import { useState } from "react";
-import * as Yup from "yup";
 import clsx from "clsx";
 import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
-import { getUserByToken, login } from "../core/_requests";
-import { toAbsoluteUrl } from "../../../../_metronic/helpers";
 import { useAuth } from "../core/Auth";
 import { instance } from "../../../../services/axiosInstance";
 import { useIntl } from "react-intl";
