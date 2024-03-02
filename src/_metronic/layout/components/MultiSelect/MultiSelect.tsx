@@ -29,6 +29,8 @@ const MultiSelect: React.FC<{
   const [selectedOptions, setSelectedOptions] = useState<Option[]>([]);
   const [isOpen, setIsOpen] = useState(false);
 
+  const intl = useIntl();
+
   useEffect(() => {
     console.log(reset);
 
@@ -97,7 +99,6 @@ const MultiSelect: React.FC<{
   };
   console.log(selectedOptions);
 
-  const intl = useIntl();
   return (
     <Dropdown show={isOpen} onToggle={toggleDropdown}>
       <Dropdown.Toggle

@@ -1,10 +1,26 @@
 import React, { useState } from "react";
+import { Controller } from "react-hook-form";
+interface HostProps {
+  control: object;
+  watch: () => void;
+}
 
-export default function IPMI() {
-  const [showPassword, setShowPassword] = useState(false);
+const IPMI: React.FC<HostProps> = ({ control, watch, setValue }) => {
+  const [authAlgorithm, setAuthAlgorithm] = useState("-1");
+  const [accessLevel, setAccessLevel] = useState("-1");
 
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
+  const handleAuthAlgorithmChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    setAuthAlgorithm(event.target.value);
+    setValue("ipmi_authtype", event.target.value);
+  };
+
+  const handleAccessLevelChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    setAccessLevel(event.target.value);
+    setValue("ipmi_privilege", event.target.value);
   };
 
   return (
@@ -18,7 +34,8 @@ export default function IPMI() {
             className="form-select form-select-lg"
             name="AuthenticationAlgorithm"
             id="AuthenticationAlgorithm"
-            defaultValue="-1"
+            value={authAlgorithm}
+            onChange={handleAuthAlgorithmChange}
           >
             <option value="-1">پیش فرض</option>
             <option value="0">هیچکدام</option>
@@ -35,11 +52,11 @@ export default function IPMI() {
           </label>
           <select
             className="form-select form-select-lg"
-            name="AuthenticationAlgorithm"
-            id="AuthenticationAlgorithm"
-            defaultValue="-1"
+            name="AccessLevel"
+            id="AccessLevel"
+            value={accessLevel}
+            onChange={handleAccessLevelChange}
           >
-            <option value="-1">پیش فرض</option>
             <option value="0">CallBack</option>
             <option value="1">کاربر</option>
             <option value="2">اپراتور</option>
@@ -50,12 +67,21 @@ export default function IPMI() {
       </div>
       <div className="mb-3 row">
         <div className="col">
-          <label className="form-label">اسم</label>
-          <input
-            type="text"
-            className="form-control"
-            autoComplete="off"
-            placeholder="اسم را اینجا وارد نمایید"
+          <label className="form-label">نام کاربری</label>
+
+          <Controller
+            name={`ipmi_username`}
+            control={control}
+            defaultValue=""
+            render={({ field }) => (
+              <input
+                {...field}
+                type="text"
+                className="form-control"
+                autoComplete="off"
+                placeholder="نام کاربری را اینجا وارد نمایید"
+              />
+            )}
           />
         </div>
         <form className="col">
@@ -63,14 +89,22 @@ export default function IPMI() {
             رمز عبور
           </label>
           <div className="input-group">
-            <input
-              type={showPassword ? "text" : "password"}
-              className="form-control rounded-end-2 rounded-start-0 "
-              id="password"
-              placeholder="رمز عبور را اینجا وارد نمایید"
-              autoComplete="off"
+            <Controller
+              name={`ipmi_password`}
+              control={control}
+              defaultValue=""
+              render={({ field }) => (
+                <input
+                  {...field}
+                  className="form-control rounded-end-2 rounded-start-0 "
+                  id="password"
+                  placeholder="رمز عبور را اینجا وارد نمایید"
+                  autoComplete="off"
+                />
+              )}
             />
-            <button
+
+            {/* <button
               className="btn border rounded-start-2 rounded-end-0"
               type="button"
               onClick={togglePasswordVisibility}
@@ -82,10 +116,12 @@ export default function IPMI() {
                   <i className="bi bi-eye" />
                 )}
               </div>
-            </button>
+            </button> */}
           </div>
         </form>
       </div>
     </div>
   );
-}
+};
+
+export default IPMI;

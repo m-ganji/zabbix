@@ -2,8 +2,14 @@ import React from "react";
 import { useIntl } from "react-intl";
 import inputsTitle from "../../../../../app/modules/profile/components/InventoryList";
 import { useState } from "react";
+import { Controller } from "react-hook-form";
 
-export default function Inventory() {
+interface HostProps {
+  control: object;
+  watch: () => void;
+}
+
+const Inventory: React.FC<HostProps> = ({ control, watch }) => {
   const intl = useIntl();
   const [activeInventory, setActiveInventory] = useState<string>("");
 
@@ -11,7 +17,6 @@ export default function Inventory() {
   for (let i = 0; i < inputsTitle.length; i += 2) {
     pairs.push(inputsTitle.slice(i, i + 2));
   }
-  console.log(activeInventory);
 
   return (
     <div>
@@ -73,16 +78,22 @@ export default function Inventory() {
               >
                 {input.title}
               </label>
-              <input
-                type={input.isTextArea ? "textarea" : "text"}
-                disabled={activeInventory === "DISABLED"}
-                className="form-control py-2"
-                id={`exampleInputEmail${input.id}`}
-                aria-describedby="emailHelp"
-                placeholder={input.title}
-                name={input.name}
-                style={{ direction: "rtl" }}
-                dir="rtl"
+              <Controller
+                name={`Inventory.${input.name}`}
+                control={control}
+                render={({ field }) => (
+                  <input
+                    {...field}
+                    type={input.isTextArea ? "textarea" : "text"}
+                    disabled={activeInventory === "DISABLED"}
+                    className="form-control py-2"
+                    id={`exampleInputEmail${input.id}`}
+                    aria-describedby="emailHelp"
+                    placeholder={input.title}
+                    style={{ direction: "rtl" }}
+                    dir="rtl"
+                  />
+                )}
               />
             </div>
           ))}
@@ -90,4 +101,6 @@ export default function Inventory() {
       ))}
     </div>
   );
-}
+};
+
+export default Inventory;
