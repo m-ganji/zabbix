@@ -11,6 +11,7 @@ import { fetchHostGroup } from "../../../../hostGroupSlice/hostGroupReducer";
 import { useDispatch } from "react-redux";
 import Severities from "./hosts/severities/Index";
 import { Loader } from "../../../../_metronic/layout/components/loader/Loader";
+import { KTIcon } from "../../../../_metronic/helpers";
 
 interface FormValues {
   status: string;
@@ -103,6 +104,14 @@ export function Overview() {
         <PageTitle breadcrumbs={[]}>
           {intl.formatMessage({ id: "MENU.HOSTS" })}
         </PageTitle>
+        <a
+          href="#"
+          id="kt_activities_toggle"
+          className="btn btn-sm btn-light-primary mt-3 float-start"
+        >
+          ساخت هاست
+          <KTIcon iconName="plus" className="fs-2" />
+        </a>
         <ToolbarWrapper />
         <div
           className="accordion"
@@ -595,14 +604,7 @@ export function Overview() {
             </div>
           </div>
         </div>
-        {/* {data.length == 0 && <p>هاستی یافت نشد</p>} */}
-        {!isLoaded ? (
-          <TableHosts data={data} />
-        ) : (
-          <div className="d-flex pt-7 w-100 justify-content-center">
-            <Loader />
-          </div>
-        )}
+        <TableHosts data={data} isLoaded={isLoaded} />
       </form>
     </Content>
   );

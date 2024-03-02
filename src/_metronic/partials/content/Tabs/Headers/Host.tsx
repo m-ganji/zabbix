@@ -4,22 +4,15 @@ import { useIntl } from "react-intl";
 import { instance } from "../../../../../services/axiosInstance";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchHostGroup } from "../../../../../hostGroupSlice/hostGroupReducer";
-import { Controller, useFieldArray, useForm } from "react-hook-form";
+import { Controller } from "react-hook-form";
 
-export default function Hosts({ logData }) {
-  const { control, handleSubmit, reset, watch, setValue } = useForm<FormValues>(
-    {
-      defaultValues: {
-        host: "",
-      },
-    }
-  );
-
+export default function Host({ control, handleSubmit, reset, watch }) {
   const intl = useIntl();
   const [templates, setTemplates] = useState<object>();
   const dispatch = useDispatch();
 
-  const hostGroupData = useSelector((state) => state.hostGroup);
+  const hostGroupData = useSelector((state) => (state as object).hostGroup);
+console.log(hostGroupData);
 
   useEffect(() => {
     dispatch(fetchHostGroup({}));
@@ -54,13 +47,21 @@ export default function Hosts({ logData }) {
               <i className="bi bi-hdd-network" />
             </span>
 
-            <input
-              type="text"
-              className="form-control rounded-start-2 rounded-end-0"
-              placeholder="نام هاست"
-              aria-label="نام هاست"
-              aria-describedby="tab-hosts"
-              required
+            <Controller
+              name={`host`}
+              control={control}
+              defaultValue=""
+              render={({ field }) => (
+                <input
+                  {...field}
+                  type="text"
+                  className="form-control rounded-start-2 rounded-end-0"
+                  placeholder="نام هاست"
+                  aria-label="نام هاست"
+                  aria-describedby="tab-hosts"
+                  required
+                />
+              )}
             />
           </div>
           <div className="input-group mb-3 col">
@@ -70,15 +71,18 @@ export default function Hosts({ logData }) {
             >
               <i className="bi bi-bullseye" />
             </span>
-
             <input
               type="text"
               className="form-control rounded-start-2 rounded-end-0"
-              placeholder="نام نمایشی"
               aria-label="نام نمایشی"
               aria-describedby="tab-hosts"
               autoComplete="off"
-              onChange={() => setValue("name", field.value)}
+              placeholder={
+                watch("host") === ""
+                  ? "نام نمایشی"
+                  : `نام نمایشی : ${watch("host")}`
+              }
+              // value={watch("host")}
               required
             />
           </div>
