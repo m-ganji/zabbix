@@ -48,7 +48,7 @@ export default function Index({
       <div className="btn-group py-2 d-block " role="group">
         <p>
           {intl.formatMessage({
-            id: "MONITORING.PROBLEMS.TAGS.SHOW.TITLE",
+            id: "MONITORING.PROBLEMS.TAGS.NAME.TITLE",
           })}
           :
         </p>

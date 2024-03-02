@@ -1,17 +1,16 @@
 import { useEffect, useState } from "react";
-import { Content } from "../../../../_metronic/layout/components/content";
+import { Content } from "../../../_metronic/layout/components/content";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
-import { TableHosts } from "../../../../_metronic/partials/widgets";
-import { PageTitle } from "../../../../_metronic/layout/core";
+import { TableHosts } from "../../../_metronic/partials/widgets";
+import { PageTitle } from "../../../_metronic/layout/core";
 import { useIntl } from "react-intl";
-import { ToolbarWrapper } from "../../../../_metronic/layout/components/toolbar";
-import { instance } from "../../../../services/axiosInstance";
-import { MultiSelect } from "../../../../_metronic/layout/components/MultiSelect/MultiSelect";
-import { fetchHostGroup } from "../../../../hostGroupSlice/hostGroupReducer";
+import { ToolbarWrapper } from "../../../_metronic/layout/components/toolbar";
+import { instance } from "../../../services/axiosInstance";
+import { MultiSelect } from "../../../_metronic/layout/components/MultiSelect/MultiSelect";
+import { fetchHostGroup } from "../../../hostGroupSlice/hostGroupReducer";
 import { useDispatch } from "react-redux";
-import Severities from "./hosts/severities/Index";
-import { Loader } from "../../../../_metronic/layout/components/loader/Loader";
-import { KTIcon } from "../../../../_metronic/helpers";
+import Severities from "../../modules/profile/components/hosts/severities/Index";
+import { Loader } from "../../../_metronic/layout/components/loader/Loader";
 
 interface FormValues {
   status: string;
@@ -104,14 +103,6 @@ export function Overview() {
         <PageTitle breadcrumbs={[]}>
           {intl.formatMessage({ id: "MENU.HOSTS" })}
         </PageTitle>
-        <a
-          href="#"
-          id="kt_activities_toggle"
-          className="btn btn-sm btn-light-primary mt-3 float-start"
-        >
-          ساخت هاست
-          <KTIcon iconName="plus" className="fs-2" />
-        </a>
         <ToolbarWrapper />
         <div
           className="accordion"
@@ -410,7 +401,7 @@ export function Overview() {
                       }}
                     >
                       {intl.formatMessage({
-                        id: "MONITORING.HOSTS.ADDTAG.ADDBUTTON",
+                        id: "ADD",
                       })}
                     </button>
                     <div className="mt-5 d-flex justify-content-start align-baseline gap-5 ">
@@ -604,7 +595,14 @@ export function Overview() {
             </div>
           </div>
         </div>
-        <TableHosts data={data} isLoaded={isLoaded} />
+        {/* {data.length == 0 && <p>هاستی یافت نشد</p>} */}
+        {!isLoaded ? (
+          <TableHosts data={data} />
+        ) : (
+          <div className="d-flex pt-7 w-100 justify-content-center">
+            <Loader />
+          </div>
+        )}
       </form>
     </Content>
   );

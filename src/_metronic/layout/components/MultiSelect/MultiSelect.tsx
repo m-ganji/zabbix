@@ -43,13 +43,14 @@ const MultiSelect: React.FC<{
     const isSelected = selectedOptions.some(
       (selectedOption) => selectedOption.value === option.value
     );
+    console.log(isSelected);
 
     if (isSelected) {
       setData(
         DataName,
-        selectedOptions.filter(
-          (selectedOption) => selectedOption.value !== option.value
-        )
+        selectedOptions
+          .filter((selectedOption) => selectedOption.value !== option.value)
+          .map((i) => i.value)
       );
       setSelectedOptions(
         selectedOptions.filter(
@@ -81,11 +82,17 @@ const MultiSelect: React.FC<{
   };
 
   const deleteOption = (option: Option) => {
+    console.log(
+      selectedOptions
+        .filter((selectedOption) => selectedOption.value !== option.value)
+        .map((i) => i.value)
+    );
+
     setData(
       DataName,
-      selectedOptions.filter(
-        (selectedOption) => selectedOption.value !== option.value
-      )
+      selectedOptions
+        .filter((selectedOption) => selectedOption.value !== option.value)
+        .map((i) => i.value)
     );
     setSelectedOptions(
       selectedOptions.filter(
@@ -97,7 +104,6 @@ const MultiSelect: React.FC<{
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
-  console.log(selectedOptions);
 
   return (
     <Dropdown show={isOpen} onToggle={toggleDropdown}>
@@ -111,7 +117,11 @@ const MultiSelect: React.FC<{
               <div
                 dir="ltr"
                 className="d-flex gap-1"
-                style={{ maxWidth: "130px" }}
+                style={{
+                  maxWidth: "130px",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                }}
                 key={option.value}
               >
                 <p
@@ -158,6 +168,11 @@ const MultiSelect: React.FC<{
             {options?.map((option) => (
               <Dropdown.Item
                 key={option.value}
+                style={{
+                  direction: "ltr",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                }}
                 onClick={() => toggleOption(option)}
                 active={selectedOptions.some(
                   (selectedOption) => selectedOption.value === option.value

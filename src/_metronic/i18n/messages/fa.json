@@ -17,11 +17,41 @@
   "CANCEL":"لغو",
   "UNACKNOWLEDGED_ONLY" :"فقط ناشناخته ها",
   "OWNER":"مالک",
+  "IMAGES":"عکس ها",
   "BG.IMAGE" : "تصویر زمینه",
   "BG.D.EXIST" :"بدون عکس",
   "USERS":"اعضا",
-  "MENU.NEW": "جدید",
+  "PERMISSIONS":"مجوزها",
+  "USERGROUPS":"گروه‌های کاربر",
+  "ACTION":"عملیات",
+  "NEW":"جدید",
+  "ADD": "اضافه کردن",
+  "PARAMETER":"پارامتر",
+  "VALUE":"مقدار",
+  "DETAILS":"جزئیات",
+  "RULES":"قوانین",
+  "ADMIN":"مدیر",
+  "GUEST":"مهمان",
+  "NOTIFICATIONS":"اعلانات",
+  "PERIOD":"دوره زمانی",
+  "YEAR":"سال",
+  
+  "DATE.FROM":"از تاریخ",
+  "DATE.TILL":"تا تاریخ",
+  
+  "READ.ONLY":"فقط برای خواندن",
+  "READ-WRITE":"خواندن و نوشتن",
+  
+  "GP.NAME":"نام گروه",
+
   "IMPORT": "وارد كردن",
+  "IMPORT.FILE": "وارد كردن فایل",
+
+
+  "UPDATE.CREATE" : "بروز رسانی موردی که از قبل موجود است",
+  "UPDATE.EXIST_CREATE" : "بروز رسانی مورد جدیدی که از قبل موجود است",
+  
+  "MENU.NEW": "جدید",
   "MENU.SELECT": "انتخاب",
   "MENU.LATESTDATA": "آخرین داده ها",
   "MENU.SELECT.ALL": "انتخاب همه",
@@ -57,7 +87,7 @@
   "MONITORING.HOSTS.ADDTAG.OPTION5": "برابر نیست",
   "MONITORING.HOSTS.ADDTAG.OPTION6": "شامل نیست",
   "MONITORING.HOSTS.ADDTAG.VALUE": "مقدار",
-  "MONITORING.HOSTS.ADDTAG.ADDBUTTON": "اضافه کردن",
+  
   "MONITORING.HOSTS.ADDTAG.REMOVEBUTTON": "حذف",
   "MONITORING.HOSTS.MAINTENANCE": "نمایش هاست ها در تعمیر و نگهداری",
   "MONITORING.HOSTS.SUPPRESSED": "نمایش مشکلات سرکوب شده",
@@ -120,6 +150,18 @@
   "MONITORING.MAPS.CREATE" : "ساخت نقشه",
   "MONITORING.MAPS.AUTO.ICON" : "نقشه برداری خودکار آیکون",
   "MONITORING.MAPS.ICON.HIGHLIGHT" : "برجسته کردن آیکون",
+
+  "REPORTS.SYS.INFO":"اطلاعات سیستم",
+  "REPORTS.MEDIA_TYPE":"نوع رسانه",
+
+  "DATA.HOSTS.GP" :"گروه هاست ها",
+  "DATA.HOSTS.GP.NEW" :"گروه هاست جدید",
+  "DATA.HOSTS.CREATE" :"ساخت گروه هاست",
+  "DATA.TEMPLATE" :"قالب ها",
+  "DATA.TEMPLATE.GP" :"گروه قالب",
+  "DATA.TEMPLATE.GP.NEW" :"گروه قالب جدید",
+  "DATA.TEMPLATE.CREATE" :"ساخت گروه قالب",
+  
   "MARK_ELEMENTS_ON_TRIGGER_STATUS_CHANGE" : "علامت‌ گذاری عناصر در تغییر وضعیت تریگر",
   "DISPLAY_PROBLEMS":"نمایش مشکلات",
   "ADVANCED_LABELS":"برچسب‌های پیشرفته",
@@ -198,4 +240,5 @@
   "ECOMMERCE.CUSTOMERS.UPDATE_STATUS.MESSAGE": "وضعیت مشتریان انتخاب شده با موفقیت به‌روزرسانی شد",
   "ECOMMERCE.CUSTOMERS.EDIT.UPDATE_MESSAGE": "مشتری به‌روزرسانی شده است",
   "ECOMMERCE.CUSTOMERS.EDIT.ADD_MESSAGE": "مشتری ایجاد شده است"
+  
 }

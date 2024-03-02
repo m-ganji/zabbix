@@ -1,5 +1,5 @@
 import React from "react";
-import { Problem } from "../../../../app/modules/profile/components/Problems";
+import { Problem } from "../../../../app/pages/Monitoring/Problems";
 import moment from "jalali-moment";
 
 interface ProblemTableProps {

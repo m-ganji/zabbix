@@ -87,7 +87,7 @@ const Tags: React.FC<TagsProps> = ({ control }) => {
         }}
       >
         {intl.formatMessage({
-          id: "MONITORING.HOSTS.ADDTAG.ADDBUTTON",
+          id: "ADD",
         })}
       </button>
     </>
