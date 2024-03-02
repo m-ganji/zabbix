@@ -5,14 +5,18 @@ import { instance } from "../../../../../services/axiosInstance";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchHostGroup } from "../../../../../hostGroupSlice/hostGroupReducer";
 import { Controller } from "react-hook-form";
+interface HostProps {
+  control: object;
+  watch: () => void;
+}
 
-export default function Host({ control, handleSubmit, reset, watch }) {
+const Host: React.FC<HostProps> = ({ control, watch }) => {
   const intl = useIntl();
   const [templates, setTemplates] = useState<object>();
   const dispatch = useDispatch();
 
   const hostGroupData = useSelector((state) => (state as object).hostGroup);
-console.log(hostGroupData);
+  console.log(hostGroupData);
 
   useEffect(() => {
     dispatch(fetchHostGroup({}));
@@ -34,6 +38,8 @@ console.log(hostGroupData);
 
     handleGetTemplates();
   }, []);
+  console.log(typeof control);
+  console.log(typeof watch);
 
   return (
     <div>
@@ -109,13 +115,20 @@ console.log(hostGroupData);
         <div className="row mt-3 position-relative" style={{ zIndex: 0 }}>
           <div className="col">
             <div dir="rtl" className="form-floating">
-              <textarea
-                className="form-control"
-                placeholder="توضیحات را اینجا وارد کنید"
-                id="floatingTextarea2"
-                style={{ height: 100 }}
+              <Controller
+                name={`description`}
+                control={control}
+                defaultValue=""
+                render={({ field }) => (
+                  <textarea
+                    {...field}
+                    className="form-control"
+                    title="توضیحات را اینجا وارد کنید"
+                    id="floatingTextarea2"
+                    style={{ height: 100 }}
+                  />
+                )}
               />
-              <label htmlFor="floatingTextarea2">توضیحات</label>
             </div>
             <div className="d-flex justify-content-start mt-5">
               <input type="checkbox" />
@@ -130,4 +143,6 @@ console.log(hostGroupData);
       </div>
     </div>
   );
-}
+};
+
+export default Host;

@@ -1,7 +1,11 @@
 import { useState } from "react";
 import { useIntl } from "react-intl";
+interface HostProps {
+  control: object;
+  watch: () => void;
+}
 
-export default function Encription() {
+const Encryption: React.FC<HostProps> = ({ control, watch }) => {
   const intl = useIntl();
   const [activeEncryption, setActiveEncryption] = useState<string>("");
   const [selectedOption, setSelectedOption] = useState(null);
@@ -107,4 +111,5 @@ export default function Encription() {
       </div>
     </div>
   );
-}
+};
+export default Encryption;
