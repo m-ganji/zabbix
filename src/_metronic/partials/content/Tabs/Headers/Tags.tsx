@@ -92,7 +92,7 @@ export default function Tags() {
         }}
       >
         {intl.formatMessage({
-          id: "MONITORING.HOSTS.ADDTAG.ADDBUTTON",
+          id: "ADD",
         })}
       </button>
     </>

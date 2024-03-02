@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
-import { Content } from "../../../../_metronic/layout/components/content";
+import { Content } from "../../../_metronic/layout/components/content";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
-import { TableHosts } from "../../../../_metronic/partials/widgets";
-import { PageTitle } from "../../../../_metronic/layout/core";
+import { TableHosts } from "../../../_metronic/partials/widgets";
+import { PageTitle } from "../../../_metronic/layout/core";
 import { useIntl } from "react-intl";
-import { ToolbarWrapper } from "../../../../_metronic/layout/components/toolbar";
-import { instance } from "../../../../services/axiosInstance";
-import { MultiSelect } from "../../../../_metronic/layout/components/MultiSelect/MultiSelect";
-import { fetchHostGroup } from "../../../../hostGroupSlice/hostGroupReducer";
+import { ToolbarWrapper } from "../../../_metronic/layout/components/toolbar";
+import { instance } from "../../../services/axiosInstance";
+import { MultiSelect } from "../../../_metronic/layout/components/MultiSelect/MultiSelect";
+import { fetchHostGroup } from "../../../hostGroupSlice/hostGroupReducer";
 import { useDispatch } from "react-redux";
-import Severities from "./hosts/severities/Index";
-import { Loader } from "../../../../_metronic/layout/components/loader/Loader";
+import Severities from "../../modules/profile/components/hosts/severities/Index";
+import { Loader } from "../../../_metronic/layout/components/loader/Loader";
 
 interface FormValues {
   status: string;
@@ -401,7 +401,7 @@ export function Overview() {
                       }}
                     >
                       {intl.formatMessage({
-                        id: "MONITORING.HOSTS.ADDTAG.ADDBUTTON",
+                        id: "ADD",
                       })}
                     </button>
                     <div className="mt-5 d-flex justify-content-start align-baseline gap-5 ">

@@ -2,19 +2,24 @@ import { useState } from "react";
 import { Content } from "../../../../_metronic/layout/components/content";
 import { useForm } from "react-hook-form";
 import { useIntl } from "react-intl";
-import { PageTitle } from "../../../../_metronic/layout/core";
-import { ToolbarWrapper } from "../../../../_metronic/layout/components/toolbar";
 import { useNavigate } from "react-router-dom";
-import { MultiSelect } from "../../../../_metronic/layout/components/MultiSelect/MultiSelect";
-import { DiscoveryTable } from "../../../../_metronic/partials/widgets";
+import BTN from "../../../../_metronic/layout/components/BTN";
+import { CreateTemplateGroup } from "../../../../_metronic/layout/components/CreateTemplateGroup";
+import Input from "../../../../_metronic/layout/components/Input";
+import { TemplatesGpTable } from "../../../../_metronic/partials/widgets/tables/TemplatesGpTable";
 
 interface FormValues {
   search: {
     name: string;
   };
+  URLs: {
+    name: string;
+    URL: string;
+    Element: string;
+  }[];
 }
 
-export function Discovery() {
+export default function DataTemplatesGroups() {
   const intl = useIntl();
   const navigate = useNavigate();
 
@@ -24,6 +29,13 @@ export function Discovery() {
     useForm<FormValues>({
       defaultValues: {
         search: { name: "" },
+        URLs: [
+          {
+            name: "",
+            URL: "",
+            Element: "",
+          },
+        ],
       },
     });
 
@@ -55,7 +67,6 @@ export function Discovery() {
     // }
     // setIsLoaded(true);
   };
-
   const resetData = () => {
     setResetMultiSelect(true);
     reset();
@@ -68,10 +79,20 @@ export function Discovery() {
 
   return (
     <Content>
-      <PageTitle breadcrumbs={[]}>
-        {intl.formatMessage({ id: "MONITORING.DISCOVERY" })}
-      </PageTitle>
-      <ToolbarWrapper />
+      <div className="d-flex flex-wrap flex-stack my-4">
+        <h3 className="fw-bolder ">
+          {intl.formatMessage({ id: "DATA.TEMPLATE" })}
+        </h3>
+        <div className="d-flex gap-5 align-items-center">
+          <BTN
+            id="create_template_gp"
+            label={intl.formatMessage({ id: "DATA.TEMPLATE.CREATE" })}
+            className="btn-light-primary"
+          />
+
+          <CreateTemplateGroup />
+        </div>
+      </div>
       <div>
         <div
           className="accordion "
@@ -95,31 +116,23 @@ export function Discovery() {
               data-bs-parent="#monitoring-hosts"
             >
               <div className="accordion-body">
-                <MultiSelect
-                  title="MONITORING.DISCOVERY.SELECT"
-                  reset={false}
-                  options={[]}
-                  Loading={false}
-                  addAll={true}
-                  DataName="objectids"
-                  setData={setValue}
-                  currentData={[]}
+                <Input
+                  className=""
+                  iconName="user"
+                  placeholder={intl.formatMessage({ id: "NAME" })}
+                  value=""
                 />
                 <div className="d-flex w-100 justify-content-center mt-10 column-gap-5">
-                  <button
-                    type="button"
+                  <BTN
+                    label={intl.formatMessage({ id: "SUBMIT" })}
+                    className="btn-light-success"
                     onClick={submit}
-                    className="btn py-2 btn-light-success"
-                  >
-                    تایید
-                  </button>
-                  <button
-                    type="button"
+                  />
+                  <BTN
+                    label="باز نشانی"
+                    className="btn-light-danger"
                     onClick={resetData}
-                    className="btn py-2 btn-light-danger"
-                  >
-                    باز نشانی
-                  </button>
+                  />
                 </div>
               </div>
             </div>
@@ -127,7 +140,7 @@ export function Discovery() {
         </div>
       </div>
       {/* Table */}
-      <DiscoveryTable />
+      <TemplatesGpTable />
     </Content>
   );
 }

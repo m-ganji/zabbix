@@ -1,16 +1,17 @@
 import { useEffect, useState } from "react";
-import { Content } from "../../../../_metronic/layout/components/content";
+import { Content } from "../../../_metronic/layout/components/content";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
-import { ProblemTable, TableHosts } from "../../../../_metronic/partials/widgets";
-import { PageTitle } from "../../../../_metronic/layout/core";
+import { ProblemTable, TableHosts } from "../../../_metronic/partials/widgets";
+import { PageTitle } from "../../../_metronic/layout/core";
 import { useIntl } from "react-intl";
-import { ToolbarWrapper } from "../../../../_metronic/layout/components/toolbar";
-import { instance } from "../../../../services/axiosInstance";
-import { MultiSelect } from "../../../../_metronic/layout/components/MultiSelect/MultiSelect";
-import { fetchHostGroup } from "../../../../hostGroupSlice/hostGroupReducer";
+import { ToolbarWrapper } from "../../../_metronic/layout/components/toolbar";
+import { instance } from "../../../services/axiosInstance";
+import { MultiSelect } from "../../../_metronic/layout/components/MultiSelect/MultiSelect";
+import { fetchHostGroup } from "../../../hostGroupSlice/hostGroupReducer";
 import { useDispatch } from "react-redux";
-import Severities from "./hosts/severities/Index";
-import { Loader } from "../../../../_metronic/layout/components/loader/Loader";
+import Severities from "../../modules/profile/components/hosts/severities/Index";
+import { Loader } from "../../../_metronic/layout/components/loader/Loader";
+import BTN from "../../../_metronic/layout/components/BTN";
 
 interface FormValues {
   status: string;
@@ -29,8 +30,8 @@ interface FormValues {
 }
 
 export function LatestData() {
-  const { control, watch, setValue, handleSubmit, reset } =
-    useForm<FormValues>({
+  const { control, watch, setValue, handleSubmit, reset } = useForm<FormValues>(
+    {
       defaultValues: {
         selectProblems: "extend",
         selectGraphs: "extend",
@@ -44,7 +45,8 @@ export function LatestData() {
         filter: { status: "" },
         tags: [],
       },
-    });
+    }
+  );
 
   const intl = useIntl();
 
@@ -400,7 +402,7 @@ export function LatestData() {
                       }}
                     >
                       {intl.formatMessage({
-                        id: "MONITORING.HOSTS.ADDTAG.ADDBUTTON",
+                        id: "ADD",
                       })}
                     </button>
                     <div className="mt-5 d-flex justify-content-start align-baseline gap-5 ">
@@ -568,35 +570,29 @@ export function LatestData() {
                   </div>
                 </div>
               </div>
-            </div>{" "}
+            </div>
             <div className="d-flex justify-content-center mb-5 gap-5 ">
-              <button
-                type="button"
-                onClick={handleSubmit((data) => {
-                  dataHost(data);
-                })}
-                className="btn btn-light-success"
-              >
-                تایید
-              </button>
-
-              <button
-                type="button"
+              <BTN
+                label={intl.formatMessage({ id: "SUBMIT" })}
+                className="btn-light-success"
+                // onClick={submit}
+              />
+              <BTN
+                label="باز نشانی"
+                className="btn-light-danger"
                 onClick={resetData}
-                className="btn btn-light-danger"
-              >
-                باز نشانی
-              </button>
-
-              <button type="button" className="btn btn-light-primary">
-                ذخیره
-              </button>
+              />
+              <BTN
+                label="ذخیره"
+                className="btn-light-primary"
+                // onClick={resetData}
+              />
             </div>
           </div>
         </div>
         {/* {data.length == 0 && <p>هاستی یافت نشد</p>} */}
         {!isLoaded ? (
-          <ProblemTable ProblemsData={[]} isLoaded={true}/>
+          <ProblemTable ProblemsData={[]} isLoaded={true} />
         ) : (
           <div className="d-flex pt-7 w-100 justify-content-center">
             <Loader />

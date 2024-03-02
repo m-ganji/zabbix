@@ -708,7 +708,7 @@ export function Projects() {
                       }}
                     >
                       {intl.formatMessage({
-                        id: "MONITORING.HOSTS.ADDTAG.ADDBUTTON",
+                        id: "ADD",
                       })}
                     </button>
                     <p className="m-0">
@@ -819,7 +819,7 @@ export function Projects() {
                       }}
                     >
                       {intl.formatMessage({
-                        id: "MONITORING.HOSTS.ADDTAG.ADDBUTTON",
+                        id: "ADD",
                       })}
                     </button>
                     <Tags

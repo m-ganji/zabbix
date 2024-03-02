@@ -178,7 +178,7 @@ export default function Macros() {
         }}
       >
         {intl.formatMessage({
-          id: "MONITORING.HOSTS.ADDTAG.ADDBUTTON",
+          id: "ADD",
         })}
       </button>
     </div>

@@ -1,10 +1,10 @@
 import { Navigate, Routes, Route, Outlet } from "react-router-dom";
 import { PageLink, PageTitle } from "../../../_metronic/layout/core";
-import { Overview } from "./components/Hosts";
-import { Problems } from "./components/Problems";
+import { Overview } from "../../pages/Monitoring/Hosts";
+import { Problems } from "../../pages/Monitoring/Problems";
 import { Campaigns } from "./components/Campaigns";
-import { Maps } from "../../pages/Maps";
-import { Discovery } from "./components/Discovery";
+import { Maps } from "../../pages/Monitoring/Maps";
+import { Discovery } from "../../pages/Monitoring/Discovery";
 
 const profileBreadCrumbs: Array<PageLink> = [
   {
