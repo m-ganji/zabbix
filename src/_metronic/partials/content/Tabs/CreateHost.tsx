@@ -6,7 +6,7 @@ import { instance } from "../../../../services/axiosInstance";
 import { useIntl } from "react-intl";
 import Tags from "./Headers/Tags";
 import IPMI from "./Headers/IPMI";
-import Hosts from "./Headers/Hosts";
+import Host from "./Headers/Host";
 import Macros from "./Headers/Macros";
 import Inventory from "./Headers/Inventory";
 import Encription from "./Headers/Encription";
@@ -16,7 +16,7 @@ import { useForm } from "react-hook-form";
 const CreateHost: FC = () => {
   const { control, handleSubmit, reset, watch } = useForm<FormValues>({
     defaultValues: {
-      name: "",
+      host: "",
       groups: [
         {
           groupid: "",
@@ -115,7 +115,12 @@ const CreateHost: FC = () => {
       <div className="card-body pt-0">
         <div className="tab-content">
           <div className="tab-pane active show" id="tab-hosts">
-            <Hosts logData={logData} />
+            <Host
+              control={control}
+              handleSubmit={handleSubmit(onSubmit)}
+              reset={reset}
+              watch={watch}
+            />
           </div>
           <div className="tab-pane container" id="tab-ipmi">
             <IPMI />

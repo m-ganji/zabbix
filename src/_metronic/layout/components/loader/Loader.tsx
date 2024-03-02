@@ -1,6 +1,6 @@
-import React from 'react'
+import React from 'react';
 
-export const Loader = () => {
+export const Loader: React.FC = () => {
     return (
         <div className="pb-6">
             <span
@@ -10,5 +10,5 @@ export const Loader = () => {
                 <span className="visually-hidden">Loading...</span>
             </span>
         </div>
-    )
-}
+    );
+};

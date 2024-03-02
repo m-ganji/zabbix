@@ -1,14 +1,23 @@
 import { KTIcon } from "../../../helpers";
+import { Loader } from "../../../layout/components/loader/Loader";
 
-const TableHosts = ({ data }) => {
+const TableHosts = ({ data, isLoaded }) => {
   return (
     <div style={{ boxShadow: "0 0 10px -10px black" }} className={`card mt-5`}>
       {/* begin::Header */}
-      {data.length == 0 && (
+
+      {isLoaded && (
+        <div className="d-flex pt-7 w-100 justify-content-center">
+          <Loader />
+        </div>
+      )}
+
+      {data.length == 0 && !isLoaded && (
         <span className="card-label fw-bold fs-3 mb-1 me-0 d-flex justify-content-center mt-5 ">
           هاستی یافت نشد
         </span>
       )}
+
       <div className="card-header border-0 pt-5">
         {data.length !== 0 && (
           <h3 className="card-title align-items-start flex-column">
@@ -17,19 +26,6 @@ const TableHosts = ({ data }) => {
               مجموع {data.length} عدد هاست
             </span>
           </h3>
-        )}
-
-        {data.length !== 0 && (
-          <div className="card-toolbar">
-            <a
-              href="#"
-              id="kt_activities_toggle"
-              className="btn btn-sm btn-light-primary"
-            >
-              ساخت هاست
-              <KTIcon iconName="plus" className="fs-2" />
-            </a>
-          </div>
         )}
       </div>
       {/* end::Header */}
@@ -117,11 +113,10 @@ const TableHosts = ({ data }) => {
                         } fs-7 fw-semibold`}
                       >
                         {item?.problems[0] ? (
-                              "1"
-                            ) : (
-                              <span className="text-gray-400">بدون مشکل</span>
-                            )}
-
+                          "1"
+                        ) : (
+                          <span className="text-gray-400">بدون مشکل</span>
+                        )}
                       </span>
                     </td>
                     <td className="text-center">
