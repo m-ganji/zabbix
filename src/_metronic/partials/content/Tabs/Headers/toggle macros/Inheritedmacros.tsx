@@ -1,4 +1,3 @@
-import { Controller } from "react-hook-form";
 import { useIntl } from "react-intl";
 import { instance } from "../../../../../../services/axiosInstance";
 import { useEffect, useState } from "react";
@@ -19,7 +18,7 @@ const Inheritedmacros: React.FC = ({
 }) => {
   const intl = useIntl();
   const [globalUserMacro, setGlobalUserMacro] = useState<ItemType[]>([]);
-  console.log(globalUserMacro);
+  const [isHostsModalOpen, setisHostsModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -28,7 +27,6 @@ const Inheritedmacros: React.FC = ({
           output: "extend",
           globalmacro: true,
         });
-        console.log(response.data);
         globalUserMacro.map((e) => setGlobalUserMacro(e.macro));
         setGlobalUserMacro(response.data || []);
         // setIsLoading(true);
@@ -39,7 +37,6 @@ const Inheritedmacros: React.FC = ({
 
     fetchData();
   }, []);
-  const [isHostsModalOpen, setisHostsModalOpen] = useState<boolean>(false);
 
   return (
     <div className="d-flex flex-column">
@@ -65,15 +62,13 @@ const Inheritedmacros: React.FC = ({
                 type="text"
                 className="form-control "
                 defaultValue={e.macro}
-                style={{ direction: "rtl" }}
                 dir="rtl"
-                style={{ width: "33%" }}
+                style={{ width: "33%", direction: "rtl" }}
               />
               <div className="d-flex" style={{ width: "33%" }}>
                 <input
                   type="text"
                   className="form-control py-2 w-75"
-                  //   id={`exampleInputEmailValue${item.id}`}
                   aria-describedby="emailHelp"
                   placeholder={intl.formatMessage({
                     id: "MONITORING.HOSTS.ADDTAG.VALUE",
@@ -83,13 +78,8 @@ const Inheritedmacros: React.FC = ({
                 />
                 <select
                   className="form-select form-select-sm w-25 "
-                  //   id={`floatingSelect${item.id}`}
                   aria-label="Floating label select example"
                   style={{ width: "33%" }}
-                  //   onChange={(e) => {
-                  //     const newValue = parseInt(e.target.value, 10);
-                  //     field.onChange(newValue);
-                  //   }}
                 >
                   <option value={1}>&#x0054; متن 1</option>
                   <option value={2}>🅿️&#x0054; متن 2</option>
@@ -108,35 +98,32 @@ const Inheritedmacros: React.FC = ({
               />
             </div>
           ))}
+          <button
+            type="button"
+            className="btn btn-success py-2 d-block mt-5 "
+            onClick={() => {
+              macrosAppend({ tag: "", value: "" });
+            }}
+          >
+            {intl.formatMessage({
+              id: "ADD",
+            })}
+          </button>
         </Modal.Body>
-        <button
-          type="button"
-          className="btn btn-success py-2 d-block mt-5 "
-          onClick={() => {
-            macrosAppend({ tag: "", value: "" });
-          }}
-        >
-          {intl.formatMessage({
-            id: "MONITORING.HOSTS.ADDTAG.ADDBUTTON",
-          })}
-        </button>
       </Modal>
-
       {globalUserMacro.map((e) => (
         <div className="d-flex py-2 mb-5 gap-5 ">
           <input
             type="text"
             className="form-control "
             defaultValue={e.macro}
-            style={{ direction: "rtl" }}
             dir="rtl"
-            style={{ width: "33%" }}
+            style={{ width: "33%", direction: "rtl" }}
           />
           <div className="d-flex" style={{ width: "33%" }}>
             <input
               type="text"
               className="form-control py-2 w-75"
-              //   id={`exampleInputEmailValue${item.id}`}
               aria-describedby="emailHelp"
               placeholder={intl.formatMessage({
                 id: "MONITORING.HOSTS.ADDTAG.VALUE",
@@ -146,13 +133,8 @@ const Inheritedmacros: React.FC = ({
             />
             <select
               className="form-select form-select-sm w-25 "
-              //   id={`floatingSelect${item.id}`}
               aria-label="Floating label select example"
               style={{ width: "33%" }}
-              //   onChange={(e) => {
-              //     const newValue = parseInt(e.target.value, 10);
-              //     field.onChange(newValue);
-              //   }}
             >
               <option value={1}>&#x0054; متن 1</option>
               <option value={2}>🅿️&#x0054; متن 2</option>
