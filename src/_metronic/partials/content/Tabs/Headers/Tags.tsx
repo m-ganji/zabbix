@@ -19,12 +19,6 @@ const Tags: React.FC<TagsProps> = ({ control }) => {
     name: "tags",
   });
 
-  useEffect(() => {
-    if (fields.length === 0) {
-      append({ tag: "", value: "" });
-    }
-  }, [fields, append]);
-
   return (
     <>
       {fields.map((item, index) => (

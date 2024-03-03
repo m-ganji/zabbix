@@ -57,6 +57,7 @@ export function Overview() {
   const [defaultData, setDefaultData] = useState([]);
   const [activeButtonTag, setActiveButtonTag] = useState<string>("");
   const [activeSituation, setActiveSituation] = useState<string>("");
+  const [resetMultiSelect, setResetMultiSelect] = useState(false);
   const [hostGroups, setHostGroups] = useState([]);
   const currentGroupids = watch("groupids") ? watch("groupids") : [];
   const dispatch = useDispatch();
@@ -70,14 +71,12 @@ export function Overview() {
   });
 
   const dataHost = async (data) => {
-    console.log(data);
     setIsLoaded(true);
     setIsError(false);
     try {
       const response = await instance.post("/core/hosts/get", data);
       setData(response.data);
       setIsLoaded(false);
-      console.log(response.data);
       return response;
     } catch (error) {
       console.error("Error fetching host data:", error);
@@ -87,8 +86,10 @@ export function Overview() {
   };
 
   const resetData = () => {
-    reset();
     dataHost(watch());
+    setResetMultiSelect(true);
+    resetMultiSelect && setResetMultiSelect(false);
+    reset();
   };
 
   useEffect(() => {

@@ -18,18 +18,18 @@ const CreateHost: FC = () => {
     {
       defaultValues: {
         host: "",
-        groups: [
-          {
-            groupid: "",
-          },
-        ],
+        groupids: [],
+        // groups: [
+        //   {
+        //     groupid: "",
+        //   },
+        // ],
       },
     }
   );
 
   const onSubmit = async (data) => {
     console.log(data);
-    console.log(watch("name"));
 
     try {
       const response = await instance.post("/core/hosts/create", data);
@@ -117,7 +117,7 @@ const CreateHost: FC = () => {
       <div className="card-body pt-0">
         <div className="tab-content">
           <div className="tab-pane active show" id="tab-hosts">
-            <Host control={control} watch={watch} />
+            <Host control={control} watch={watch} setValue={setValue} />
           </div>
           <div className="tab-pane container" id="tab-ipmi">
             <IPMI control={control} watch={watch} setValue={setValue} />

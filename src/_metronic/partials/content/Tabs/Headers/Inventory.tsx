@@ -67,38 +67,39 @@ const Inventory: React.FC<HostProps> = ({ control, watch }) => {
           })}
         </button>
       </div>
-
-      {pairs.map((pair, index) => (
-        <div key={index} className="d-flex">
-          {pair.map((input) => (
-            <div key={input.id} className="w-50 p-2">
-              <label
-                htmlFor={`exampleInputEmail${input.id}`}
-                className="form-label"
-              >
-                {input.title}
-              </label>
-              <Controller
-                name={`Inventory.${input.name}`}
-                control={control}
-                render={({ field }) => (
-                  <input
-                    {...field}
-                    type={input.isTextArea ? "textarea" : "text"}
-                    disabled={activeInventory === "DISABLED"}
-                    className="form-control py-2"
-                    id={`exampleInputEmail${input.id}`}
-                    aria-describedby="emailHelp"
-                    placeholder={input.title}
-                    style={{ direction: "rtl" }}
-                    dir="rtl"
-                  />
-                )}
-              />
-            </div>
-          ))}
-        </div>
-      ))}
+      <div style={{ maxHeight: "650px", overflow: "auto" }}>
+        {pairs.map((pair, index) => (
+          <div key={index} className="d-flex">
+            {pair.map((input) => (
+              <div key={input.id} className="w-50 p-2">
+                <label
+                  htmlFor={`exampleInputEmail${input.id}`}
+                  className="form-label"
+                >
+                  {input.title}
+                </label>
+                <Controller
+                  name={`Inventory.${input.name}`}
+                  control={control}
+                  render={({ field }) => (
+                    <input
+                      {...field}
+                      type={input.isTextArea ? "textarea" : "text"}
+                      disabled={activeInventory === "DISABLED"}
+                      className="form-control py-2"
+                      id={`exampleInputEmail${input.id}`}
+                      aria-describedby="emailHelp"
+                      placeholder={input.title}
+                      style={{ direction: "rtl" }}
+                      dir="rtl"
+                    />
+                  )}
+                />
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

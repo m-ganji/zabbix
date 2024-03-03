@@ -65,17 +65,20 @@ const Macros: React.FC<HostProps> = ({ control, watch }) => {
           macrosField={macrosField}
           control={control}
           macrosRemove={macrosRemove}
-        />
-      )}
-      {activeMacro == "INHERITED" && (
-        <Inheritedmacros
-          macrosField={macrosField}
-          control={control}
-          macrosRemove={macrosRemove}
           macrosAppend={macrosAppend}
         />
       )}
-      <button
+      {activeMacro == "INHERITED" && (
+        <div style={{ maxHeight: "650px", overflow: "auto" }}>
+          <Inheritedmacros
+            macrosField={macrosField}
+            control={control}
+            macrosRemove={macrosRemove}
+            macrosAppend={macrosAppend}
+          />
+        </div>
+      )}
+      {/* <button
         type="button"
         className="btn btn-success py-2 d-block mt-5 "
         onClick={() => {
@@ -85,7 +88,7 @@ const Macros: React.FC<HostProps> = ({ control, watch }) => {
         {intl.formatMessage({
           id: "ADD",
         })}
-      </button>
+      </button> */}
     </div>
   );
 };

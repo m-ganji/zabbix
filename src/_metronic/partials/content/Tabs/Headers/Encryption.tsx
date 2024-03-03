@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Controller } from "react-hook-form";
 import { useIntl } from "react-intl";
 interface HostProps {
   control: object;
@@ -13,8 +14,6 @@ const Encryption: React.FC<HostProps> = ({ control, watch }) => {
   const handleCheckboxChange = (value) => {
     setSelectedOption(value);
   };
-  console.log(selectedOption);
-  console.log(activeEncryption);
 
   return (
     <div>
@@ -109,6 +108,143 @@ const Encryption: React.FC<HostProps> = ({ control, watch }) => {
           <input type="hidden" value="1" />
         </div>
       </div>
+      {activeEncryption == "CERTIFICATE" &&
+        selectedOption !== "certificate" && (
+          <div className="d-flex gap-5 ">
+            <Controller
+              name={`tls_issuer`}
+              control={control}
+              defaultValue=""
+              render={({ field }) => (
+                <input
+                  {...field}
+                  type="text"
+                  className="form-control rounded-start-2 rounded-end-0 mt-3 mb-3"
+                  placeholder="صادر کننده"
+                  aria-describedby="tab-hosts"
+                  required
+                />
+              )}
+            />
+            <Controller
+              name={`tls_subject`}
+              control={control}
+              defaultValue=""
+              render={({ field }) => (
+                <input
+                  {...field}
+                  type="text"
+                  className="form-control rounded-start-2 rounded-end-0 mt-3 mb-3"
+                  placeholder="موضوع"
+                  aria-describedby="tab-hosts"
+                  required
+                />
+              )}
+            />
+          </div>
+        )}
+      {activeEncryption == "PSK" && selectedOption !== "psk" && (
+        <div className="d-flex gap-5 ">
+          <Controller
+            name={`tls_psk_identity`}
+            control={control}
+            defaultValue=""
+            render={({ field }) => (
+              <input
+                {...field}
+                type="text"
+                className="form-control rounded-start-2 rounded-end-0 mt-3 mb-3"
+                placeholder="هویت PSK"
+                aria-describedby="tab-hosts"
+                required
+              />
+            )}
+          />
+          <Controller
+            name={`tls_psk`}
+            control={control}
+            defaultValue=""
+            render={({ field }) => (
+              <input
+                {...field}
+                type="text"
+                className="form-control rounded-start-2 rounded-end-0 mt-3 mb-3"
+                placeholder="PSK"
+                aria-describedby="tab-hosts"
+                required
+              />
+            )}
+          />
+        </div>
+      )}
+      {selectedOption == "certificate" && (
+        <div className="d-flex gap-5 ">
+          <Controller
+            name={`tls_issuer`}
+            control={control}
+            defaultValue=""
+            render={({ field }) => (
+              <input
+                {...field}
+                type="text"
+                className="form-control rounded-start-2 rounded-end-0 mt-3 mb-3"
+                placeholder="صادر کننده"
+                aria-describedby="tab-hosts"
+                required
+              />
+            )}
+          />
+          <Controller
+            name={`tls_subject`}
+            control={control}
+            defaultValue=""
+            render={({ field }) => (
+              <input
+                {...field}
+                type="text"
+                className="form-control rounded-start-2 rounded-end-0 mt-3 mb-3"
+                placeholder="موضوع"
+                aria-describedby="tab-hosts"
+                required
+              />
+            )}
+          />
+        </div>
+      )}
+      {selectedOption == "psk" && (
+        <div className="d-flex gap-5 ">
+          <Controller
+            name={`tls_psk_identity`}
+            control={control}
+            defaultValue=""
+            render={({ field }) => (
+              <input
+                {...field}
+                type="text"
+                className="form-control rounded-start-2 rounded-end-0 mt-3 mb-3"
+                placeholder="هویت PSK"
+                aria-describedby="tab-hosts"
+                required
+              />
+            )}
+          />
+          <Controller
+            name={`tls_psk`}
+            control={control}
+            defaultValue=""
+            render={({ field }) => (
+              <input
+                {...field}
+                type="text"
+                className="form-control rounded-start-2 rounded-end-0 mt-3 mb-3"
+                placeholder="PSK"
+                aria-describedby="tab-hosts"
+                required
+              />
+            )}
+          />
+        </div>
+      )}
     </div>
   );
 };

@@ -59,7 +59,6 @@ const MultiSelect: React.FC<{
       );
     } else {
       console.log(currentData);
-
       setData(DataName, [...currentData, option.value]);
       setSelectedOptions([...selectedOptions, option]);
     }
@@ -104,6 +103,8 @@ const MultiSelect: React.FC<{
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
+  
+  console.log(selectedOptions);
 
   return (
     <Dropdown show={isOpen} onToggle={toggleDropdown}>

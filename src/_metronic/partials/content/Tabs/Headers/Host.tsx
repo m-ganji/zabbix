@@ -10,9 +10,13 @@ interface HostProps {
   watch: () => void;
 }
 
-const Host: React.FC<HostProps> = ({ control, watch }) => {
+const Host: React.FC<HostProps> = ({ control, watch, setValue }) => {
   const intl = useIntl();
   const [templates, setTemplates] = useState<object>();
+  const [resetMultiSelect, setResetMultiSelect] = useState(false);
+  const currentGroupids = watch("groupids") ? watch("groupids") : [];
+  const currentTemplate = watch("template") ? watch("template") : [];
+
   const dispatch = useDispatch();
 
   const hostGroupData = useSelector((state) => (state as object).hostGroup);
@@ -98,17 +102,33 @@ const Host: React.FC<HostProps> = ({ control, watch }) => {
           <div className="col w-50">
             <MultiSelect
               title="MENU.SELECT.HOSTS.GP"
-              options={hostGroupData.data}
-              Loading={false}
+              reset={resetMultiSelect}
               addAll={false}
+              options={hostGroupData ? hostGroupData.data : []}
+              Loading={
+                hostGroupData &&
+                hostGroupData.meta &&
+                hostGroupData.meta.requestStatus !== "fulfilled"
+              }
+              DataName="groupids"
+              setData={setValue}
+              currentData={currentGroupids}
             />
           </div>
           <div className="col">
             <MultiSelect
               title="MENU.SELECT.TEMPLATES"
-              options={templates}
-              Loading={false}
+              reset={resetMultiSelect}
               addAll={false}
+              options={templates}
+              // Loading={
+              //   hostGroupData &&
+              //   hostGroupData.meta &&
+              //   hostGroupData.meta.requestStatus !== "fulfilled"
+              // }
+              DataName="template"
+              setData={setValue}
+              currentData={currentTemplate}
             />
           </div>
         </div>
