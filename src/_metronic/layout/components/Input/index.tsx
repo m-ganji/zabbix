@@ -5,8 +5,14 @@ interface Props {
   className?: string;
   iconName: string;
   placeholder?: string;
-  value?: string;
+  value?: string ;
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
+}
+
+interface Field {
+  field: {
+    value: string;
+  };
 }
 
 const Input: React.FC<Props> = ({
@@ -18,8 +24,8 @@ const Input: React.FC<Props> = ({
 }) => {
   return (
     <div className={`input-group ${className}`}>
-      <span className="input-group-text rounded-start-0 rounded-end-2">
-        <KTIcon iconName={iconName} className="fs-1" />
+      <span className="input-group-text rounded-start-0 rounded-end-2 p-3">
+        <KTIcon iconName={iconName} className="fs-3" />
       </span>
       <input
         type="text"

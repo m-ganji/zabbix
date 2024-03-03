@@ -901,7 +901,7 @@ export function Problems() {
                           type="text"
                           className="form-control py-2"
                           placeholder={intl.formatMessage({
-                            id: "MONITORING.HOSTS.ADDTAG.VALUE",
+                            id: "MONITORING.PROBLEMS.TAGS.SHOW.TITLE.PRIORITY",
                           })}
                           {...field}
                         />
