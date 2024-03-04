@@ -35,6 +35,8 @@
   "NOTIFICATIONS": "اعلانات",
   "PERIOD": "دوره زمانی",
   "YEAR": "سال",
+  "PROBLEM": "مشکل",
+  "GRAPH":"گراف",
 
   "DATE.FROM": "از تاریخ",
   "DATE.TILL": "تا تاریخ",
@@ -102,7 +104,7 @@
   "MONITORING.HOSTS.SEVERITY.OPTION5": "عادی",
   "MONITORING.HOSTS.SEVERITY.OPTION6": "بسیار بالا",
 
-  "MONITORING.HOSTS.CREATEHOST.HOST": "هاست",
+  "HOST": "هاست",
   "MONITORING.HOSTS.CREATEHOST.HOST.NAME": "نام",
   "MONITORING.HOSTS.CREATEHOST.HOST.ACTIVE": "فعال",
   "MONITORING.HOSTS.CREATEHOST.IPMI": "IPMI",
@@ -156,6 +158,8 @@
 
   "REPORTS.SYS.INFO": "اطلاعات سیستم",
   "REPORTS.MEDIA_TYPE": "نوع رسانه",
+  "REPORT.AVAILABILITY_REPORT" : "گزارش های برنامه ریزی شده",
+  "REPORTS.BUSIEST_TRIGGERS": "",
 
   "DATA.HOSTS.GP": "گروه هاست ها",
   "DATA.HOSTS.GP.NEW": "گروه هاست جدید",

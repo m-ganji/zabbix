@@ -10,7 +10,7 @@ const AvailabilityReportTabel = () => {
       <div className="card-header border-0 pt-5">
         <h3 className="card-title align-items-start flex-column">
           <span className="card-label fw-bold fs-3 mb-1">
-            {intl.formatMessage({ id: "REPORTS.SYS.INFO" })}
+            {intl.formatMessage({ id: "REPORT.AVAILABILITY_REPORT" })}
           </span>
         </h3>
   
