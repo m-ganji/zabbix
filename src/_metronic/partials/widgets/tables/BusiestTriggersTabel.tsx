@@ -3,17 +3,15 @@ import { useIntl } from "react-intl";
 const BusiestTriggersTabel = () => {
   const intl = useIntl();
 
-
   return (
     <div className={`card my-5`}>
       {/* begin::Header */}
       <div className="card-header border-0 pt-5">
         <h3 className="card-title align-items-start flex-column">
           <span className="card-label fw-bold fs-3 mb-1">
-            {intl.formatMessage({ id: "REPORTS.SYS.INFO" })}
+            {intl.formatMessage({ id: "REPORTS.BUSIEST_TRIGGERS" })}
           </span>
         </h3>
-  
       </div>
       {/* end::Header */}
       {/* begin::Body */}
@@ -37,25 +35,20 @@ const BusiestTriggersTabel = () => {
                 <th className="min-w-100px">
                   {intl.formatMessage({ id: "NUMBER OF STATUS CHANGE" })}
                 </th>
-     
               </tr>
             </thead>
             {/* end::Table head */}
             {/* begin::Table body */}
             <tbody>
               <tr>
-                <td>
-          
-                </td>
-                <td>
-       
-                </td>
+                <td></td>
+                <td></td>
                 <td className="text-end"></td>
                 <td className="text-end">
-                  <span className="badge badge-light-danger">No Data Found</span>
-                  
-                  </td>
-           
+                  <span className="badge badge-light-danger">
+                    No Data Found
+                  </span>
+                </td>
               </tr>
             </tbody>
             {/* end::Table body */}

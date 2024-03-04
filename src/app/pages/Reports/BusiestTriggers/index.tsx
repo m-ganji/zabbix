@@ -156,7 +156,7 @@ const BusiestTriggers = () => {
     <>
       <Content>
         <PageTitle breadcrumbs={[]}>
-          {intl.formatMessage({ id: "MENU.PROBLEMS" })}
+          {intl.formatMessage({ id: "REPORTS.BUSIEST_TRIGGERS" })}
         </PageTitle>
         <ToolbarWrapper />
 

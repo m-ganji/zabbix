@@ -37,6 +37,10 @@
   "YEAR": "سال",
   "PROBLEM": "مشکل",
   "GRAPH":"گراف",
+  "TRIGGER":"",
+  "SEVERITY":"",
+  "NUMBER_OF_STATUS_CHANGE":"تعداد تغییر وضعیت",
+
 
   "DATE.FROM": "از تاریخ",
   "DATE.TILL": "تا تاریخ",
@@ -159,7 +163,7 @@
   "REPORTS.SYS.INFO": "اطلاعات سیستم",
   "REPORTS.MEDIA_TYPE": "نوع رسانه",
   "REPORT.AVAILABILITY_REPORT" : "گزارش های برنامه ریزی شده",
-  "REPORTS.BUSIEST_TRIGGERS": "",
+  "REPORTS.BUSIEST_TRIGGERS": "100 شلوغ ترین محرک",
 
   "DATA.HOSTS.GP": "گروه هاست ها",
   "DATA.HOSTS.GP.NEW": "گروه هاست جدید",
