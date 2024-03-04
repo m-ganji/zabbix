@@ -464,7 +464,7 @@ export function Problems() {
                           <MultiSelect
                             reset={false}
                             addAll={true}
-                            title="MENU.SELECT.HOSTS.GP"
+                            title="MENU.SELECT.HOSTS"
                             options={selectedHosts}
                             Loading={false}
                             DataName="hostids"

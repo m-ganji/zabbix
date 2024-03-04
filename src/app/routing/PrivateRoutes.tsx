@@ -17,6 +17,10 @@ import { DataHostGroups } from "../pages/LatestData/DataHostGroups";
 import { SystemInfo } from "../pages/Reports/SystemInfo";
 import { Notifications } from "../pages/Reports/Notifications";
 import { ScheduledReports } from "../pages/Reports/ScheduledReports";
+import AuditLog from "../pages/Reports/AuditLog";
+import ActionLog from "../pages/Reports/ActionLog";
+import AvailabilityReport from "../pages/Reports/AvailabilityReport";
+import BusiestTriggers from "../pages/Reports/BusiestTriggers";
 
 const PrivateRoutes = () => {
   const ProfilePage = lazy(() => import("../modules/profile/ProfilePage"));
@@ -50,6 +54,10 @@ const PrivateRoutes = () => {
           element={<ScheduledReports />}
         />
         <Route path="Reports/Notifications" element={<Notifications />} />
+        <Route path="Reports/Availability-Report" element={<AvailabilityReport />} />
+        <Route path="Reports/Busiest-Triggers" element={<BusiestTriggers />} />
+        <Route path="Reports/Audit-log" element={<AuditLog />} />
+        <Route path="Reports/Action-log" element={<ActionLog />} />
         {/* DATA PAGES */}
         <Route path="Data/Templates-Groups" element={<DataTemplatesGroups />} />
         <Route path="Data/Host-Groups" element={<DataHostGroups />} />

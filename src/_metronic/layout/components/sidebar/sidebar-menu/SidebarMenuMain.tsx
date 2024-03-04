@@ -95,27 +95,22 @@ const SidebarMenuMain = () => {
           hasBullet={true}
         />
         <SidebarMenuItem
-          to="Reports/"
-          title="گزارش در دسترس بودن"
-          hasBullet={true}
-        />
-        <SidebarMenuItem
-          to="Reports/"
+          to="Reports/Availability-Report"
           title="گزارش در دسترس بودن"
           hasBullet={true}
         />
             <SidebarMenuItem
-          to="Reports/"
+          to="Reports/Busiest-Triggers"
           title="100 شلوغ ترین محرک"
           hasBullet={true}
         />
             <SidebarMenuItem
-          to="Reports/"
+          to="Reports/Audit-log"
           title="گزارش حسابرسی"
           hasBullet={true}
         />
             <SidebarMenuItem
-          to="Reports/"
+          to="Reports/Action-log"
           title="گزارش اقدام"
           hasBullet={true}
         />
