@@ -67,7 +67,7 @@ const Inventory: React.FC<HostProps> = ({ control, watch }) => {
           })}
         </button>
       </div>
-      <div style={{ maxHeight: "650px", overflow: "auto" }}>
+      <div style={{ maxHeight: "70vh", overflow: "auto" }}>
         {pairs.map((pair, index) => (
           <div key={index} className="d-flex">
             {pair.map((input) => (
