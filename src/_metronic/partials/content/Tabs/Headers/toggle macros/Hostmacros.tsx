@@ -70,7 +70,6 @@ const Hostmacros: React.FC = ({
     setIsOpen(false);
   };
 
-
   return (
     <div>
       {macrosField.map((item, index) => (
@@ -169,7 +168,7 @@ const Hostmacros: React.FC = ({
         type="button"
         className="btn btn-success py-2 d-block mt-5 "
         onClick={() => {
-          macrosAppend({  macro: "" ,value: "", description: "" });
+          macrosAppend({ macro: "", value: "", description: "" });
         }}
       >
         {intl.formatMessage({

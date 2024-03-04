@@ -103,7 +103,7 @@ const MultiSelect: React.FC<{
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
-  
+
   console.log(selectedOptions);
 
   return (
@@ -171,8 +171,8 @@ const MultiSelect: React.FC<{
                 key={option.value}
                 style={{
                   direction: "ltr",
-                  overflow: "hidden",
                   textOverflow: "ellipsis",
+                  maxHeight: "250px",
                 }}
                 onClick={() => toggleOption(option)}
                 active={selectedOptions.some(
