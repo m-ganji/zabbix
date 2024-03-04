@@ -12,7 +12,7 @@ export const SwitchBTN: React.FC<SwitchBTNProps> = ({
   state,
 }) => {
   return (
-    <div className="form-check form-switch form-switch-sm form-check-custom form-check-solid">
+    <div className="form-check form-switch p-0 form-switch-sm form-check-custom form-check-solid">
       <label className="form-check-label">{label}</label>
       <input
         className="form-check-input"

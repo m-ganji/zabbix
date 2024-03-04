@@ -154,7 +154,7 @@ const Host: React.FC<HostProps> = ({ control, watch, setValue }) => {
               <input type="checkbox" />
               <span className="me-2">
                 {intl.formatMessage({
-                  id: "MONITORING.HOSTS.CREATEHOST.HOST.ACTIVE",
+                  id: "ACTIVE",
                 })}
               </span>
             </div>

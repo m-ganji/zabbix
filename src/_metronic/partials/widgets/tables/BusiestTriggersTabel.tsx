@@ -19,7 +19,7 @@ const BusiestTriggersTabel = () => {
         {/* begin::Table container */}
         <div className="table-responsive">
           {/* begin::Table */}
-          <table className="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-4">
+          <table className="table table-row-dashed table-row-gray-300 align-middle text-center gs-0 gy-4">
             {/* begin::Table head */}
             <thead>
               <tr className="fw-bold text-muted">
@@ -33,7 +33,7 @@ const BusiestTriggersTabel = () => {
                   {intl.formatMessage({ id: "SEVERITY" })}
                 </th>
                 <th className="min-w-100px">
-                  {intl.formatMessage({ id: "NUMBER OF STATUS CHANGE" })}
+                  {intl.formatMessage({ id: "NUMBER_OF_STATUS_CHANGE" })}
                 </th>
               </tr>
             </thead>
@@ -43,8 +43,8 @@ const BusiestTriggersTabel = () => {
               <tr>
                 <td></td>
                 <td></td>
-                <td className="text-end"></td>
-                <td className="text-end">
+                <td className="text-center"></td>
+                <td className="text-center">
                   <span className="badge badge-light-danger">
                     No Data Found
                   </span>

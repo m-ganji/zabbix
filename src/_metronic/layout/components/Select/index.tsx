@@ -9,28 +9,28 @@ interface SelectProps {
   options: SelectOption[];
   onChange?: (selectedValue: string | number) => void;
   defaultLabel?: string;
+  value?: string | number;
 }
 
 export const Select: React.FC<SelectProps> = ({
   options,
   onChange,
   defaultLabel = "Select...",
+  value
 }) => {
-  const [selectedValue, setSelectedValue] = useState<string | number>("");
 
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = event.target.value;
-    setSelectedValue(value);
+    const value = event?.target?.value;
     onChange(value);
   };
 
   return (
     <select
       className="form-select h-40px"
-      value={selectedValue}
+      value={value}
       onChange={handleSelectChange}
     >
-      <option disabled value="">
+      <option disabled value="-1">
         {defaultLabel}
       </option>
       {options.map((option, index) => (
@@ -41,4 +41,3 @@ export const Select: React.FC<SelectProps> = ({
     </select>
   );
 };
-

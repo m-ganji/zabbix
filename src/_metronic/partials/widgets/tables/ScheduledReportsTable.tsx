@@ -1,7 +1,7 @@
 import { useIntl } from "react-intl";
 import { CheckBox } from "./../../../layout/components/CheckBox/index";
 
-const HostsGpTable = () => {
+const ScheduledReportsTabel = () => {
   const intl = useIntl();
 
   return (
@@ -9,7 +9,7 @@ const HostsGpTable = () => {
       {/* begin::Header */}
       <div className="card-header border-0 pt-5">
         <h3 className="card-title align-items-start flex-column">
-          {intl.formatMessage({ id: "DATA.HOSTS.GP" })}
+          {intl.formatMessage({ id: "REPORTS.SCHEDULED_REPORTS" })}
         </h3>
         <div
           className="card-toolbar"
@@ -19,7 +19,7 @@ const HostsGpTable = () => {
           title="Click to add a user"
         >
           <span className="text-muted mt-1 fw-semibold fs-7">
-            تعداد 1 مورد گروه هاست یافت شد
+            تعداد 1 مورد گزارش یافت شد
           </span>
         </div>
       </div>
@@ -29,7 +29,7 @@ const HostsGpTable = () => {
         {/* begin::Table container */}
         <div className="table-responsive">
           {/* begin::Table */}
-          <table className="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-4">
+          <table className="table table-row-dashed table-row-gray-30 text-center">
             {/* begin::Table head */}
             <thead>
               <tr className="fw-bold text-muted">
@@ -39,8 +39,23 @@ const HostsGpTable = () => {
                 <th className="min-w-150px">
                   {intl.formatMessage({ id: "NAME" })}
                 </th>
-                <th className="min-w-400px">
-                  {intl.formatMessage({ id: "MENU.HOSTS" })}
+                <th className="min-w-100px">
+                  {intl.formatMessage({ id: "OWNER" })}
+                </th>
+                <th className="min-w-100px">
+                  {intl.formatMessage({ id: "REPEATS" })}
+                </th>
+                <th className="min-w-100px">
+                  {intl.formatMessage({ id: "PERIOD" })}
+                </th>
+                <th className="min-w-100px">
+                  {intl.formatMessage({ id: "LAST_SENT" })}
+                </th>
+                <th className="min-w-100px">
+                  {intl.formatMessage({ id: "STATUS" })}
+                </th>
+                <th className="min-w-100px">
+                  {intl.formatMessage({ id: "INFO" })}
                 </th>
               </tr>
             </thead>
@@ -48,26 +63,17 @@ const HostsGpTable = () => {
             {/* begin::Table body */}
             <tbody>
               <tr>
+                <td></td>
                 <td>
-                  <CheckBox />
+                  <span className="badge badge-light-primary fs-6">linux</span>
                 </td>
-                <td>
-                  <div className="d-flex align-items-center">
-                    <div className="d-flex justify-content-start flex-column">
-                      <a
-                        href="#"
-                        className="text-gray-900 fw-bold text-hover-primary fs-6"
-                      >
-                        ZABBIX
-                      </a>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <span className="badge badge-light-primary">
-                    linux host 2
+                <td className="text-center">
+                  <span className="badge badge-light-success fs-6">
+                    server 2
                   </span>
                 </td>
+                <td className="text-center"></td>
+                <td className="text-center"></td>
               </tr>
             </tbody>
             {/* end::Table body */}
@@ -81,4 +87,4 @@ const HostsGpTable = () => {
   );
 };
 
-export { HostsGpTable };
+export { ScheduledReportsTabel };

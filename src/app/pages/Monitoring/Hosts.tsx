@@ -145,7 +145,7 @@ export function Overview() {
                     >
                       <p>
                         {intl.formatMessage({
-                          id: "MONITORING.HOSTS.STATUS",
+                          id: "STATUS",
                         })}
                       </p>
                       <div className="w-100 ">
@@ -172,7 +172,7 @@ export function Overview() {
                                 data-bs-toggle="button"
                               >
                                 {intl.formatMessage({
-                                  id: "MONITORING.HOSTS.STATUS.ANY",
+                                  id: "ANY",
                                 })}
                               </button>
                             )}
@@ -570,7 +570,7 @@ export function Overview() {
                     <div className="row">
                       <p className="mt-5">
                         {intl.formatMessage({
-                          id: "MONITORING.HOSTS.SEVERITY",
+                          id: "SEVERITY",
                         })}
                       </p>
                       <Severities watch={watch} setValue={setValue} />
