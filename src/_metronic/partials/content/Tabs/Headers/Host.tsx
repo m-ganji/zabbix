@@ -110,7 +110,7 @@ const Host: React.FC<HostProps> = ({ control, watch, setValue }) => {
                 hostGroupData.meta &&
                 hostGroupData.meta.requestStatus !== "fulfilled"
               }
-              DataName="groupids"
+              DataName="groups.{groupid}"
               setData={setValue}
               currentData={currentGroupids}
             />

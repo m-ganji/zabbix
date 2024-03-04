@@ -69,7 +69,7 @@ const Macros: React.FC<HostProps> = ({ control, watch }) => {
         />
       )}
       {activeMacro == "INHERITED" && (
-        <div style={{ maxHeight: "70vh", overflow: "auto" }}>
+        <div style={{ maxHeight: "65vh", overflow: "auto" }} className="mt-3">
           <Inheritedmacros
             macrosField={macrosField}
             control={control}

@@ -71,6 +71,8 @@ export function Overview() {
   });
 
   const dataHost = async (data) => {
+    console.log(data);
+    
     setIsLoaded(true);
     setIsError(false);
     try {

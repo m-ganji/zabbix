@@ -36,7 +36,7 @@
   "PERIOD": "دوره زمانی",
   "YEAR": "سال",
   "PROBLEM": "مشکل",
-  "GRAPH":"گراف",
+  "GRAPH": "گراف",
 
   "DATE.FROM": "از تاریخ",
   "DATE.TILL": "تا تاریخ",
@@ -118,6 +118,8 @@
   "MONITORING.HOSTS.CREATEHOST.ENCRYPTION.PSK": "PSK",
   "MONITORING.HOSTS.CREATEHOST.ENCRYPTION.CERTIFICATE": "گواهی نامه",
   "MONITORING.HOSTS.CREATEHOST.ENCRYPTION.FROM": "متصل از هاست",
+  "MONITORING.HOSTS.CREATEHOST.TAGS.MACRO": "ماکرو",
+  "MONITORING.HOSTS.CREATEHOST.TAGS.DESC": "توضیح",
 
   "MONITORING.PROBLEMS.SHOWBASEDON": "نمایش بر اساس :",
   "MONITORING.PROBLEMS.SHOWBASEDON.RECENTPROBLEMS": "آخرین مشکلات",
@@ -158,7 +160,7 @@
 
   "REPORTS.SYS.INFO": "اطلاعات سیستم",
   "REPORTS.MEDIA_TYPE": "نوع رسانه",
-  "REPORT.AVAILABILITY_REPORT" : "گزارش های برنامه ریزی شده",
+  "REPORT.AVAILABILITY_REPORT": "گزارش های برنامه ریزی شده",
   "REPORTS.BUSIEST_TRIGGERS": "",
 
   "DATA.HOSTS.GP": "گروه هاست ها",

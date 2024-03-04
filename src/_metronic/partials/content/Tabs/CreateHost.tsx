@@ -18,12 +18,6 @@ const CreateHost: FC = () => {
     {
       defaultValues: {
         host: "",
-        groupids: [],
-        // groups: [
-        //   {
-        //     groupid: "",
-        //   },
-        // ],
       },
     }
   );
@@ -37,10 +31,6 @@ const CreateHost: FC = () => {
     } catch (error) {
       console.error("Error occurred:", error);
     }
-  };
-
-  const logData = (data: string) => {
-    console.log("Data from Controller:", data);
   };
 
   return (
