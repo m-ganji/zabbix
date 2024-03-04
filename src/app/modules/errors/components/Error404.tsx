@@ -8,6 +8,7 @@ const Error404: FC = () => {
 
   return (
     <>
+    
       {/* begin::Title */}
 
       {/* end::Title */}
