@@ -11,6 +11,8 @@ import { GroupSharesTabel } from "../../../partials/widgets/tables/GroupSharesTa
 import BTN from "../BTN";
 import { UserSharesTabel } from "../../../partials/widgets/tables/UserSharesTabel";
 import { SwitchBTN } from "./SwitchBTN";
+import Input from "../Input";
+import { Select } from "../Select";
 
 interface CreateMapProps {
   control: object;
@@ -136,64 +138,27 @@ export const CreateMap: React.FC<CreateMapProps> = ({ control, setValue }) => {
                       </Modal>
                       <div className="row">
                         <div className="input-group  col">
-                          <span
-                            className="input-group-text rounded-start-0 rounded-end-2"
-                            id="map"
-                          >
-                            <i className="bi bi-person-bounding-box" />
-                          </span>
-                          <input
-                            type="text"
-                            className="form-control rounded-start-2 rounded-end-0"
+                          <Input
+                            iconName="user"
                             placeholder={intl.formatMessage({
                               id: "NAME",
                             })}
-                            aria-label={intl.formatMessage({
-                              id: "NAME",
-                            })}
-                            aria-describedby="map"
-                            required
                           />
                         </div>
                         <div className="input-group  col">
-                          <span
-                            className="input-group-text rounded-start-0 rounded-end-2"
-                            id="map"
-                          >
-                            <i className="bi bi-arrows" />
-                          </span>
-                          <input
-                            type="text"
-                            className="form-control rounded-start-2 rounded-end-0"
+                          <Input
+                            iconName="right-left"
                             placeholder={intl.formatMessage({
                               id: "WIDTH",
                             })}
-                            aria-label={intl.formatMessage({
-                              id: "WIDTH",
-                            })}
-                            aria-describedby="map"
-                            required
                           />
                         </div>
                         <div className="input-group col">
-                          <span
-                            className="input-group-text rounded-start-0 rounded-end-2"
-                            id="map"
-                          >
-                            <i className="bi bi-arrows-vertical" />
-                          </span>
-                          <input
-                            type="text"
-                            className="form-control rounded-start-2 rounded-end-0"
+                          <Input
+                            iconName="up-down"
                             placeholder={intl.formatMessage({
                               id: "HEIGHT",
                             })}
-                            aria-label={intl.formatMessage({
-                              id: "HEIGHT",
-                            })}
-                            aria-describedby="map"
-                            autoComplete="off"
-                            required
                           />
                         </div>
                       </div>
@@ -292,91 +257,103 @@ export const CreateMap: React.FC<CreateMapProps> = ({ control, setValue }) => {
                       {IsAdvancedTags ? (
                         <div className="row">
                           <div className="col">
-                            <select className="form-select">
-                              <option disabled selected>
-                                {intl.formatMessage({
-                                  id: "HOST_GROUP_LABEL_TYPE",
-                                })}
-                              </option>
-                              <option value="1">
-                                {intl.formatMessage({
-                                  id: "ELEMENT_NAME",
-                                })}
-                              </option>
-                            </select>
+                            <Select
+                              value="-1"
+                              defaultLabel={intl.formatMessage({
+                                id: "HOST_GROUP_LABEL_TYPE",
+                              })}
+                              options={[
+                                {
+                                  value: "0",
+                                  label: intl.formatMessage({
+                                    id: "ELEMENT_NAME",
+                                  }),
+                                },
+                              ]}
+                            />
                           </div>
                           <div className="col">
-                            <select className="form-select">
-                              <option disabled selected>
-                                {intl.formatMessage({
-                                  id: "HOST_LABEL_TYPE",
-                                })}
-                              </option>
-                              <option value="ELEMENT_NAME">
-                                {intl.formatMessage({
-                                  id: "ELEMENT_NAME",
-                                })}
-                              </option>
-                            </select>
+                            <Select
+                              value="-1"
+                              defaultLabel={intl.formatMessage({
+                                id: "HOST_LABEL_TYPE",
+                              })}
+                              options={[
+                                {
+                                  value: "0",
+                                  label: intl.formatMessage({
+                                    id: "ELEMENT_NAME",
+                                  }),
+                                },
+                              ]}
+                            />
                           </div>
                           <div className="col">
-                            <select className="form-select">
-                              <option disabled selected>
-                                {intl.formatMessage({
-                                  id: "TRIGGER_LABEL_TYPE",
-                                })}
-                              </option>
-                              <option value="ELEMENT_NAME">
-                                {intl.formatMessage({
-                                  id: "ELEMENT_NAME",
-                                })}
-                              </option>
-                            </select>
+                            <Select
+                              value="-1"
+                              defaultLabel={intl.formatMessage({
+                                id: "TRIGGER_LABEL_TYPE",
+                              })}
+                              options={[
+                                {
+                                  value: "0",
+                                  label: intl.formatMessage({
+                                    id: "ELEMENT_NAME",
+                                  }),
+                                },
+                              ]}
+                            />
                           </div>
                           <div className="col">
-                            <select className="form-select">
-                              <option disabled selected>
-                                {intl.formatMessage({
-                                  id: "MAP_LABEL_TYPE",
-                                })}
-                              </option>
-                              <option value="ELEMENT_NAME">
-                                {intl.formatMessage({
-                                  id: "ELEMENT_NAME",
-                                })}
-                              </option>
-                            </select>
+                            <Select
+                              value="-1"
+                              defaultLabel={intl.formatMessage({
+                                id: "MAP_LABEL_TYPE",
+                              })}
+                              options={[
+                                {
+                                  value: "0",
+                                  label: intl.formatMessage({
+                                    id: "ELEMENT_NAME",
+                                  }),
+                                },
+                              ]}
+                            />
                           </div>
                           <div className="col">
-                            <select className="form-select">
-                              <option disabled selected>
-                                {intl.formatMessage({
-                                  id: "IMAGE_LABEL_TYPE",
-                                })}
-                              </option>
-                              <option value="ELEMENT_NAME">
-                                {intl.formatMessage({
-                                  id: "ELEMENT_NAME",
-                                })}
-                              </option>
-                            </select>
+                            <Select
+                              value="-1"
+                              defaultLabel={intl.formatMessage({
+                                id: "IMAGE_LABEL_TYPE",
+                              })}
+                              options={[
+                                {
+                                  value: "0",
+                                  label: intl.formatMessage({
+                                    id: "ELEMENT_NAME",
+                                  }),
+                                },
+                              ]}
+                            />
                           </div>
                         </div>
                       ) : (
                         <div className="row">
                           <div className="col">
-                            <select className="form-select">
-                              <option disabled selected>
-                                {intl.formatMessage({
-                                  id: "Map_LABEL_TYPE",
-                                })}
-                              </option>
-                              <option value="1">
-                                {intl.formatMessage({
-                                  id: "ELEMENT_NAME",
-                                })}
-                              </option>
-                            </select>
+                            <Select
+                              value="-1"
+                              defaultLabel={intl.formatMessage({
+                                id: "Map_LABEL_TYPE",
+                              })}
+                              options={[
+                                {
+                                  value: "0",
+                                  label: intl.formatMessage({
+                                    id: "ELEMENT_NAME",
+                                  }),
+                                },
+                              ]}
+                            />
                           </div>
                         </div>
                       )}
@@ -385,7 +362,7 @@ export const CreateMap: React.FC<CreateMapProps> = ({ control, setValue }) => {
                           <div className=" d-flex align-items-center gap-3 text-end ">
                             <p>
                               {intl.formatMessage({
-                                id: "MONITORING.HOSTS.SEVERITY",
+                                id: "SEVERITY",
                               })}
                               :
                             </p>
@@ -405,7 +382,7 @@ export const CreateMap: React.FC<CreateMapProps> = ({ control, setValue }) => {
                                 },
                                 {
                                   value: 2,
-                                  label: "MONITORING.HOSTS.SEVERITY.OPTION4",
+                                  label: "INFO",
                                 },
                                 {
                                   value: 2,
@@ -426,45 +403,44 @@ export const CreateMap: React.FC<CreateMapProps> = ({ control, setValue }) => {
                       <div className="row gap-3">
                         <h6 className="text-end p-0 m-0">URLs :</h6>
                         {URLsField.map((item, index) => (
-                          <div className="row">
-                            <Controller
-                              control={control}
-                              name={`URLs[${index}].name`}
-                              render={({ field }) => (
-                                <input
-                                  className="form-control col py-2"
-                                  placeholder={intl.formatMessage({
-                                    id: "MONITORING.HOSTS.ADDTAG.VALUE",
-                                  })}
-                                  {...field}
-                                />
-                              )}
-                            />
-                            <div className="col">
+                          <div key={item.id} className="row gap-3">
+                            <div className="col p-0">
                               <Controller
                                 control={control}
-                                name={`URLs[${index}].URL`}
+                                name={`URLs[${index}].name`}
                                 render={({ field }) => (
-                                  <input
-                                    className="form-control py-2"
+                                  <Input
+                                    iconName="feather"
                                     placeholder={intl.formatMessage({
-                                      id: "MONITORING.HOSTS.ADDTAG.VALUE",
+                                      id: "NAME",
                                     })}
-                                    {...field}
+                                    value={field.value.toString()}
+                                    onChange={field.onChange}
                                   />
                                 )}
                               />
                             </div>
-                            <button
-                              type="button"
-                              className="btn col-2 btn-light-danger me-2 py-2"
-                              onClick={() => URLsRemove(index)}
-                              style={{ width: "10%" }}
-                            >
-                              {intl.formatMessage({
+                            <div className="col p-0">
+                              <Controller
+                                control={control}
+                                name={`URLs[${index}].URL`}
+                                render={({ field }) => (
+                                  <Input
+                                    iconName="fasten"
+                                    placeholder="URL"
+                                    value={field.value.toString()}
+                                    onChange={field.onChange}
+                                  />
+                                )}
+                              />
+                            </div>
+                            <BTN
+                              label={intl.formatMessage({
                                 id: "MONITORING.HOSTS.ADDTAG.REMOVEBUTTON",
                               })}
-                            </button>
+                              className="btn-light-danger col-1 p-0"
+                              onClick={() => URLsRemove(index)}
+                            />
                           </div>
                         ))}
                         <button

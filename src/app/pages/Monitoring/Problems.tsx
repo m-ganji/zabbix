@@ -9,7 +9,7 @@ import { ProblemTable } from "../../../_metronic/partials/widgets";
 import { PageTitle } from "../../../_metronic/layout/core";
 import { ToolbarWrapper } from "../../../_metronic/layout/components/toolbar";
 import { instance } from "../../../services/axiosInstance";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { MultiSelect } from "../../../_metronic/layout/components/MultiSelect/MultiSelect";
 import { useDispatch } from "react-redux";
 import { Form, Modal } from "react-bootstrap";
@@ -129,11 +129,17 @@ export interface Problem {
   urls: never[];
   userid: string;
 }
+interface ProblemParams {
+  id: string;
+  value: string;
+}
 
 export function Problems() {
   const intl = useIntl();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const { id, value } = useParams<ProblemParams>();
 
   const [sortBasedOn, setSortBasedOn] = useState("");
   const [hostGroupWithParam, setHostGroupWithParam] = useState([]);
@@ -160,6 +166,8 @@ export function Problems() {
   const [age, setAge] = useState(0);
 
   useEffect(() => {
+    // setValue("groupids", );
+
     watch("hostids")?.length === 0 && unregister("hostids");
     fetchPromsListData(watch());
     dispatch(
@@ -192,8 +200,8 @@ export function Problems() {
         evaltype: "0",
         tags: [],
         inventory: [],
-        hostids: [],
         recent: "1",
+        hostids: id ? [id] : [],
       },
     });
 
@@ -468,6 +476,7 @@ export function Problems() {
                             options={selectedHosts}
                             Loading={false}
                             DataName="hostids"
+                            selectedValue={[{ value: id, label: value }]}
                             setData={setValue}
                             currentData={currentHostids}
                           />
@@ -697,7 +706,7 @@ export function Problems() {
                       <div>
                         <p className="mt-5">
                           {intl.formatMessage({
-                            id: "MONITORING.HOSTS.SEVERITY",
+                            id: "SEVERITY",
                           })}
                         </p>
                         <Severities watch={watch} setValue={setValue} />

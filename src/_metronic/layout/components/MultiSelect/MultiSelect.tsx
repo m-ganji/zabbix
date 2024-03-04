@@ -16,6 +16,7 @@ const MultiSelect: React.FC<{
   setData: CallableFunction;
   currentData: number[];
   reset: boolean;
+  selectedValue: Option[];
 }> = ({
   title,
   options,
@@ -25,6 +26,7 @@ const MultiSelect: React.FC<{
   setData,
   currentData,
   reset,
+  selectedValue,
 }) => {
   const [selectedOptions, setSelectedOptions] = useState<Option[]>([]);
   const [isOpen, setIsOpen] = useState(false);
@@ -32,11 +34,12 @@ const MultiSelect: React.FC<{
   const intl = useIntl();
 
   useEffect(() => {
-    console.log(reset);
+    console.log(selectedValue?.length);
 
     setSelectedOptions([]);
-
     addAll && setSelectedOptions([...options]);
+    
+    selectedValue?.[0]?.value && setSelectedOptions(selectedValue);
   }, [addAll, options, reset]);
 
   const toggleOption = (option: Option) => {
@@ -104,8 +107,6 @@ const MultiSelect: React.FC<{
     setIsOpen(!isOpen);
   };
 
-  console.log(selectedOptions);
-
   return (
     <Dropdown show={isOpen} onToggle={toggleDropdown}>
       <Dropdown.Toggle
@@ -114,30 +115,35 @@ const MultiSelect: React.FC<{
       >
         {selectedOptions?.length > 0 ? (
           <div className="d-flex flex-wrap gap-2">
-            {selectedOptions.map((option) => (
-              <div
-                dir="ltr"
-                className="d-flex gap-1"
-                style={{
-                  maxWidth: "130px",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                }}
-                key={option.value}
-              >
-                <p
-                  style={{ textOverflow: "ellipsis" }}
-                  className="m-0  overflow-hidden"
-                >
-                  {option.label}
-                </p>
-                <img
-                  src="/media/icons/duotune/general/close-circle.svg"
-                  onClick={() => deleteOption(option)}
-                  alt="Close"
-                />
-              </div>
-            ))}
+            {selectedOptions.map(
+              (option, index) => (
+                console.log(selectedOptions),
+                (
+                  <div
+                    dir="ltr"
+                    className="d-flex gap-1"
+                    style={{
+                      maxWidth: "130px",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                    }}
+                    key={index}
+                  >
+                    <p
+                      style={{ textOverflow: "ellipsis" }}
+                      className="m-0  overflow-hidden"
+                    >
+                      {option.label}
+                    </p>
+                    <img
+                      src="/media/icons/duotune/general/close-circle.svg"
+                      onClick={() => deleteOption(option)}
+                      alt="Close"
+                    />
+                  </div>
+                )
+              )
+            )}
           </div>
         ) : (
           intl.formatMessage({ id: title })
@@ -166,9 +172,9 @@ const MultiSelect: React.FC<{
               </Dropdown.Item>
             </div>
             <Dropdown.Divider />
-            {options?.map((option) => (
+            {options?.map((option, index) => (
               <Dropdown.Item
-                key={option.value}
+                key={index}
                 style={{
                   direction: "ltr",
                   textOverflow: "ellipsis",

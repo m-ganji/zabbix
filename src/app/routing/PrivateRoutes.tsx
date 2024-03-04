@@ -43,6 +43,7 @@ const PrivateRoutes = () => {
         <Route path="menu-test" element={<MenuTestPage />} />
         {/* MONITORING PAGES */}
         <Route path="Monitoring/Problems" element={<Problems />} />
+        <Route path="Monitoring/Problems/:id/:value" element={<Problems />} />
         <Route path="Monitoring/Hosts" element={<Overview />} />
         <Route path="Monitoring/Discovery" element={<Discovery />} />
         <Route path="Monitoring/Maps" element={<Maps />} />

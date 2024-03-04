@@ -11,6 +11,8 @@ import BTN from "../../../../_metronic/layout/components/BTN";
 import { Content } from "../../../../_metronic/layout/components/content";
 import { AvailabilityReportTabel } from "../../../../_metronic/partials/widgets/tables/AvailabilityReportTabel";
 import { Select } from "../../../../_metronic/layout/components/Select";
+import { KTIcon } from "../../../../_metronic/helpers";
+import DatePickerSelect from "../../../../_metronic/layout/components/DatePicker";
 
 interface FormValues {
   selectTags: string;
@@ -65,14 +67,14 @@ const AvailabilityReport = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [isHostsModalOpen, setisHostsModalOpen] = useState<boolean>(false);
-  const [isHostsDataLoading, setIsHostsDataLoading] = useState<boolean>(false);
-  const [selectedHosts, setSelectedHosts] = useState<hostGroupItems[]>([]);
   const [hostsData, setHostsData] = useState<HostsData[]>([]);
   const [hostGroupWithoutParam, setHostGroupWithoutParam] =
     useState<HostGroupData | null>(null);
+  const [selectedHosts, setSelectedHosts] = useState<hostGroupItems[]>([]);
   const [resetMultiSelect, setresetMultiSelect] = useState(false);
-
+  const [isHostsModalOpen, setisHostsModalOpen] = useState<boolean>(false);
+  const [isHostsDataLoading, setIsHostsDataLoading] = useState<boolean>(false);
+  const [Mood, setMood] = useState<string>("0");
   const { control, watch, setValue, handleSubmit, reset, unregister } =
     useForm<FormValues>({
       defaultValues: {
@@ -150,6 +152,15 @@ const AvailabilityReport = () => {
     handleSubmit(fetchPromsListData)();
   };
 
+  const handleDateChange = (e) => {
+    console.log(e);
+    // Your logic here
+  };
+
+  const handleMood = (e) => {
+    setMood(e);
+  };
+
   return (
     <>
       <Content>
@@ -157,8 +168,38 @@ const AvailabilityReport = () => {
           <h3 className="fw-bolder w-100">
             {intl.formatMessage({ id: "REPORT.AVAILABILITY_REPORT" })}
           </h3>
-          <div className="col-2">
-            <Select options={[]} defaultLabel="مود :" />
+          <div className="d-flex gap-3 w-50 justify-content-end">
+            <div className="w-50">
+              <Select
+                options={[
+                  { value: "0", label: "توسط هاست" },
+                  { value: "1", label: "توسط قالب های محرک" },
+                ]}
+                defaultLabel="حالت :"
+                value={Mood}
+                onChange={handleMood}
+              />
+            </div>
+            <ul className="nav d-flex gap-3 align-items-center">
+              <li className="nav-item">
+                <a
+                  data-bs-toggle="tab"
+                  href="#Availability_filter"
+                  className="w-100 text-end btn py-2 btn-light-primary active"
+                >
+                  <KTIcon iconName="filter" className="fs-2" />
+                </a>
+              </li>
+              <li className="nav-item">
+                <a
+                  data-bs-toggle="tab"
+                  href="#Availability_date"
+                  className="w-100 text-end btn py-2 btn-light-warning"
+                >
+                  <KTIcon iconName="calendar" className="fs-2" />
+                </a>
+              </li>
+            </ul>
           </div>
         </div>
 
@@ -184,121 +225,135 @@ const AvailabilityReport = () => {
                 className="accordion-collapse collapse show"
                 data-bs-parent="#monitoring-hosts"
               >
-                <div className="accordion-body">
-                  <div className="d-flex flex-column align-items-center gap-3">
-                    <div className="w-50">
-                      <MultiSelect
-                        reset={resetMultiSelect}
-                        addAll={false}
-                        title="MENU.SELECT.HOSTS.GP"
-                        options={
-                          hostGroupWithoutParam
-                            ? hostGroupWithoutParam.payload
-                            : []
-                        }
-                        Loading={
-                          hostGroupWithoutParam &&
-                          hostGroupWithoutParam.meta &&
-                          hostGroupWithoutParam.meta.requestStatus !==
-                            "fulfilled"
-                        }
-                        DataName="groupids"
-                        setData={setValue}
-                        currentData={currentGroupids}
-                      />
-                    </div>
-                    <div className="w-50 d-flex gap-3">
-                      <div className="w-100">
+                <div className="accordion-body tab-content">
+                  <div
+                    id="Availability_filter"
+                    className="tab-pane active show"
+                  >
+                    <div className="d-flex flex-column align-items-center gap-3">
+                      <div className="w-50">
                         <MultiSelect
-                          reset={false}
-                          addAll={true}
-                          title="MENU.SELECT.HOSTS"
-                          options={selectedHosts}
-                          Loading={false}
-                          DataName="hostids"
+                          reset={resetMultiSelect}
+                          addAll={false}
+                          title="MENU.SELECT.HOSTS.GP"
+                          options={
+                            hostGroupWithoutParam
+                              ? hostGroupWithoutParam.payload
+                              : []
+                          }
+                          Loading={
+                            hostGroupWithoutParam &&
+                            hostGroupWithoutParam.meta &&
+                            hostGroupWithoutParam.meta.requestStatus !==
+                              "fulfilled"
+                          }
+                          DataName="groupids"
                           setData={setValue}
-                          currentData={currentHostids}
+                          currentData={currentGroupids}
                         />
                       </div>
-                      <button
-                        className="btn h-25 py-3 btn-light-primary px-10"
-                        onClick={() => setisHostsModalOpen(true)}
-                      >
-                        {intl.formatMessage({
-                          id: "MENU.SELECT",
-                        })}
-                      </button>
-                    </div>
-                  </div>
-                  <Modal
-                    show={isHostsModalOpen}
-                    onHide={() => setisHostsModalOpen(false)}
-                  >
-                    <Modal.Header closeButton>
-                      <Modal.Title>
-                        {intl.formatMessage({ id: "MENU.SELECT.HOSTS" })}
-                      </Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body dir="rtl">
-                      <Form.Select
-                        defaultValue={-1}
-                        onChange={(e) =>
-                          fetchHostsData(e.currentTarget.value, false)
-                        }
-                      >
-                        <option value={-1}>
-                          {intl.formatMessage({ id: "MENU.SELECT.ALL" })}
-                        </option>
-                        {hostGroupWithoutParam?.payload?.map(
-                          (item: hostGroupItems, index: number) => {
-                            return (
-                              <option value={item.value} key={index}>
-                                {item.label}
-                              </option>
-                            );
-                          }
-                        )}
-                      </Form.Select>
-                      <div className=" h-350px overflow-y-scroll mt-2">
-                        {!isHostsDataLoading ? (
-                          hostsData.map((host) => (
-                            // console.log(currentHostids, host),
-                            <div
-                              key={host.hostid}
-                              className="w-100 justify-content-end my-3 gap-2 d-flex"
-                            >
-                              <label
-                                className="form-check-label"
-                                htmlFor={`host-${host.hostid}`}
-                              >
-                                {host.host}
-                              </label>
-                              <input
-                                type="checkbox"
-                                id={`host-${host.hostid}`}
-                                checked={currentHostids.includes(host.hostid)}
-                                onChange={() => handleCheckboxChange(host)}
-                              />
-                            </div>
-                          ))
-                        ) : (
-                          <div className="d-flex pt-7 w-100 justify-content-center">
-                            <Loader />
-                          </div>
-                        )}
-                      </div>
-
-                      <div className="d-flex justify-content-center mt-2">
+                      <div className="w-50 d-flex gap-3">
+                        <div className="w-100">
+                          <MultiSelect
+                            reset={false}
+                            addAll={true}
+                            title="MENU.SELECT.HOSTS"
+                            options={selectedHosts}
+                            Loading={false}
+                            DataName="hostids"
+                            setData={setValue}
+                            currentData={currentHostids}
+                          />
+                        </div>
                         <button
-                          type="button"
-                          onClick={() => setisHostsModalOpen(false)}
-                          className="btn py-2 btn-light-danger"
+                          className="btn h-25 py-3 btn-light-primary px-10"
+                          onClick={() => setisHostsModalOpen(true)}
                         >
-                          بستن
+                          {intl.formatMessage({
+                            id: "MENU.SELECT",
+                          })}
                         </button>
                       </div>
-                    </Modal.Body>
-                  </Modal>
+                    </div>
+                    <Modal
+                      show={isHostsModalOpen}
+                      onHide={() => setisHostsModalOpen(false)}
+                    >
+                      <Modal.Header closeButton>
+                        <Modal.Title>
+                          {intl.formatMessage({ id: "MENU.SELECT.HOSTS" })}
+                        </Modal.Title>
+                      </Modal.Header>
+                      <Modal.Body dir="rtl">
+                        <Form.Select
+                          defaultValue={-1}
+                          onChange={(e) =>
+                            fetchHostsData(e.currentTarget.value, false)
+                          }
+                        >
+                          <option value={-1}>
+                            {intl.formatMessage({ id: "MENU.SELECT.ALL" })}
+                          </option>
+                          {hostGroupWithoutParam?.payload?.map(
+                            (item: hostGroupItems, index: number) => {
+                              return (
+                                <option value={item.value} key={index}>
+                                  {item.label}
+                                </option>
+                              );
+                            }
+                          )}
+                        </Form.Select>
+                        <div className=" h-350px overflow-y-scroll mt-2">
+                          {!isHostsDataLoading ? (
+                            hostsData.map((host) => (
+                              // console.log(currentHostids, host),
+                              <div
+                                key={host.hostid}
+                                className="w-100 justify-content-end my-3 gap-2 d-flex"
+                              >
+                                <label
+                                  className="form-check-label"
+                                  htmlFor={`host-${host.hostid}`}
+                                >
+                                  {host.host}
+                                </label>
+                                <input
+                                  type="checkbox"
+                                  id={`host-${host.hostid}`}
+                                  checked={currentHostids.includes(host.hostid)}
+                                  onChange={() => handleCheckboxChange(host)}
+                                />
+                              </div>
+                            ))
+                          ) : (
+                            <div className="d-flex pt-7 w-100 justify-content-center">
+                              <Loader />
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="d-flex justify-content-center mt-2">
+                          <button
+                            type="button"
+                            onClick={() => setisHostsModalOpen(false)}
+                            className="btn py-2 btn-light-danger"
+                          >
+                            بستن
+                          </button>
+                        </div>
+                      </Modal.Body>
+                    </Modal>
+                  </div>
+                  <div id="Availability_date" className=" tab-pane">
+                    <div className="d-flex justify-content-center">
+                      <DatePickerSelect
+                        range={true}
+                        defaultValue={new Date()}
+                        onChange={handleDateChange}
+                      />
+                    </div>
+                  </div>
                   <div className="d-flex w-100 justify-content-center mt-10 column-gap-5">
                     <BTN
                       label={intl.formatMessage({ id: "SUBMIT" })}

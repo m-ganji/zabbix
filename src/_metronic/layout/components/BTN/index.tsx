@@ -10,7 +10,7 @@ const BTN: React.FC<BTNProps> = ({ className, onClick, label, id }) => (
     id={id}
     type="button"
     onClick={onClick}
-    className={`btn py-2 ${className}`}
+    className={`btn ${className} py-2`}
   >
     {label}
   </button>

@@ -635,7 +635,7 @@ export function Projects() {
                       <div>
                         <p className="mt-5">
                           {intl.formatMessage({
-                            id: "MONITORING.HOSTS.SEVERITY",
+                            id: "SEVERITY",
                           })}
                         </p>
                         <Severities watch={watch} setValue={setValue} />

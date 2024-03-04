@@ -5,7 +5,7 @@ const AvailabilityReportTabel = () => {
 
 
   return (
-    <div className={`card mt-10`}>
+    <div className={`card mt-5`}>
       {/* begin::Header */}
       <div className="card-header border-0 pt-5">
         <h3 className="card-title align-items-start flex-column">
@@ -35,7 +35,7 @@ const AvailabilityReportTabel = () => {
                   {intl.formatMessage({ id: "PROBLEM" })}
                 </th>
                 <th className="min-w-100px">
-                  {intl.formatMessage({ id: "OK" })}
+                OK
                 </th>
                 <th className="min-w-100px">
                   {intl.formatMessage({ id: "GRAPH" })}
@@ -47,12 +47,12 @@ const AvailabilityReportTabel = () => {
             <tbody>
               <tr>
                 <td>
-                  <span className="badge badge-light-success fs-6">
+                  <span className="badge badge-light-success">
                    LINUX
                   </span>
                 </td>
                 <td>
-                  <span className="badge badge-light-danger fs-6">
+                  <span className="badge badge-light-danger">
                   LINUX CHANGED
                   </span>
                 </td>
