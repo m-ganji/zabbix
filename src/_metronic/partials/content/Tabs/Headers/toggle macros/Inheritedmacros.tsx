@@ -26,6 +26,7 @@ const Inheritedmacros: React.FC = ({
   control,
   macrosRemove,
   macrosAppend,
+  setValue,
 }) => {
   const intl = useIntl();
   const [globalUserMacro, setGlobalUserMacro] = useState<ItemType[]>([]);
@@ -75,9 +76,84 @@ const Inheritedmacros: React.FC = ({
     }
   };
 
+  const [dropdownStates, setDropdownStates] = useState(
+    new Array(macrosField.length).fill(false)
+  );
   const [selectedOptions, setSelectedOptions] = useState(
     new Array(macrosField.length).fill(null)
   );
+
+  const toggleDropdown = (index?: number) => {
+    const newDropdownStates = [...dropdownStates];
+    if (index !== undefined) {
+      newDropdownStates[index] = !newDropdownStates[index];
+    } else {
+      // Close all dropdowns
+      newDropdownStates.fill(false);
+    }
+    setDropdownStates(newDropdownStates);
+  };
+
+  const selectOption = (option, index) => {
+    let typeValue;
+    if (option.props.iconName === "text") {
+      typeValue = 0;
+    } else if (option.props.iconName === "eye-slash") {
+      typeValue = 1;
+    } else if (option.props.iconName === "lock-2") {
+      typeValue = 2;
+    }
+    setValue(`macros[${index}].type`, typeValue);
+    const newSelectedOptions = [...selectedOptions];
+    newSelectedOptions[index] = option;
+    setSelectedOptions(newSelectedOptions);
+    toggleDropdown(index);
+  };
+
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isOpenAdd, setIsOpenAdd] = useState<boolean>(false);
+  const [selectedOption, setSelectedOption] = useState<JSX.Element>(
+    <KTIcon iconName="text" className="fs-2" />
+  );
+
+  const options: JSX.Element[] = [
+    <div className="border card rounded-2 p-2 mt-7">
+      <div
+        key={1}
+        className="d-flex justify-content-end gap-2 p-2"
+        onClick={() =>
+          selectOption(<KTIcon iconName="text" className="fs-2 d-flex" />, 1)
+        }
+      >
+        text
+        <KTIcon
+          iconName="text"
+          className="fs-2 d-flex justify-content-center justify-content-end gap-2"
+        />
+      </div>
+
+      <div
+        key={2}
+        className="d-flex justify-content-end gap-2 p-2"
+        onClick={() =>
+          selectOption(<KTIcon iconName="eye-slash" className="fs-2" />, 2)
+        }
+      >
+        secret text
+        <KTIcon iconName="eye-slash" className="fs-2" />
+      </div>
+
+      <div
+        key={3}
+        className="d-flex justify-content-end gap-2 p-2"
+        onClick={() =>
+          selectOption(<KTIcon iconName="lock-2" className="fs-2" />, 3)
+        }
+      >
+        vault secret <KTIcon iconName="lock-2" className="fs-2" />
+      </div>
+    </div>,
+  ];
 
   return (
     <div className="d-flex flex-column">
@@ -120,8 +196,99 @@ const Inheritedmacros: React.FC = ({
                   dir="rtl"
                   key={index}
                 />
+                <div
+                  className={`custom-dropdown border border-${secondaryColor} border-2 `}
+                  onClick={() => {
+                    toggleDropdown(index);
+                  }}
+                  key={index}
+                >
+                  <div className="selected-option mt-2">
+                    {selectedOptions[index] ? (
+                      selectedOptions[index]
+                    ) : (
+                      <span>
+                        {e.type == "0" && (
+                          <span>
+                            <KTIcon
+                              iconName="text"
+                              className="fs-2 d-flex justify-content-center justify-content-end gap-2"
+                            />
+                          </span>
+                        )}
+                        {e.type == "1" && (
+                          <span>
+                            <KTIcon
+                              iconName="eye-slash"
+                              className="fs-2 d-flex justify-content-center justify-content-end "
+                            />
+                          </span>
+                        )}
+                        {e.type == "2" && (
+                          <span>
+                            <KTIcon
+                              iconName="lock-2"
+                              className="fs-2 d-flex justify-content-center justify-content-end gap-2"
+                            />
+                          </span>
+                        )}
+                      </span>
+                    )}
+                  </div>
+                  {dropdownStates[index] && (
+                    <div
+                      className="options position-absolute border card"
+                      style={{ zIndex: 100 }}
+                    >
+                      <div
+                        key={0}
+                        className="d-flex justify-content-end gap-2 p-2"
+                        onClick={() => {
+                          selectOption(
+                            <KTIcon iconName="text" className="fs-2 d-flex" />,
+                            index
+                          );
+                        }}
+                      >
+                        text
+                        <KTIcon
+                          iconName="text"
+                          className="fs-2 d-flex justify-content-center justify-content-end gap-2"
+                        />
+                      </div>
+
+                      <div
+                        key={1}
+                        className="d-flex justify-content-end gap-2 p-2"
+                        onClick={() =>
+                          selectOption(
+                            <KTIcon iconName="eye-slash" className="fs-2" />,
+                            index
+                          )
+                        }
+                      >
+                        secret text
+                        <KTIcon iconName="eye-slash" className="fs-2" />
+                      </div>
+
+                      <div
+                        key={2}
+                        className="d-flex justify-content-end gap-2 p-2"
+                        onClick={() =>
+                          selectOption(
+                            <KTIcon iconName="lock-2" className="fs-2" />,
+                            index
+                          )
+                        }
+                      >
+                        vault secret{" "}
+                        <KTIcon iconName="lock-2" className="fs-2" />
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
-              select
+
               <input
                 type="text"
                 className="form-control py-2"
@@ -168,7 +335,10 @@ const Inheritedmacros: React.FC = ({
               />
               <div className="d-flex" style={{ width: "33%" }}>
                 <input
-                  {...register("value")}
+                  {...register("value", {
+                    pattern: /^\{\$test\}$/i,
+                    message: "Input should be in the format '{$test}'",
+                  })}
                   type="text"
                   className="form-control py-2 w-75"
                   aria-describedby="emailHelp"
@@ -178,16 +348,17 @@ const Inheritedmacros: React.FC = ({
                   style={{ direction: "rtl" }}
                   dir="rtl"
                 />
-                آخرین
-                {/* <select
-                  className="form-select form-select-sm w-25 "
-                  aria-label="Floating label select example"
-                  style={{ width: "33%" }}
+                <div
+                  className={`custom-dropdown border border-${secondaryColor} border-2 `}
+                  onClick={() => {
+                    setIsOpenAdd((prevIsOpen) => !prevIsOpen);
+                  }}
                 >
-                  <option value={1}>&#x0054; متن 1</option>
-                  <option value={2}>🅿️&#x0054; متن 2</option>
-                  <option value={2}>🔏 متن 2</option>
-                </select> */}
+                  <div className="selected-option mt-2">{selectedOption}</div>
+                  {isOpenAdd && (
+                    <div className="options position-absolute">{options}</div>
+                  )}
+                </div>
               </div>
               <input
                 {...register("description")}

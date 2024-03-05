@@ -76,6 +76,7 @@ const Macros: React.FC<HostProps> = ({ control, watch, setValue }) => {
             control={control}
             macrosRemove={macrosRemove}
             macrosAppend={macrosAppend}
+            setValue={setValue}
           />
         </div>
       )}
