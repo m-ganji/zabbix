@@ -18,12 +18,6 @@ const CreateHost: FC = () => {
     {
       defaultValues: {
         host: "",
-        groupids: [],
-        // groups: [
-        //   {
-        //     groupid: "",
-        //   },
-        // ],
       },
     }
   );
@@ -37,10 +31,6 @@ const CreateHost: FC = () => {
     } catch (error) {
       console.error("Error occurred:", error);
     }
-  };
-
-  const logData = (data: string) => {
-    console.log("Data from Controller:", data);
   };
 
   return (
@@ -126,7 +116,7 @@ const CreateHost: FC = () => {
             <Tags control={control} watch={watch} />
           </div>
           <div className="tab-pane" id="tab-macro">
-            <Macros control={control} watch={watch} />
+            <Macros control={control} watch={watch} setValue={setValue} />
           </div>
           <div className="tab-pane" id="tab-inventory">
             <Inventory control={control} watch={watch} />

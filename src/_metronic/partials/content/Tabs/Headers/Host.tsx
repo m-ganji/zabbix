@@ -20,7 +20,6 @@ const Host: React.FC<HostProps> = ({ control, watch, setValue }) => {
   const dispatch = useDispatch();
 
   const hostGroupData = useSelector((state) => (state as object).hostGroup);
-  console.log(hostGroupData);
 
   useEffect(() => {
     dispatch(fetchHostGroup({}));
@@ -32,8 +31,6 @@ const Host: React.FC<HostProps> = ({ control, watch, setValue }) => {
         const response = await instance.post("/core/templates/get", {});
         const mapped = response.data.map((e) => ({ label: e.name }));
         setTemplates(mapped);
-        // const labels = response.data.map((template) => template.name);
-        console.log(response.data);
       } catch (error) {
         console.error(error);
         throw error;
@@ -42,8 +39,7 @@ const Host: React.FC<HostProps> = ({ control, watch, setValue }) => {
 
     handleGetTemplates();
   }, []);
-  console.log(typeof control);
-  console.log(typeof watch);
+
 
   return (
     <div>
@@ -92,7 +88,6 @@ const Host: React.FC<HostProps> = ({ control, watch, setValue }) => {
                   ? "نام نمایشی"
                   : `نام نمایشی : ${watch("host")}`
               }
-              // value={watch("host")}
               required
             />
           </div>
@@ -110,7 +105,7 @@ const Host: React.FC<HostProps> = ({ control, watch, setValue }) => {
                 hostGroupData.meta &&
                 hostGroupData.meta.requestStatus !== "fulfilled"
               }
-              DataName="groupids"
+              DataName="groups.{groupid}"
               setData={setValue}
               currentData={currentGroupids}
             />

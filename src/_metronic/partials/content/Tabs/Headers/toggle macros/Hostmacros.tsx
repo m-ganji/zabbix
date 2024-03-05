@@ -1,24 +1,52 @@
 import { Controller } from "react-hook-form";
 import { useIntl } from "react-intl";
 import { KTIcon } from "../../../../../helpers";
-import { Dropdown } from "react-bootstrap";
 import { useState } from "react";
+import { getCSSVariableValue } from "../../../../../assets/ts/_utils";
 
 const Hostmacros: React.FC = ({
   macrosField,
   control,
   macrosRemove,
   macrosAppend,
+  setValue,
 }) => {
   const intl = useIntl();
-  const [isOpen, setIsOpen] = useState(false);
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen);
+  const secondaryColor = getCSSVariableValue("--bs-gray-300");
+
+  const [dropdownStates, setDropdownStates] = useState(
+    new Array(macrosField.length).fill(false)
+  );
+  const [selectedOptions, setSelectedOptions] = useState(
+    new Array(macrosField.length).fill(null)
+  );
+
+  const toggleDropdown = (index) => {
+    const newDropdownStates = [...dropdownStates];
+    newDropdownStates[index] = !newDropdownStates[index];
+    setDropdownStates(newDropdownStates);
   };
+
+  const selectOption = (option, index) => {
+    let typeValue;
+    if (option.props.iconName === "text") {
+      typeValue = 0;
+    } else if (option.props.iconName === "eye-slash") {
+      typeValue = 1;
+    } else if (option.props.iconName === "lock-2") {
+      typeValue = 2;
+    }
+    setValue(`macros[${index}].type`, typeValue);
+    const newSelectedOptions = [...selectedOptions];
+    newSelectedOptions[index] = option;
+    setSelectedOptions(newSelectedOptions);
+    toggleDropdown(index);
+  };
+
   return (
     <div>
       {macrosField.map((item, index) => (
-        <div className="d-flex mb-3 gap-3 m-5 " key={item.id}>
+        <div className="d-flex mb-3 gap-3 m-5" key={item.id}>
           <div style={{ width: "33%" }}>
             <Controller
               name={`macros[${index}].macro`}
@@ -32,7 +60,7 @@ const Hostmacros: React.FC = ({
                   id={`exampleInputEmail${item.id}`}
                   aria-describedby="emailHelp"
                   placeholder={intl.formatMessage({
-                    id: "MONITORING.HOSTS.ADDTAG.VALUE",
+                    id: "MONITORING.HOSTS.CREATEHOST.TAGS.MACRO",
                   })}
                   style={{ direction: "rtl" }}
                   dir="rtl"
@@ -57,48 +85,80 @@ const Hostmacros: React.FC = ({
                   style={{ direction: "rtl" }}
                   dir="rtl"
                 />
-                <select
-                  className="form-select form-select-sm w-25 "
-                  id={`floatingSelect${item.id}`}
-                  aria-label="Floating label select example"
-                  style={{ width: "33%" }}
-                  onChange={(e) => {
-                    const newValue = parseInt(e.target.value, 10);
-                    field.onChange(newValue);
+                <div
+                  className={`custom-dropdown border border-${secondaryColor} border-2 `}
+                  onClick={() => {
+                    toggleDropdown(index);
                   }}
+                  key={index}
                 >
-                  <option value={1}>
-                    <KTIcon iconName="plus" />
-                  </option>
-                  <option value={2}>🅿️&#x0054; متن 2</option>
-                  <option value={2}>🔏 متن 2</option>
-                </select>
+                  <div className="selected-option mt-2">
+                    {selectedOptions[index] ? (
+                      selectedOptions[index]
+                    ) : (
+                      <span>
+                        <KTIcon
+                          iconName="text"
+                          className="fs-2 d-flex justify-content-center justify-content-end gap-2"
+                        />
+                      </span>
+                    )}
+                  </div>
+                  {dropdownStates[index] && (
+                    <div
+                      className="options position-absolute border card"
+                      style={{ zIndex: 100 }}
+                    >
+                      <div
+                        key={0}
+                        className="d-flex justify-content-end gap-2 p-2"
+                        onClick={() => {
+                          selectOption(
+                            <KTIcon iconName="text" className="fs-2 d-flex" />,
+                            index
+                          );
+                        }}
+                      >
+                        text
+                        <KTIcon
+                          iconName="text"
+                          className="fs-2 d-flex justify-content-center justify-content-end gap-2"
+                        />
+                      </div>
+
+                      <div
+                        key={1}
+                        className="d-flex justify-content-end gap-2 p-2"
+                        onClick={() =>
+                          selectOption(
+                            <KTIcon iconName="eye-slash" className="fs-2" />,
+                            index
+                          )
+                        }
+                      >
+                        secret text
+                        <KTIcon iconName="eye-slash" className="fs-2" />
+                      </div>
+
+                      <div
+                        key={2}
+                        className="d-flex justify-content-end gap-2 p-2"
+                        onClick={() =>
+                          selectOption(
+                            <KTIcon iconName="lock-2" className="fs-2" />,
+                            index
+                          )
+                        }
+                      >
+                        vault secret{" "}
+                        <KTIcon iconName="lock-2" className="fs-2" />
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             )}
           />
-          <Dropdown show={isOpen} onToggle={toggleDropdown}>
-            <Dropdown.Toggle
-              className="w-100 py-3 d-flex bg-transparent text-reset border align-items-center justify-content-between"
-              variant="reset"
-            >
-              <KTIcon iconName="plus" className="fs-2" />1
-            </Dropdown.Toggle>
-
-            <Dropdown.Menu>
-              <Dropdown.Item
-                href="#/action-1"
-                // onClick={() => handleItemClick("Item 1")}
-              >
-                {" "}
-                <KTIcon iconName="plus" className="fs-2" />1
-              </Dropdown.Item>
-              <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
-              <Dropdown.Item href="#/action-3">
-                {" "}
-                <KTIcon iconName="plus" className="fs-2" />1
-              </Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
 
           <div style={{ width: "33%" }}>
             <Controller
@@ -113,7 +173,7 @@ const Hostmacros: React.FC = ({
                   id={`exampleInputEmailValue${item.id}`}
                   aria-describedby="emailHelp"
                   placeholder={intl.formatMessage({
-                    id: "MONITORING.HOSTS.ADDTAG.VALUE",
+                    id: "MONITORING.HOSTS.CREATEHOST.TAGS.DESC",
                   })}
                   style={{ direction: "rtl" }}
                   dir="rtl"
@@ -136,7 +196,7 @@ const Hostmacros: React.FC = ({
         type="button"
         className="btn btn-success py-2 d-block mt-5 "
         onClick={() => {
-          macrosAppend({ tag: "", value: "" });
+          macrosAppend({ macro: "", value: "", type: 0, description: "" });
         }}
       >
         {intl.formatMessage({

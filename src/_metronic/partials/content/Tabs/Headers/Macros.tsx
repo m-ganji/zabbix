@@ -9,7 +9,7 @@ interface HostProps {
   watch: () => void;
 }
 
-const Macros: React.FC<HostProps> = ({ control, watch }) => {
+const Macros: React.FC<HostProps> = ({ control, watch, setValue }) => {
   const intl = useIntl();
 
   const [activeMacro, setActiveMacro] = useState<string>("HOSTMACROS");
@@ -66,15 +66,17 @@ const Macros: React.FC<HostProps> = ({ control, watch }) => {
           control={control}
           macrosRemove={macrosRemove}
           macrosAppend={macrosAppend}
+          setValue={setValue}
         />
       )}
       {activeMacro == "INHERITED" && (
-        <div style={{ maxHeight: "70vh", overflow: "auto" }}>
+        <div style={{ maxHeight: "65vh", overflow: "auto" }} className="mt-3">
           <Inheritedmacros
             macrosField={macrosField}
             control={control}
             macrosRemove={macrosRemove}
             macrosAppend={macrosAppend}
+            setValue={setValue}
           />
         </div>
       )}

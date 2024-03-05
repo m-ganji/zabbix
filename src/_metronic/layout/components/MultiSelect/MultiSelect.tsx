@@ -177,8 +177,8 @@ const MultiSelect: React.FC<{
                 key={index}
                 style={{
                   direction: "ltr",
-                  overflow: "hidden",
                   textOverflow: "ellipsis",
+                  maxHeight: "250px",
                 }}
                 onClick={() => toggleOption(option)}
                 active={selectedOptions.some(
