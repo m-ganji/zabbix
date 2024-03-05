@@ -166,8 +166,6 @@ export function Problems() {
   const [age, setAge] = useState(0);
 
   useEffect(() => {
-    // setValue("groupids", );
-
     watch("hostids")?.length === 0 && unregister("hostids");
     fetchPromsListData(watch());
     dispatch(

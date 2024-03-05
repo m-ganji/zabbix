@@ -119,7 +119,6 @@ const TableHosts: React.FC<TableHostsProps> = ({ data, isLoaded }) => {
                       </td>
                       <td className="text-center">آخرین دیتا</td>
                       <td className="text-center">
-                        {console.log(item)}
                         {item?.problems[0] ? (
                           <Link
                             to={`/Monitoring/Problems/${item?.hostid}/${item?.host}`}

@@ -3,6 +3,7 @@ import { instance } from "../../../../../../services/axiosInstance";
 import { useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
 import { useForm } from "react-hook-form";
+import { Loader } from "../../../../../layout/components/loader/Loader";
 
 interface ItemType {
   description: string;
@@ -30,8 +31,11 @@ const Inheritedmacros: React.FC = ({
     useState<boolean>(false);
   const [isInheritedCreateModalOpen, setIsInheritedCreateModalOpen] =
     useState<boolean>(false);
+  const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
   useEffect(() => {
+    setIsLoaded(false);
+
     const fetchData = async () => {
       try {
         const response = await instance.post("/core/usermacro/get", {
@@ -39,11 +43,13 @@ const Inheritedmacros: React.FC = ({
           globalmacro: true,
         });
         globalUserMacro.map((e) => setGlobalUserMacro(e.macro));
+
         setGlobalUserMacro(response.data || []);
-        // setIsLoading(true);
+        setIsLoaded(true);
       } catch (error) {
         console.error("Error during Zabbix request:", error);
       }
+      // setIsLoaded(true);
     };
 
     fetchData();
@@ -68,14 +74,16 @@ const Inheritedmacros: React.FC = ({
 
   return (
     <div className="d-flex flex-column">
-      <p
-        className="d-flex justify-content-center align-content-center btn btn-light-primary w-25"
-        type="button"
-        style={{ marginRight: "70%" }}
-        onClick={() => setisInheritedModalOpen(true)}
-      >
-        پیکربندی مقدار
-      </p>
+      {isLoaded && (
+        <p
+          className="d-flex justify-content-center align-content-center btn btn-light-primary w-25"
+          type="button"
+          style={{ marginRight: "70%" }}
+          onClick={() => setisInheritedModalOpen(true)}
+        >
+          پیکربندی مقدار
+        </p>
+      )}
       {/* first modal */}
       <Modal
         show={isInheritedModalOpen}
@@ -200,48 +208,53 @@ const Inheritedmacros: React.FC = ({
           </form>
         </Modal.Body>
       </Modal>
-      {globalUserMacro.map((e) => (
-        <div className="d-flex py-2 mb-5 gap-5 me-3">
-          <input
-            type="text"
-            className="form-control "
-            defaultValue={e.macro}
-            dir="rtl"
-            style={{ width: "33%", direction: "rtl" }}
-          />
-          <div className="d-flex" style={{ width: "33%" }}>
+      {(!isLoaded && (
+        <div className="d-flex pt-7 w-100 justify-content-center">
+          <Loader />
+        </div>
+      )) ||
+        globalUserMacro.map((e) => (
+          <div className="d-flex py-2 mb-5 gap-5 me-3">
             <input
               type="text"
-              className="form-control py-2 w-75"
+              className="form-control "
+              defaultValue={e.macro}
+              dir="rtl"
+              style={{ width: "33%", direction: "rtl" }}
+            />
+            <div className="d-flex" style={{ width: "33%" }}>
+              <input
+                type="text"
+                className="form-control py-2 w-75"
+                aria-describedby="emailHelp"
+                placeholder={intl.formatMessage({
+                  id: "MONITORING.HOSTS.ADDTAG.VALUE",
+                })}
+                style={{ direction: "rtl" }}
+                dir="rtl"
+              />
+              <select
+                className="form-select form-select-sm w-25 "
+                aria-label="Floating label select example"
+                style={{ width: "33%" }}
+              >
+                <option value={1}>&#x0054; متن 1</option>
+                <option value={2}>🅿️&#x0054; متن 2</option>
+                <option value={2}>🔏 متن 2</option>
+              </select>
+            </div>
+            <input
+              type="text"
+              className="form-control py-2"
               aria-describedby="emailHelp"
               placeholder={intl.formatMessage({
                 id: "MONITORING.HOSTS.ADDTAG.VALUE",
               })}
-              style={{ direction: "rtl" }}
+              style={{ width: "33%" }}
               dir="rtl"
             />
-            <select
-              className="form-select form-select-sm w-25 "
-              aria-label="Floating label select example"
-              style={{ width: "33%" }}
-            >
-              <option value={1}>&#x0054; متن 1</option>
-              <option value={2}>🅿️&#x0054; متن 2</option>
-              <option value={2}>🔏 متن 2</option>
-            </select>
           </div>
-          <input
-            type="text"
-            className="form-control py-2"
-            aria-describedby="emailHelp"
-            placeholder={intl.formatMessage({
-              id: "MONITORING.HOSTS.ADDTAG.VALUE",
-            })}
-            style={{ width: "33%" }}
-            dir="rtl"
-          />
-        </div>
-      ))}
+        ))}
     </div>
   );
 };

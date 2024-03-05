@@ -32,6 +32,8 @@ const Hostmacros: React.FC = ({
     setSelectedOptions(newSelectedOptions);
     toggleDropdown(index);
   };
+  console.log(dropdownStates);
+  console.log(selectedOptions);
 
   return (
     <div>
