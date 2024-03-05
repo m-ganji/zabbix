@@ -88,32 +88,30 @@ const Inheritedmacros: React.FC = ({
       <Modal
         show={isInheritedModalOpen}
         onHide={() => setisInheritedModalOpen(false)}
-        className="sss2"
       >
         <Modal.Header closeButton>
           <Modal.Title>ها user macro لیست</Modal.Title>
         </Modal.Header>
         <Modal.Body dir="rtl">
           {globalUserMacro.map((e, index) => (
-            <div className="d-flex py-2 mb-5 gap-5 ">
+            <div className="d-flex py-2 mb-5 gap-5 " key={index}>
               <input
                 type="text"
                 className="form-control "
                 defaultValue={e.macro}
                 dir="rtl"
-                key={index}
                 style={{ width: "33%", direction: "rtl" }}
               />
               <div className="d-flex" style={{ width: "33%" }}>
                 <input
                   type="text"
                   className="form-control py-2 w-75"
-                  aria-describedby="emailHelp"
                   placeholder={intl.formatMessage({
                     id: "MONITORING.HOSTS.ADDTAG.VALUE",
                   })}
                   style={{ direction: "rtl" }}
                   dir="rtl"
+                  key={index}
                 />
                 <select
                   className="form-select form-select-sm w-25 "

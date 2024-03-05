@@ -9,6 +9,7 @@ const Hostmacros: React.FC = ({
   control,
   macrosRemove,
   macrosAppend,
+  setValue,
 }) => {
   const intl = useIntl();
   const secondaryColor = getCSSVariableValue("--bs-gray-300");
@@ -27,13 +28,20 @@ const Hostmacros: React.FC = ({
   };
 
   const selectOption = (option, index) => {
+    let typeValue;
+    if (option.props.iconName === "text") {
+      typeValue = 0;
+    } else if (option.props.iconName === "eye-slash") {
+      typeValue = 1;
+    } else if (option.props.iconName === "lock-2") {
+      typeValue = 2;
+    }
+    setValue(`macros[${index}].type`, typeValue);
     const newSelectedOptions = [...selectedOptions];
     newSelectedOptions[index] = option;
     setSelectedOptions(newSelectedOptions);
     toggleDropdown(index);
   };
-  console.log(dropdownStates);
-  console.log(selectedOptions);
 
   return (
     <div>
@@ -77,77 +85,83 @@ const Hostmacros: React.FC = ({
                   style={{ direction: "rtl" }}
                   dir="rtl"
                 />
+                <div
+                  className={`custom-dropdown border border-${secondaryColor} border-2 `}
+                  onClick={() => {
+                    toggleDropdown(index);
+                    console.log(item);
+                    console.log(selectedOptions);
+                  }}
+                  key={index}
+                >
+                  <div className="selected-option mt-2">
+                    {selectedOptions[index] ? (
+                      selectedOptions[index]
+                    ) : (
+                      <span>
+                        <KTIcon
+                          iconName="text"
+                          className="fs-2 d-flex justify-content-center justify-content-end gap-2"
+                        />
+                      </span>
+                    )}
+                  </div>
+                  {dropdownStates[index] && (
+                    <div
+                      className="options position-absolute border card"
+                      style={{ zIndex: 100 }}
+                    >
+                      <div
+                        key={0}
+                        className="d-flex justify-content-end gap-2 p-2"
+                        onClick={() => {
+                          selectOption(
+                            <KTIcon iconName="text" className="fs-2 d-flex" />,
+                            index
+                          );
+                        }}
+                      >
+                        text
+                        <KTIcon
+                          iconName="text"
+                          className="fs-2 d-flex justify-content-center justify-content-end gap-2"
+                        />
+                      </div>
+
+                      <div
+                        key={1}
+                        className="d-flex justify-content-end gap-2 p-2"
+                        onClick={() =>
+                          selectOption(
+                            <KTIcon iconName="eye-slash" className="fs-2" />,
+                            index
+                          )
+                        }
+                      >
+                        secret text
+                        <KTIcon iconName="eye-slash" className="fs-2" />
+                      </div>
+
+                      <div
+                        key={2}
+                        className="d-flex justify-content-end gap-2 p-2"
+                        onClick={() =>
+                          selectOption(
+                            <KTIcon iconName="lock-2" className="fs-2" />,
+                            index
+                          )
+                        }
+                      >
+                        vault secret{" "}
+                        <KTIcon iconName="lock-2" className="fs-2" />
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             )}
           />
-          <div
-            className={`custom-dropdown border border-${secondaryColor} border-2 `}
-            onClick={() => toggleDropdown(index)}
-            key={index}
-          >
-            <div className="selected-option mt-2">
-              {selectedOptions[index] ? (
-                selectedOptions[index]
-              ) : (
-                <span>
-                  <KTIcon
-                    iconName="text"
-                    className="fs-2 d-flex justify-content-center justify-content-end gap-2"
-                  />
-                </span>
-              )}
-            </div>
-            {dropdownStates[index] && (
-              <div
-                className="options position-absolute border card"
-                style={{ zIndex: 100 }}
-              >
-                <div
-                  key={1}
-                  className="d-flex justify-content-end gap-2 p-2"
-                  onClick={() =>
-                    selectOption(
-                      <KTIcon iconName="text" className="fs-2 d-flex" />,
-                      index
-                    )
-                  }
-                >
-                  text
-                  <KTIcon
-                    iconName="text"
-                    className="fs-2 d-flex justify-content-center justify-content-end gap-2"
-                  />
-                </div>
 
-                <div
-                  key={2}
-                  className="d-flex justify-content-end gap-2 p-2"
-                  onClick={() =>
-                    selectOption(
-                      <KTIcon iconName="eye-slash" className="fs-2" />,
-                      index
-                    )
-                  }
-                >
-                  secret text
-                  <KTIcon iconName="eye-slash" className="fs-2" />
-                </div>
-
-                <div
-                  key={3}
-                  className="d-flex justify-content-end gap-2 p-2"
-                  onClick={() =>
-                    selectOption(
-                      <KTIcon iconName="lock-2" className="fs-2" />,
-                      index
-                    )
-                  }
-                >
-                  vault secret <KTIcon iconName="lock-2" className="fs-2" />
-                </div>
-              </div>
-            )}
-          </div>
           <div style={{ width: "33%" }}>
             <Controller
               name={`macros[${index}].description`}
@@ -184,7 +198,7 @@ const Hostmacros: React.FC = ({
         type="button"
         className="btn btn-success py-2 d-block mt-5 "
         onClick={() => {
-          macrosAppend({ macro: "", value: "", description: "" });
+          macrosAppend({ macro: "", value: "", type: 0, description: "" });
         }}
       >
         {intl.formatMessage({

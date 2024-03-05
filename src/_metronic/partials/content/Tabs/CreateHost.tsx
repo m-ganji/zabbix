@@ -116,7 +116,7 @@ const CreateHost: FC = () => {
             <Tags control={control} watch={watch} />
           </div>
           <div className="tab-pane" id="tab-macro">
-            <Macros control={control} watch={watch} />
+            <Macros control={control} watch={watch} setValue={setValue} />
           </div>
           <div className="tab-pane" id="tab-inventory">
             <Inventory control={control} watch={watch} />
