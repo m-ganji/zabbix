@@ -38,7 +38,7 @@ const MultiSelect: React.FC<{
 
     setSelectedOptions([]);
     addAll && setSelectedOptions([...options]);
-    
+
     selectedValue?.[0]?.value && setSelectedOptions(selectedValue);
   }, [addAll, options, reset]);
 

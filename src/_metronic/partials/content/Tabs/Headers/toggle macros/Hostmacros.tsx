@@ -11,63 +11,26 @@ const Hostmacros: React.FC = ({
   macrosAppend,
 }) => {
   const intl = useIntl();
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [selectedOption, setSelectedOption] = useState<JSX.Element>(
-    <KTIcon iconName="text" className="fs-2" />
-  );
   const secondaryColor = getCSSVariableValue("--bs-gray-300");
-  const [activeDropdownIndex, setActiveDropdownIndex] = useState(null);
-  console.log(activeDropdownIndex);
 
-  const options: JSX.Element[] = [
-    <div className="border card  rounded-2 p-2 mt-7">
-      <div
-        key={1}
-        className="d-flex justify-content-end gap-2  p-2"
-        onClick={() =>
-          selectOption(<KTIcon iconName="text" className="fs-2 d-flex" />, 1)
-        }
-      >
-        text
-        <KTIcon
-          iconName="text"
-          className="fs-2 d-flex justify-content-center justify-content-end gap-2"
-        />
-      </div>
-
-      <div
-        key={2}
-        className="d-flex justify-content-end gap-2 p-2"
-        onClick={() =>
-          selectOption(<KTIcon iconName="eye-slash" className="fs-2" />, 2)
-        }
-      >
-        secret text
-        <KTIcon iconName="eye-slash" className="fs-2" />
-      </div>
-
-      <div
-        key={3}
-        className="d-flex justify-content-end gap-2 p-2"
-        onClick={() =>
-          selectOption(<KTIcon iconName="lock-2" className="fs-2" />, 3)
-        }
-      >
-        vault secret <KTIcon iconName="lock-2" className="fs-2" />
-      </div>
-    </div>,
-  ];
+  const [dropdownStates, setDropdownStates] = useState(
+    new Array(macrosField.length).fill(false)
+  );
+  const [selectedOptions, setSelectedOptions] = useState(
+    new Array(macrosField.length).fill(null)
+  );
 
   const toggleDropdown = (index) => {
-    setActiveDropdownIndex((prevIndex) => (prevIndex === index ? null : index));
-    setIsOpen((prevIsOpen) => !prevIsOpen);
-    console.log(setActiveDropdownIndex);
+    const newDropdownStates = [...dropdownStates];
+    newDropdownStates[index] = !newDropdownStates[index];
+    setDropdownStates(newDropdownStates);
   };
 
-  const selectOption = (option) => {
-    setSelectedOption(option);
-    console.log(option);
-    setIsOpen(false);
+  const selectOption = (option, index) => {
+    const newSelectedOptions = [...selectedOptions];
+    newSelectedOptions[index] = option;
+    setSelectedOptions(newSelectedOptions);
+    toggleDropdown(index);
   };
 
   return (
@@ -117,18 +80,69 @@ const Hostmacros: React.FC = ({
           />
           <div
             className={`custom-dropdown border border-${secondaryColor} border-2 `}
-            onClick={() => {
-              toggleDropdown(index);
-              console.log(index);
-            }}
+            onClick={() => toggleDropdown(index)}
             key={index}
           >
-            <div className="selected-option mt-2" key={index}>
-              {selectedOption}
+            <div className="selected-option mt-2">
+              {selectedOptions[index] ? (
+                selectedOptions[index]
+              ) : (
+                <span>
+                  <KTIcon
+                    iconName="text"
+                    className="fs-2 d-flex justify-content-center justify-content-end gap-2"
+                  />
+                </span>
+              )}
             </div>
-            {isOpen && (
-              <div className="options position-absolute" key={index}>
-                {options}
+            {dropdownStates[index] && (
+              <div
+                className="options position-absolute border card"
+                style={{ zIndex: 100 }}
+              >
+                <div
+                  key={1}
+                  className="d-flex justify-content-end gap-2 p-2"
+                  onClick={() =>
+                    selectOption(
+                      <KTIcon iconName="text" className="fs-2 d-flex" />,
+                      index
+                    )
+                  }
+                >
+                  text
+                  <KTIcon
+                    iconName="text"
+                    className="fs-2 d-flex justify-content-center justify-content-end gap-2"
+                  />
+                </div>
+
+                <div
+                  key={2}
+                  className="d-flex justify-content-end gap-2 p-2"
+                  onClick={() =>
+                    selectOption(
+                      <KTIcon iconName="eye-slash" className="fs-2" />,
+                      index
+                    )
+                  }
+                >
+                  secret text
+                  <KTIcon iconName="eye-slash" className="fs-2" />
+                </div>
+
+                <div
+                  key={3}
+                  className="d-flex justify-content-end gap-2 p-2"
+                  onClick={() =>
+                    selectOption(
+                      <KTIcon iconName="lock-2" className="fs-2" />,
+                      index
+                    )
+                  }
+                >
+                  vault secret <KTIcon iconName="lock-2" className="fs-2" />
+                </div>
               </div>
             )}
           </div>

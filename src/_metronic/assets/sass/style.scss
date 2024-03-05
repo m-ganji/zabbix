@@ -20,6 +20,10 @@
   overflow: auto;
 }
 
+.dropdown-menu {
+  background-clip: unset !important;
+}
+
 // Initialize
 @import "init";
 
