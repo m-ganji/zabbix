@@ -1,32 +1,57 @@
 import { useIntl } from "react-intl";
-import { KTIcon } from "../../../../helpers";
 import { SidebarMenuItemWithSub } from "./SidebarMenuItemWithSub";
 import { SidebarMenuItem } from "./SidebarMenuItem";
+import Swal from "sweetalert2";
+import { instance } from "../../../../../services/axiosInstance";
+import Toast from "../../Toast";
+import { useNavigate } from "react-router-dom";
 
 const SidebarMenuMain = () => {
   const intl = useIntl();
+  const navigate = useNavigate();
 
+  const logOut = () => {
+    Swal.fire({
+      title: "آیا مطمئن هستید؟",
+      icon: "warning",
+      showConfirmButton: false,
+      showDenyButton: true,
+      showCancelButton: true,
+      denyButtonText: `بله`,
+      cancelButtonText: "لغو",
+      background: "rgb(16 79 153 / 70%)",
+      width: 350,
+    }).then(async (result) => {
+      if (result.isDenied) {
+        try {
+          await instance.post(
+            "/auth/logout",
+            `token=${localStorage.getItem("token")}`
+          );
+          localStorage.removeItem("token");
+          Toast.fire({
+            icon: "success",
+            title: "با موفقیت خارج شدید",
+            position: "bottom-start",
+            background: "rgb(16 79 153 / 90%)",
+          });
+          navigate("/");
+        } catch (error) {
+          console.error(error);
+          Toast.fire({
+            icon: "error",
+            title: `خطا ${error?.code}`,
+            text: "لطفا لحظاتی بعد مجدد تلاش کنید",
+            position: "bottom-start",
+            background: "rgb(16 79 153 / 90%)",
+          });
+        }
+      }
+    });
+  };
   return (
     <>
-      <SidebarMenuItem
-        to="/dashboard"
-        icon="element-11"
-        title="داشبورد"
-        fontIcon="bi-app-indicator"
-      />
-      {/* <SidebarMenuItem
-        to="/builder"
-        icon="switch"
-        title="Layout Builder"
-        fontIcon="bi-layers"
-      /> */}
-      {/* <div className="menu-item">
-        <div className="menu-content pt-8 pb-2">
-          <span className="menu-section text-muted text-uppercase fs-8 ls-1">
-            Crafted
-          </span>
-        </div>
-      </div> */}
+      <SidebarMenuItem to="/dashboard" icon="element-11" title="داشبورد" />
       <SidebarMenuItemWithSub
         to="/crafted/pages"
         title="نظارت"
@@ -73,49 +98,60 @@ const SidebarMenuMain = () => {
         />
       </SidebarMenuItemWithSub>
       <SidebarMenuItemWithSub
-        to="/crafted/widgets"
-        title="فهرست"
+        to="/Inventory"
+        title={intl.formatMessage({ id: "INVENTORY" })}
         icon="note-2"
         fontIcon="bi-layers"
-      ></SidebarMenuItemWithSub>
+      >
+        <SidebarMenuItem
+          to="/Inventory/Overview"
+          title={intl.formatMessage({ id: "INVENTORY.OVERVIEW" })}
+          hasBullet={true}
+        />
+        <SidebarMenuItem
+          to="/Inventory/Host"
+          title={intl.formatMessage({ id: "HOST" })}
+          hasBullet={true}
+        />
+      </SidebarMenuItemWithSub>
       <SidebarMenuItemWithSub
-        to="/crafted/widgets"
+        to="/Reports"
         title="گزارشات"
         icon="chart-pie-3"
         fontIcon="bi-layers"
       >
         <SidebarMenuItem
-          to="Reports/System-Info"
+          to="/Reports/System-Info"
           title="اطلاعات سیستم"
           hasBullet={true}
         />
         <SidebarMenuItem
-          to="Reports/Scheduled-Reports"
+          to="/Reports/Scheduled-Reports"
           title="گزارش های برنامه ریزی شده"
           hasBullet={true}
         />
         <SidebarMenuItem
-          to="Reports/Availability-Report"
+          to="/Reports/Availability-Report"
           title="گزارش در دسترس بودن"
           hasBullet={true}
         />
-            <SidebarMenuItem
-          to="Reports/Busiest-Triggers"
+        <SidebarMenuItem
+          to="/Reports/Busiest-Triggers"
           title="100 شلوغ ترین محرک"
           hasBullet={true}
         />
-            <SidebarMenuItem
-          to="Reports/Audit-log"
+        <SidebarMenuItem
+          to="/Reports/Audit-log"
           title="گزارش حسابرسی"
           hasBullet={true}
         />
-            <SidebarMenuItem
-          to="Reports/Action-log"
-          title="گزارش اقدام"
+        <SidebarMenuItem
+          to="/Reports/Action-log"
+          title="گزارش فعالیت ها"
           hasBullet={true}
         />
-            <SidebarMenuItem
-          to="Reports/Notifications"
+        <SidebarMenuItem
+          to="/Reports/Notifications"
           title="اعلانات"
           hasBullet={true}
         />
@@ -243,28 +279,12 @@ const SidebarMenuMain = () => {
         to="/apps/user-management/users"
         icon="profile-circle"
         title="پروفایل"
-        fontIcon="bi-layers"
       />
       <SidebarMenuItem
-        to="#"
         icon="exit-right"
         title="خروج از اکانت"
-        fontIcon="bi-layers"
+        onClick={logOut}
       />
-      <div className="menu-item">
-        <a
-          target="_blank"
-          className="menu-link"
-          href={import.meta.env.VITE_APP_PREVIEW_DOCS_URL + "/changelog"}
-        >
-          <span className="menu-icon">
-            <KTIcon iconName="code" className="fs-2" />
-          </span>
-          <span className="menu-title">
-            Changelog {import.meta.env.VITE_APP_VERSION}
-          </span>
-        </a>
-      </div>
     </>
   );
 };

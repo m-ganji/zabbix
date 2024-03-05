@@ -1,6 +1,6 @@
 import { useIntl } from "react-intl";
 
-const AvailabilityReportTabel = () => {
+const AuditLogTabel = () => {
   const intl = useIntl();
 
   return (
@@ -9,7 +9,7 @@ const AvailabilityReportTabel = () => {
       <div className="card-header border-0 pt-5">
         <h3 className="card-title align-items-start flex-column">
           <span className="card-label fw-bold fs-3 mb-1">
-            {intl.formatMessage({ id: "REPORT.AVAILABILITY_REPORT" })}
+            {intl.formatMessage({ id: "REPORT.AUDIT_LOG" })}
           </span>
         </h3>
         <div
@@ -20,7 +20,13 @@ const AvailabilityReportTabel = () => {
           title="Click to add a user"
         >
           <span className="text-muted mt-1 fw-semibold fs-7">
-            تعداد 1 مورد گزارش یافت شد
+            {intl.formatMessage(
+              { id: "REPORT.FIND" },
+              {
+                COUNT: 1,
+                LABEL: intl.formatMessage({ id: "REPORT.AUDIT_LOG" }),
+              }
+            )}
           </span>
         </div>
       </div>
@@ -35,17 +41,28 @@ const AvailabilityReportTabel = () => {
             <thead>
               <tr className="fw-bold text-muted">
                 <th className="min-w-100px">
-                  {intl.formatMessage({ id: "HOST" })}
+                  {intl.formatMessage({ id: "TIME" })}
                 </th>
                 <th className="min-w-100px">
-                  {intl.formatMessage({ id: "NAME" })}
+                  {intl.formatMessage({ id: "USER" })}
                 </th>
                 <th className="min-w-100px">
-                  {intl.formatMessage({ id: "PROBLEM" })}
+                  {intl.formatMessage({ id: "IP" })}
                 </th>
-                <th className="min-w-100px">OK</th>
                 <th className="min-w-100px">
-                  {intl.formatMessage({ id: "GRAPH" })}
+                  {intl.formatMessage({ id: "RESOURCE" })}
+                </th>
+                <th className="min-w-100px">
+                  {intl.formatMessage({ id: "ID" })}
+                </th>
+                <th className="min-w-100px">
+                  {intl.formatMessage({ id: "ACTION" })}
+                </th>
+                <th className="min-w-100px">
+                  {intl.formatMessage({ id: "RESOURCE_ID" })}
+                </th>
+                <th className="min-w-100px">
+                  {intl.formatMessage({ id: "DETAILS" })}
                 </th>
               </tr>
             </thead>
@@ -53,21 +70,11 @@ const AvailabilityReportTabel = () => {
             {/* begin::Table body */}
             <tbody>
               <tr>
-                <td>
-                  <span className="badge badge-light-success">LINUX</span>
-                </td>
-                <td>
-                  <span className="badge badge-light-danger">
-                    LINUX CHANGED
-                  </span>
-                </td>
+                <td></td>
+                <td></td>
                 <td className="text-end"></td>
-                <td className="text-end">
-                  <span className="badge badge-light-success">100%</span>
-                </td>
-                <td className="text-end">
-                  <span className="badge badge-light-primary">SHOW</span>
-                </td>
+                <td className="text-end"></td>
+                <td className="text-end"></td>
               </tr>
             </tbody>
             {/* end::Table body */}
@@ -81,4 +88,4 @@ const AvailabilityReportTabel = () => {
   );
 };
 
-export { AvailabilityReportTabel };
+export { AuditLogTabel };

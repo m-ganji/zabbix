@@ -1,4 +1,4 @@
-﻿import React, { useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { MultiSelect } from "../../../../_metronic/layout/components/MultiSelect/MultiSelect";
 import { useIntl } from "react-intl";
@@ -7,11 +7,11 @@ import { useNavigate } from "react-router-dom";
 import { instance } from "../../../../services/axiosInstance";
 import BTN from "../../../../_metronic/layout/components/BTN";
 import { Content } from "../../../../_metronic/layout/components/content";
-import { ActionLogTabel } from "../../../../_metronic/partials/widgets/tables/ActionLogTabel";
-import { KTIcon } from "../../../../_metronic/helpers";
+import { Select } from "../../../../_metronic/layout/components/Select";
 import DatePickerSelect from "../../../../_metronic/layout/components/DatePicker";
-import Input from "../../../../_metronic/layout/components/Input";
-import { SwitchBTN } from "../../../../_metronic/layout/components/Maps/SwitchBTN/index";
+import { PageTitle } from "../../../../_metronic/layout/core";
+import { ToolbarWrapper } from "../../../../_metronic/layout/components/toolbar";
+import { OverviewTabel } from "../../../../_metronic/partials/widgets/tables/Inventory/OverviewTabel";
 
 interface FormValues {
   selectTags: string;
@@ -61,7 +61,7 @@ interface HostGroupData {
     requestStatus: string;
   };
 }
-const ActionLog = () => {
+const InventoryOverview = () => {
   const intl = useIntl();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -163,40 +163,10 @@ const ActionLog = () => {
   return (
     <>
       <Content>
-        <div className="d-flex align-items-center my-4">
-          <h3 className="fw-bolder w-100">
-            {intl.formatMessage({ id: "REPORT.ACTION_LOG" })}
-          </h3>
-          <div className="d-flex gap-3 w-50 justify-content-end">
-            <div>
-              <BTN
-                label={intl.formatMessage({ id: "EXPORT_TO_CSV" })}
-                className="btn-light-success"
-              />
-            </div>
-            <ul className="nav d-flex gap-3 align-items-center">
-              <li className="nav-item">
-                <a
-                  data-bs-toggle="tab"
-                  href="#Availability_filter"
-                  className="w-100 text-end btn py-2 btn-light-primary active"
-                >
-                  <KTIcon iconName="filter" className="fs-2" />
-                </a>
-              </li>
-              <li className="nav-item">
-                <a
-                  data-bs-toggle="tab"
-                  href="#Availability_date"
-                  className="w-100 text-end btn py-2 btn-light-warning"
-                >
-                  <KTIcon iconName="calendar" className="fs-2" />
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
-
+        <PageTitle breadcrumbs={[]}>
+          {intl.formatMessage({ id: "INVENTORY.OVERVIEW.HOST" })}
+        </PageTitle>
+        <ToolbarWrapper />
         <div>
           <div
             className="accordion "
@@ -224,100 +194,35 @@ const ActionLog = () => {
                     id="Availability_filter"
                     className="tab-pane active show"
                   >
-                    <div className="d-flex gap-3 justify-content-center">
-                      <div className="d-flex flex-column align-items-center gap-3 w-50">
-                        <div className="w-100">
-                          <MultiSelect
-                            reset={resetMultiSelect}
-                            addAll={false}
-                            title="RECIPIENTS"
-                            options={
-                              hostGroupWithoutParam
-                                ? hostGroupWithoutParam.payload
-                                : []
-                            }
-                            Loading={
-                              hostGroupWithoutParam &&
-                              hostGroupWithoutParam.meta &&
-                              hostGroupWithoutParam.meta.requestStatus !==
-                                "fulfilled"
-                            }
-                            DataName="groupids"
-                            setData={setValue}
-                            currentData={currentGroupids}
-                          />
-                        </div>
-                        <div className="w-100">
-                          <MultiSelect
-                            reset={resetMultiSelect}
-                            addAll={false}
-                            title="MENU.ACTIONS"
-                            options={
-                              hostGroupWithoutParam
-                                ? hostGroupWithoutParam.payload
-                                : []
-                            }
-                            Loading={
-                              hostGroupWithoutParam &&
-                              hostGroupWithoutParam.meta &&
-                              hostGroupWithoutParam.meta.requestStatus !==
-                                "fulfilled"
-                            }
-                            DataName="groupids"
-                            setData={setValue}
-                            currentData={currentGroupids}
-                          />
-                        </div>
-                        <div className="w-100">
-                          <MultiSelect
-                            reset={resetMultiSelect}
-                            addAll={false}
-                            title="REPORTS.MEDIA_TYPE"
-                            options={
-                              hostGroupWithoutParam
-                                ? hostGroupWithoutParam.payload
-                                : []
-                            }
-                            Loading={
-                              hostGroupWithoutParam &&
-                              hostGroupWithoutParam.meta &&
-                              hostGroupWithoutParam.meta.requestStatus !==
-                                "fulfilled"
-                            }
-                            DataName="groupids"
-                            setData={setValue}
-                            currentData={currentGroupids}
-                          />
-                        </div>
+                    <div className="d-flex flex-column align-items-center gap-3">
+                      <div className="w-50">
+                        <MultiSelect
+                          reset={resetMultiSelect}
+                          addAll={false}
+                          title="MENU.SELECT.HOSTS.GP"
+                          options={
+                            hostGroupWithoutParam
+                              ? hostGroupWithoutParam.payload
+                              : []
+                          }
+                          Loading={
+                            hostGroupWithoutParam &&
+                            hostGroupWithoutParam.meta &&
+                            hostGroupWithoutParam.meta.requestStatus !==
+                              "fulfilled"
+                          }
+                          DataName="groupids"
+                          setData={setValue}
+                          currentData={currentGroupids}
+                        />
                       </div>
-                      <div className="d-flex flex-column align-items-center gap-3 w-50">
-                        <div className="w-100">
-                          <p className="m-0">
-                            {intl.formatMessage({ id: "STATUS" })} :
-                          </p>
-                          <div className="d-flex gap-3">
-                            <SwitchBTN
-                              label={intl.formatMessage({
-                                id: "IN_PROGRESS",
-                              })}
-                            />
-                            <SwitchBTN
-                              label={intl.formatMessage({
-                                id: "SENT/EXECUTED",
-                              })}
-                            />
-                            <SwitchBTN
-                              label={intl.formatMessage({
-                                id: "FAILED",
-                              })}
-                            />
-                          </div>
-                        </div>
-                        <Input
-                          iconName="magnifier"
-                          placeholder={intl.formatMessage({
-                            id: "SEARCH_STRING",
+                      <div className="w-50">
+                        <Select
+                          value="-1"
+                          defaultLabel={intl.formatMessage({
+                            id: "INVENTORY.GP_BY",
                           })}
+                          options={[]}
                         />
                       </div>
                     </div>
@@ -348,10 +253,10 @@ const ActionLog = () => {
             </div>
           </div>
         </div>
-        <ActionLogTabel />
+        <OverviewTabel />
       </Content>
     </>
   );
 };
 
-export default ActionLog;
+export default InventoryOverview;

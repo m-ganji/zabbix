@@ -2,6 +2,8 @@ import React from "react";
 import { KTIcon } from "../../../helpers";
 import { Loader } from "../../../layout/components/loader/Loader";
 import { Link } from "react-router-dom";
+import Badge from "./../../../layout/components/Badge/index";
+import { useIntl } from "react-intl";
 
 interface Host {
   id: string;
@@ -24,6 +26,8 @@ interface TableHostsProps {
 }
 
 const TableHosts: React.FC<TableHostsProps> = ({ data, isLoaded }) => {
+  const intl = useIntl();
+
   return (
     <div style={{ boxShadow: "0 0 10px -10px black" }} className={`card mt-5`}>
       {isLoaded && (
@@ -43,10 +47,24 @@ const TableHosts: React.FC<TableHostsProps> = ({ data, isLoaded }) => {
           <div className="card-header border-0 pt-5">
             <h3 className="card-title align-items-start flex-column">
               <span className="card-label fw-bold fs-3 mb-1 me-0">هاست ها</span>
-              <span className="text-muted mt-1 fw-semibold fs-7">
-                مجموع {data.length} عدد هاست
-              </span>
             </h3>
+            <div
+              className="card-toolbar"
+              data-bs-toggle="tooltip"
+              data-bs-placement="top"
+              data-bs-trigger="hover"
+              title="Click to add a user"
+            >
+              <span className="text-muted mt-1 fw-semibold fs-7">
+                {intl.formatMessage(
+                  { id: "REPORT.FIND" },
+                  {
+                    COUNT: data.length,
+                    LABEL: intl.formatMessage({ id: "HOST" }),
+                  }
+                )}
+              </span>
+            </div>
           </div>
           <div className="card-body py-3">
             <div className="table-responsive">
@@ -54,10 +72,10 @@ const TableHosts: React.FC<TableHostsProps> = ({ data, isLoaded }) => {
                 <thead>
                   <tr className="fw-bold text-muted bg-light">
                     <th className="text-center min-w-100px">نام</th>
-                    <th className="text-center min-w-100px">رابط</th>
+                    <th className="text-center min-w-150px">رابط</th>
                     <th className="text-center min-w-100px">دسترسی</th>
                     <th className="text-center min-w-150px">برچسب ها</th>
-                    <th className="text-center min-w-100px">وضعیت</th>
+                    <th className="text-center min-w-50px">وضعیت</th>
                     <th className="text-center min-w-125px">آخرین داده ها</th>
                     <th className="text-center min-w-150px">مشکلات</th>
                     <th className="text-center min-w-100px">نمودارها</th>
@@ -69,21 +87,15 @@ const TableHosts: React.FC<TableHostsProps> = ({ data, isLoaded }) => {
                   {data.map((item) => (
                     <tr key={item.id || Math.random()}>
                       <td className="text-center">
-                        <span className="text-muted fw-semibold text-muted d-block fs-7">
-                          {item.name}
-                        </span>
+                        <Badge title={item.name} bg="success" />
                       </td>
                       <td className="text-center">
-                        <a
-                          href={item.link}
-                          className="text-gray-900 fw-bold text-hover-primary d-block mb-1 fs-6"
-                        >
-                          {item.interfaces?.map((i, interfaceIndex) => (
-                            <p key={interfaceIndex}>
-                              {i.port} : {i.ip}
-                            </p>
-                          ))}
-                        </a>
+                        {item.interfaces?.map((i) => (
+                          <Badge
+                            title={`${i.ip + " : " + i.port}`}
+                            bg="primary"
+                          />
+                        ))}
                       </td>
                       <td className="text-center">
                         <span className="text-muted fw-semibold text-muted d-block fs-7">
@@ -100,24 +112,33 @@ const TableHosts: React.FC<TableHostsProps> = ({ data, isLoaded }) => {
                         </span>
                       </td>
                       <td className="text-center">
-                        <span className="text-muted fw-semibold text-muted d-block fs-7">
-                          {item.tags?.map((value, tagIndex) => (
-                            <p key={tagIndex}>
-                              {value.tag} : {value.value}
-                            </p>
+                        <div className="d-flex flex-column gap-2">
+                          {item.tags?.map((value) => (
+                            <div className="d-flex justify-content-center">
+                              <Badge
+                                title={`${value.tag + " : " + value.value}`}
+                                bg="info"
+                              />
+                            </div>
                           ))}
-                        </span>
+                        </div>
                       </td>
                       <td className="text-center">
-                        <span
-                          className={`badge badge-light-${
-                            item.statusColor || "primary"
-                          } fs-7 fw-semibold`}
-                        >
-                          {item.status === 0 ? <>✅</> : <>❌</>}
-                        </span>
+                        {item.status === 0 ? (
+                          <KTIcon
+                            iconName="check"
+                            className="fs-1 text-success"
+                          />
+                        ) : (
+                          <KTIcon
+                            iconName="cross"
+                            className="fs-1 text-danger"
+                          />
+                        )}
                       </td>
-                      <td className="text-center">آخرین دیتا</td>
+                      <td className="text-center">
+                        <a href="">آخرین دیتا</a>
+                      </td>
                       <td className="text-center">
                         {console.log(item)}
                         {item?.problems[0] ? (
@@ -135,19 +156,21 @@ const TableHosts: React.FC<TableHostsProps> = ({ data, isLoaded }) => {
                       </td>
                       <td className="text-center">
                         {item.graphs?.length > 0 ? (
-                          item.graphs.length
+                          <Badge title={item.graphs.length} bg="primary" />
                         ) : (
                           <span className="text-gray-400">بدون گراف</span>
                         )}
                       </td>
                       <td className="text-center">
                         {item.dashboards?.length > 0 ? (
-                          item.dashboards?.length
+                          <Badge title={item.dashboards?.length} bg="primary" />
                         ) : (
                           <span className="text-gray-400">بدون داشبورد</span>
                         )}
                       </td>
-                      <td className="text-center">وب</td>
+                      <td className="text-center">
+                        <span className="text-gray-400">وب</span>
+                      </td>
                     </tr>
                   ))}
                 </tbody>

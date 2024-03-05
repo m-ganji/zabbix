@@ -394,7 +394,7 @@ export function Overview() {
                           </div>
                           <BTN
                             label={intl.formatMessage({
-                              id: "MONITORING.HOSTS.ADDTAG.REMOVEBUTTON",
+                              id: "DELETE",
                             })}
                             className="btn-light-danger"
                             onClick={() => tagsRemove(index)}
@@ -502,7 +502,7 @@ export function Overview() {
                               className="form-control py-2"
                               aria-describedby="emailHelp"
                               placeholder={intl.formatMessage({
-                                id: "MONITORING.HOSTS.IP",
+                                id: "IP",
                               })}
                               style={{ direction: "rtl" }}
                               dir="rtl"
@@ -553,19 +553,17 @@ export function Overview() {
                           )}
                         />
                       </div>
-                      {hostGroups.payload && (
-                        <MultiSelect
-                          addAll={false}
-                          title="MENU.SELECT.HOSTS.GP"
-                          options={hostGroups.payload}
-                          DataName="groupids"
-                          setData={setValue}
-                          currentData={currentGroupids}
-                          Loading={
-                            hostGroups?.meta?.requestStatus !== "fulfilled"
-                          }
-                        />
-                      )}
+                      <MultiSelect
+                        addAll={false}
+                        title="MENU.SELECT.HOSTS.GP"
+                        options={hostGroups.payload}
+                        DataName="groupids"
+                        setData={setValue}
+                        currentData={currentGroupids}
+                        Loading={
+                          hostGroups?.meta?.requestStatus !== "fulfilled"
+                        }
+                      />
                     </div>
                     <div className="row">
                       <p className="mt-5">

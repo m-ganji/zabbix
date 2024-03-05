@@ -127,7 +127,7 @@ const Hostmacros: React.FC = ({
             onClick={() => macrosRemove(index)}
           >
             {intl.formatMessage({
-              id: "MONITORING.HOSTS.ADDTAG.REMOVEBUTTON",
+              id: "DELETE",
             })}
           </button>
         </div>

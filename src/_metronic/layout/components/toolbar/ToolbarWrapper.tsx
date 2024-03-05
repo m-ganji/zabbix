@@ -22,7 +22,7 @@ const ToolbarWrapper = () => {
       <div
         id='kt_app_toolbar_container'
         className={clsx(
-          'app-container',
+          'app-container pe-0',
           classes.toolbarContainer.join(' '),
           config.app?.toolbar?.containerClass,
           config.app?.toolbar?.minimize?.enabled ? 'app-toolbar-minimize' : '',

@@ -1,20 +1,19 @@
 import { useEffect, useState } from "react";
 import { Content } from "../../../_metronic/layout/components/content";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
-import { ProblemTable, TableHosts } from "../../../_metronic/partials/widgets";
+import { ProblemTable } from "../../../_metronic/partials/widgets";
 import { PageTitle } from "../../../_metronic/layout/core";
 import { useIntl } from "react-intl";
 import { ToolbarWrapper } from "../../../_metronic/layout/components/toolbar";
-import { instance } from "../../../services/axiosInstance";
 import { MultiSelect } from "../../../_metronic/layout/components/MultiSelect/MultiSelect";
 import { fetchHostGroup } from "../../../hostGroupSlice/hostGroupReducer";
 import { useDispatch } from "react-redux";
-import Severities from "../../modules/profile/components/hosts/severities/Index";
 import { Loader } from "../../../_metronic/layout/components/loader/Loader";
 import BTN from "../../../_metronic/layout/components/BTN";
 import { Modal } from "react-bootstrap";
 import Input from "../../../_metronic/layout/components/Input";
 import ToggleBtns from "../../../_metronic/layout/components/ToggleBtn/ToggleBtn";
+import Tags from "../../modules/profile/components/hosts/tags/Index";
 
 interface HostGroupData {
   payload: [];
@@ -82,6 +81,8 @@ export function LatestData() {
   const [isHostsDataLoading, setIsHostsDataLoading] = useState<boolean>(false);
   const [resetMultiSelect, setresetMultiSelect] = useState(false);
   const [selectedHosts, setSelectedHosts] = useState([]);
+  const [showTags, setShowTags] = useState<number | string>(3);
+  const [tagNameVisible, setTagNameVisible] = useState<number>(0);
 
   const currentHostids = watch("hostids") ? watch("hostids") : [];
 
@@ -289,128 +290,66 @@ export function LatestData() {
                           </div>
                         </Modal.Body>
                       </Modal>
-                      <Input
-                        className=""
-                        iconName="user"
-                        placeholder={intl.formatMessage({ id: "NAME" })}
-                        value=""
-                      />
-                    </div>
 
-                    <div className="mt-5 d-flex justify-content-start align-baseline gap-5 ">
-                      <div>
-                        <Controller
-                          name="show_suppressed"
-                          control={control}
-                          defaultValue=""
-                          render={({ field }) => (
-                            <>
-                              <input
-                                onChange={() =>
-                                  setValue(
-                                    "show_suppressed",
-                                    field.value == 1 ? 0 : 1
-                                  )
-                                }
-                                type="checkbox"
+                      <div className="row">
+                        <div className="col">
+                          <Controller
+                            name="search.name"
+                            control={control}
+                            defaultValue=""
+                            render={({ field }) => (
+                              <Input
+                                iconName="price-tag"
+                                placeholder={intl.formatMessage({
+                                  id: "MONITORING.PROBLEMS.TAGS.SHOW.TITLE.PRIORITY",
+                                })}
+                                value={field.value.toString()}
+                                onChange={field.onChange}
                               />
-                            </>
-                          )}
-                        />
-                        <span className="me-2">
-                          {intl.formatMessage({
-                            id: "MONITORING.HOSTS.SUPPRESSED",
-                          })}
-                        </span>
-                      </div>
-                      <div>
-                        <Controller
-                          name="maintenance_status"
-                          control={control}
-                          defaultValue=""
-                          render={({ field }) => (
-                            <>
-                              <input
-                                onChange={() =>
-                                  setValue(
-                                    "maintenance_status",
-                                    field.value == 1 ? 0 : 1
-                                  )
-                                }
-                                type="checkbox"
-                              />
-                            </>
-                          )}
-                        />
-                        <span className="me-2">
-                          {intl.formatMessage({
-                            id: "MONITORING.HOSTS.MAINTENANCE",
-                          })}
-                        </span>
+                            )}
+                          />
+                        </div>
+                        <div className="col">
+                          <Input
+                            className=""
+                            iconName="user"
+                            placeholder={intl.formatMessage({ id: "NAME" })}
+                            value=""
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>
-                  <div className="col d-flex gap-5 flex-column">
+                  <div className="col d-grid gap-3">
                     <div className="row">
-                      <div
-                        className="btn-group btn-group-toggle d-flex flex-column mb-5 "
-                        data-toggle="buttons"
-                      >
-                        <div className="w-100">
-                          <div
-                            className="btn-group py-2"
-                            role="group"
-                            aria-label="Basic example"
-                          >
-                            <p className="m-0 mt-2 ms-2">
-                              {intl.formatMessage({
-                                id: "MONITORING.HOSTS.TAGS",
-                              })}
-                              :
-                            </p>
-                            <ToggleBtns
-                              options={[
-                                {
-                                  value: "0",
-                                  label: "MONITORING.HOSTS.TAGS.AND",
-                                },
-                                {
-                                  value: "2",
-                                  label: "MONITORING.HOSTS.TAGS.OR",
-                                },
-                              ]}
-                              data="evaltype"
-                              setData={setValue}
-                              initialData={watch("evaltype")}
+                      <p className="m-0">
+                        {intl.formatMessage({
+                          id: "MONITORING.PROBLEMS.TAGS",
+                        })}
+                        :
+                      </p>
+                      {tagsField.map((item, index) => (
+                        <div className="row gap-3" key={item.id}>
+                          <div className="col p-0">
+                            <Controller
+                              name={`tags[${index}].tag`}
+                              control={control}
+                              defaultValue=""
+                              render={({ field }) => (
+                                <input
+                                  {...field}
+                                  type="text"
+                                  className="form-control py-2"
+                                  id={`exampleInputEmail${item.id}`}
+                                  aria-describedby="emailHelp"
+                                  placeholder={intl.formatMessage({
+                                    id: "MONITORING.HOSTS.ADDTAG.VALUE",
+                                  })}
+                                />
+                              )}
                             />
                           </div>
-                        </div>
-                      </div>
-                      <div>
-                        {tagsField.map((item, index) => (
-                          <div className="d-flex mb-3 gap-3" key={item.id}>
-                            <div style={{ width: "33%" }}>
-                              <Controller
-                                name={`tags[${index}].tag`}
-                                control={control}
-                                defaultValue=""
-                                render={({ field }) => (
-                                  <input
-                                    {...field}
-                                    type="text"
-                                    className="form-control py-2"
-                                    id={`exampleInputEmail${item.id}`}
-                                    aria-describedby="emailHelp"
-                                    placeholder={intl.formatMessage({
-                                      id: "MONITORING.HOSTS.ADDTAG.VALUE",
-                                    })}
-                                    style={{ direction: "rtl" }}
-                                    dir="rtl"
-                                  />
-                                )}
-                              />
-                            </div>
-
+                          <div className="col p-0">
                             <Controller
                               name={`tags[${index}].operator`}
                               control={control}
@@ -418,8 +357,6 @@ export function LatestData() {
                                 <select
                                   className="form-select form-select-sm"
                                   id={`floatingSelect${item.id}`}
-                                  aria-label="Floating label select example"
-                                  style={{ width: "33%" }}
                                   onChange={(e) => {
                                     const newValue = parseInt(
                                       e.target.value,
@@ -462,40 +399,40 @@ export function LatestData() {
                                 </select>
                               )}
                             />
-
-                            <div style={{ width: "33%" }}>
-                              <Controller
-                                name={`tags[${index}].value`}
-                                control={control}
-                                defaultValue=""
-                                render={({ field }) => (
-                                  <input
-                                    {...field}
-                                    type="text"
-                                    className="form-control py-2"
-                                    id={`exampleInputEmailValue${item.id}`}
-                                    aria-describedby="emailHelp"
-                                    placeholder={intl.formatMessage({
-                                      id: "MONITORING.HOSTS.ADDTAG.VALUE",
-                                    })}
-                                    style={{ direction: "rtl" }}
-                                    dir="rtl"
-                                  />
-                                )}
-                              />
-                            </div>
-                            <button
-                              type="button"
-                              className="btn btn-danger me-2 py-2"
-                              onClick={() => tagsRemove(index)}
-                            >
-                              {intl.formatMessage({
-                                id: "MONITORING.HOSTS.ADDTAG.REMOVEBUTTON",
-                              })}
-                            </button>
                           </div>
-                        ))}
-                      </div>
+
+                          <div className="col p-0">
+                            <Controller
+                              name={`tags[${index}].value`}
+                              control={control}
+                              defaultValue=""
+                              render={({ field }) => (
+                                <input
+                                  {...field}
+                                  type="text"
+                                  className="form-control py-2"
+                                  id={`exampleInputEmailValue${item.id}`}
+                                  aria-describedby="emailHelp"
+                                  placeholder={intl.formatMessage({
+                                    id: "MONITORING.HOSTS.ADDTAG.VALUE",
+                                  })}
+                                />
+                              )}
+                            />
+                          </div>
+                          <button
+                            type="button"
+                            className="btn btn-danger me-2 py-2 col-2"
+                            onClick={() => tagsRemove(index)}
+                          >
+                            {intl.formatMessage({
+                              id: "DELETE",
+                            })}
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="row">
                       <BTN
                         label={intl.formatMessage({ id: "ADD" })}
                         className="btn-light-success py-2 m-0 col-3"
@@ -505,35 +442,23 @@ export function LatestData() {
                       />
                     </div>
 
-                    <div className="row gap-2">
-                      <div className="col p-0">
-                        <Controller
-                          name="search.name"
+                    <div className="row">
+                      <div className="w-100">
+                        <p>
+                          {intl.formatMessage({
+                            id: "MONITORING.PROBLEMS.SHOWBASEDON",
+                          })}
+                        </p>
+                        <Tags
+                          showTags={showTags}
+                          setShowTags={setShowTags}
+                          tagNameVisible={tagNameVisible}
+                          setTagNameVisible={setTagNameVisible}
+                          setValue={setValue}
+                          activeButtonTag={watch("evaltype")}
                           control={control}
-                          defaultValue=""
-                          render={({ field }) => (
-                            <>
-                              <Input
-                                iconName="price-tag"
-                                placeholder={intl.formatMessage({
-                                  id: "MONITORING.PROBLEMS.TAGS.SHOW.TITLE.PRIORITY",
-                                })}
-                                value={field.value.toString()}
-                                onChange={field.onChange}
-                              />
-                            </>
-                          )}
                         />
                       </div>
-                    </div>
-
-                    <div className="row">
-                      <p className="mt-5">
-                        {intl.formatMessage({
-                          id: "MONITORING.HOSTS.SEVERITY",
-                        })}
-                      </p>
-                      <Severities watch={watch} setValue={setValue} />
                     </div>
                   </div>
                 </div>

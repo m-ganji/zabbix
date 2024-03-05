@@ -90,10 +90,10 @@
     "MONITORING.HOSTS.ADDTAG.OPTION6": "Not Contains",
     "MONITORING.HOSTS.ADDTAG.VALUE": "Value",
     
-    "MONITORING.HOSTS.ADDTAG.REMOVEBUTTON": "Remove",
+    "DELETE": "Remove",
     "MONITORING.HOSTS.MAINTENANCE": "Show hosts in maintenance",
     "MONITORING.HOSTS.SUPPRESSED": "Show suppressed problems",
-    "MONITORING.HOSTS.IP": "IP",
+    "IP": "IP",
     "MONITORING.HOSTS.DNS": "DNS",
     "MONITORING.HOSTS.PORT": "Port",
     "MONITORING.HOSTS.MONITORED": "Monitored Host",

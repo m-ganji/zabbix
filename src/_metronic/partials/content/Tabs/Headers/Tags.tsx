@@ -68,7 +68,7 @@ const Tags: React.FC<TagsProps> = ({ control }) => {
             onClick={() => remove(index)}
           >
             {intl.formatMessage({
-              id: "MONITORING.HOSTS.ADDTAG.REMOVEBUTTON",
+              id: "DELETE",
             })}
           </button>
         </div>

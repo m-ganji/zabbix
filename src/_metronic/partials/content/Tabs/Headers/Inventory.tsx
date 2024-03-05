@@ -33,7 +33,7 @@ const Inventory: React.FC<HostProps> = ({ control, watch }) => {
           data-bs-toggle="button"
         >
           {intl.formatMessage({
-            id: "MONITORING.HOSTS.CREATEHOST.INVENTORY.DISABLED",
+            id: "DISABLED",
           })}
         </button>
         <button
