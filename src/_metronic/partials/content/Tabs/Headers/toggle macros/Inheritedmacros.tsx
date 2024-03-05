@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { Loader } from "../../../../../layout/components/loader/Loader";
+import { getCSSVariableValue } from "../../../../../assets/ts/_utils";
+import { KTIcon } from "../../../../../helpers";
 
 interface ItemType {
   description: string;
@@ -32,6 +34,7 @@ const Inheritedmacros: React.FC = ({
   const [isInheritedCreateModalOpen, setIsInheritedCreateModalOpen] =
     useState<boolean>(false);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
+  const secondaryColor = getCSSVariableValue("--bs-gray-300");
 
   useEffect(() => {
     setIsLoaded(false);
@@ -71,6 +74,10 @@ const Inheritedmacros: React.FC = ({
       console.error("Error during Zabbix request:", error);
     }
   };
+
+  const [selectedOptions, setSelectedOptions] = useState(
+    new Array(macrosField.length).fill(null)
+  );
 
   return (
     <div className="d-flex flex-column">
@@ -113,16 +120,8 @@ const Inheritedmacros: React.FC = ({
                   dir="rtl"
                   key={index}
                 />
-                <select
-                  className="form-select form-select-sm w-25 "
-                  aria-label="Floating label select example"
-                  style={{ width: "33%" }}
-                >
-                  <option value={1}>&#x0054; متن 1</option>
-                  <option value={2}>🅿️&#x0054; متن 2</option>
-                  <option value={2}>🔏 متن 2</option>
-                </select>
               </div>
+              select
               <input
                 type="text"
                 className="form-control py-2"
@@ -179,7 +178,8 @@ const Inheritedmacros: React.FC = ({
                   style={{ direction: "rtl" }}
                   dir="rtl"
                 />
-                <select
+                آخرین
+                {/* <select
                   className="form-select form-select-sm w-25 "
                   aria-label="Floating label select example"
                   style={{ width: "33%" }}
@@ -187,7 +187,7 @@ const Inheritedmacros: React.FC = ({
                   <option value={1}>&#x0054; متن 1</option>
                   <option value={2}>🅿️&#x0054; متن 2</option>
                   <option value={2}>🔏 متن 2</option>
-                </select>
+                </select> */}
               </div>
               <input
                 {...register("description")}
@@ -231,16 +231,41 @@ const Inheritedmacros: React.FC = ({
                 style={{ direction: "rtl" }}
                 dir="rtl"
               />
-              <select
-                className="form-select form-select-sm w-25 "
-                aria-label="Floating label select example"
-                style={{ width: "33%" }}
+              <div
+                className={`custom-dropdown border border-${secondaryColor} border-2`}
+                style={{
+                  cursor: "not-allowed",
+                }}
               >
-                <option value={1}>&#x0054; متن 1</option>
-                <option value={2}>🅿️&#x0054; متن 2</option>
-                <option value={2}>🔏 متن 2</option>
-              </select>
+                <div className="selected-option mt-2">
+                  {e.type == "0" && (
+                    <span>
+                      <KTIcon
+                        iconName="text"
+                        className="fs-2 d-flex justify-content-center justify-content-end gap-2"
+                      />
+                    </span>
+                  )}
+                  {e.type == "1" && (
+                    <span>
+                      <KTIcon
+                        iconName="eye-slash"
+                        className="fs-2 d-flex justify-content-center justify-content-end "
+                      />
+                    </span>
+                  )}
+                  {e.type == "2" && (
+                    <span>
+                      <KTIcon
+                        iconName="lock-2"
+                        className="fs-2 d-flex justify-content-center justify-content-end gap-2"
+                      />
+                    </span>
+                  )}
+                </div>
+              </div>
             </div>
+
             <input
               type="text"
               className="form-control py-2"

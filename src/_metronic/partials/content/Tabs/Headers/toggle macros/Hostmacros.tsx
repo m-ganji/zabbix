@@ -89,8 +89,6 @@ const Hostmacros: React.FC = ({
                   className={`custom-dropdown border border-${secondaryColor} border-2 `}
                   onClick={() => {
                     toggleDropdown(index);
-                    console.log(item);
-                    console.log(selectedOptions);
                   }}
                   key={index}
                 >
