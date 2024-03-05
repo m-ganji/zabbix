@@ -1,21 +1,22 @@
 import { useEffect, useState } from "react";
-import { Content } from "../../../../_metronic/layout/components/content";
-import Severities from "./hosts/severities/Index";
-import Tags from "./hosts/tags/Index";
+import { Content } from "../../../_metronic/layout/components/content";
+import Severities from "../../modules/profile/components/hosts/severities/Index";
+import Tags from "../../modules/profile/components/hosts/tags/Index";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { useIntl } from "react-intl";
-import InventoryList from "./InventoryList";
-import { ProblemTable } from "../../../../_metronic/partials/widgets";
-import { PageTitle } from "../../../../_metronic/layout/core";
-import { ToolbarWrapper } from "../../../../_metronic/layout/components/toolbar";
-import { instance } from "../../../../services/axiosInstance";
-import { useNavigate } from "react-router-dom";
-import { MultiSelect } from "../../../../_metronic/layout/components/MultiSelect/MultiSelect";
+import InventoryList from "../../modules/profile/components/InventoryList";
+import { ProblemTable } from "../../../_metronic/partials/widgets";
+import { PageTitle } from "../../../_metronic/layout/core";
+import { ToolbarWrapper } from "../../../_metronic/layout/components/toolbar";
+import { instance } from "../../../services/axiosInstance";
+import { useNavigate, useParams } from "react-router-dom";
+import { MultiSelect } from "../../../_metronic/layout/components/MultiSelect/MultiSelect";
 import { useDispatch } from "react-redux";
 import { Form, Modal } from "react-bootstrap";
-import { fetchHostGroup } from "../../../../hostGroupSlice/hostGroupReducer";
-import { Loader } from "../../../../_metronic/layout/components/loader/Loader";
-import ToggleBtns from "../../../../_metronic/layout/components/ToggleBtn/ToggleBtn";
+import { fetchHostGroup } from "../../../hostGroupSlice/hostGroupReducer";
+import { Loader } from "../../../_metronic/layout/components/loader/Loader";
+import ToggleBtns from "../../../_metronic/layout/components/ToggleBtn/ToggleBtn";
+import BTN from "../../../_metronic/layout/components/BTN";
 
 interface hostGroupItems {
   value: string;
@@ -128,11 +129,17 @@ export interface Problem {
   urls: never[];
   userid: string;
 }
+interface ProblemParams {
+  id: string;
+  value: string;
+}
 
 export function Problems() {
   const intl = useIntl();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const { id, value } = useParams<ProblemParams>();
 
   const [sortBasedOn, setSortBasedOn] = useState("");
   const [hostGroupWithParam, setHostGroupWithParam] = useState([]);
@@ -191,8 +198,8 @@ export function Problems() {
         evaltype: "0",
         tags: [],
         inventory: [],
-        hostids: [],
         recent: "1",
+        hostids: id ? [id] : [],
       },
     });
 
@@ -218,33 +225,41 @@ export function Problems() {
   const currentGroupids = watch("groupids") ? watch("groupids") : [];
 
   const handleCheckboxChange = (host) => {
-    console.log(selectedHosts);
-    setValue("hostids", [...currentHostids, host.hostid]);
-
     if (currentHostids.includes(host.hostid)) {
-      setSelectedHosts(selectedHosts.filter((id) => id.hostid !== host.hostid));
+      const newData = selectedHosts.filter((id) => id.value != host.hostid);
+      setSelectedHosts(newData);
+      setValue(
+        "hostids",
+        newData.map((i) => i.value)
+      );
+      console.log(newData);
     } else {
       setSelectedHosts([
         ...selectedHosts,
         { label: host.host, value: host.hostid },
       ]);
+      setValue("hostids", [...currentHostids, host.hostid]);
     }
   };
 
   const handleCheckboxTriggersChange = (trigger) => {
     console.log(currentTriggersIds);
 
-    setValue("objectids", [...currentTriggersIds, trigger.triggerid]);
-
     if (currentTriggersIds.includes(trigger.triggerid)) {
-      setSelectedHosts(
-        SelectedTriggers.filter((id) => id.triggerid !== trigger.triggerid)
+      const newData = SelectedTriggers.filter(
+        (id) => id.value !== trigger.triggerid
+      );
+      setSelectedTriggers(newData);
+      setValue(
+        "objectids",
+        newData.map((i) => i.value)
       );
     } else {
       setSelectedTriggers([
         ...SelectedTriggers,
         { label: trigger.description, value: trigger.triggerid },
       ]);
+      setValue("objectids", [...currentTriggersIds, trigger.triggerid]);
     }
   };
 
@@ -455,10 +470,11 @@ export function Problems() {
                           <MultiSelect
                             reset={false}
                             addAll={true}
-                            title="MENU.SELECT.HOSTS.GP"
+                            title="MENU.SELECT.HOSTS"
                             options={selectedHosts}
                             Loading={false}
                             DataName="hostids"
+                            selectedValue={[{ value: id, label: value }]}
                             setData={setValue}
                             currentData={currentHostids}
                           />
@@ -501,32 +517,46 @@ export function Problems() {
                               }
                             )}
                           </Form.Select>
-
-                          {!isHostsDataLoading ? (
-                            hostsData.map((host) => (
-                              <div
-                                key={host.hostid}
-                                className="w-100 justify-content-end my-3 gap-2 d-flex"
-                              >
-                                <label
-                                  className="form-check-label"
-                                  htmlFor={`host-${host.hostid}`}
+                          <div className=" h-350px overflow-y-scroll mt-2">
+                            {!isHostsDataLoading ? (
+                              hostsData.map((host) => (
+                                // console.log(currentHostids, host),
+                                <div
+                                  key={host.hostid}
+                                  className="w-100 justify-content-end my-3 gap-2 d-flex"
                                 >
-                                  {host.host}
-                                </label>
-                                <input
-                                  type="checkbox"
-                                  id={`host-${host.hostid}`}
-                                  checked={currentHostids.includes(host.hostid)}
-                                  onChange={() => handleCheckboxChange(host)}
-                                />
+                                  <label
+                                    className="form-check-label"
+                                    htmlFor={`host-${host.hostid}`}
+                                  >
+                                    {host.host}
+                                  </label>
+                                  <input
+                                    type="checkbox"
+                                    id={`host-${host.hostid}`}
+                                    checked={currentHostids.includes(
+                                      host.hostid
+                                    )}
+                                    onChange={() => handleCheckboxChange(host)}
+                                  />
+                                </div>
+                              ))
+                            ) : (
+                              <div className="d-flex pt-7 w-100 justify-content-center">
+                                <Loader />
                               </div>
-                            ))
-                          ) : (
-                            <div className="d-flex pt-7 w-100 justify-content-center">
-                              <Loader />
-                            </div>
-                          )}
+                            )}
+                          </div>
+
+                          <div className="d-flex justify-content-center mt-2">
+                            <button
+                              type="button"
+                              onClick={() => setisHostsModalOpen(false)}
+                              className="btn py-2 btn-light-danger"
+                            >
+                              بستن
+                            </button>
+                          </div>
                         </Modal.Body>
                       </Modal>
                       <div className="row column-gap-3 m-0">
@@ -617,32 +647,43 @@ export function Problems() {
                             </span>
                           </div>
 
-                          {!IsTriggersLoading ? (
-                            Triggers.map((item: Triggers) => (
-                              <div
-                                key={item.triggerid}
-                                className={`w-100 justify-content-end my-3 gap-2 badge d-flex badge-light-${getPriorityBackgroundColor(
-                                  item.priority
-                                )}`}
-                              >
-                                {item.description}
-                                <input
-                                  type="checkbox"
-                                  id={`host-${item.triggerid}`}
-                                  checked={currentTriggersIds.includes(
-                                    item.triggerid
-                                  )}
-                                  onChange={() =>
-                                    handleCheckboxTriggersChange(item)
-                                  }
-                                />
+                          <div className=" h-350px overflow-y-scroll mt-2">
+                            {!IsTriggersLoading ? (
+                              Triggers.map((item: Triggers) => (
+                                <div
+                                  key={item.triggerid}
+                                  className={`w-100 justify-content-end my-3 gap-2 badge d-flex badge-light-${getPriorityBackgroundColor(
+                                    item.priority
+                                  )}`}
+                                >
+                                  {item.description}
+                                  <input
+                                    type="checkbox"
+                                    id={`host-${item.triggerid}`}
+                                    checked={currentTriggersIds.includes(
+                                      item.triggerid
+                                    )}
+                                    onChange={() =>
+                                      handleCheckboxTriggersChange(item)
+                                    }
+                                  />
+                                </div>
+                              ))
+                            ) : (
+                              <div className="d-flex pt-7 w-100 justify-content-center">
+                                <Loader />
                               </div>
-                            ))
-                          ) : (
-                            <div className="d-flex pt-7 w-100 justify-content-center">
-                              <Loader />
-                            </div>
-                          )}
+                            )}
+                          </div>
+                          <div className="d-flex justify-content-center mt-2">
+                            <button
+                              type="button"
+                              onClick={() => setIsTriggersModalOpen(false)}
+                              className="btn py-2 btn-light-danger"
+                            >
+                              بستن
+                            </button>
+                          </div>
                         </Modal.Body>
                       </Modal>
                       <Controller
@@ -663,7 +704,7 @@ export function Problems() {
                       <div>
                         <p className="mt-5">
                           {intl.formatMessage({
-                            id: "MONITORING.HOSTS.SEVERITY",
+                            id: "SEVERITY",
                           })}
                         </p>
                         <Severities watch={watch} setValue={setValue} />
@@ -736,7 +777,7 @@ export function Problems() {
                       }}
                     >
                       {intl.formatMessage({
-                        id: "MONITORING.HOSTS.ADDTAG.ADDBUTTON",
+                        id: "ADD",
                       })}
                     </button>
                     <p className="m-0">
@@ -847,7 +888,7 @@ export function Problems() {
                       }}
                     >
                       {intl.formatMessage({
-                        id: "MONITORING.HOSTS.ADDTAG.ADDBUTTON",
+                        id: "ADD",
                       })}
                     </button>
                     <Tags
@@ -867,7 +908,7 @@ export function Problems() {
                           type="text"
                           className="form-control py-2"
                           placeholder={intl.formatMessage({
-                            id: "MONITORING.HOSTS.ADDTAG.VALUE",
+                            id: "MONITORING.PROBLEMS.TAGS.SHOW.TITLE.PRIORITY",
                           })}
                           {...field}
                         />
@@ -935,26 +976,21 @@ export function Problems() {
                     </div>
                   </div>
                   <div className="d-flex w-100 justify-content-center mt-10 column-gap-5">
-                    <button
-                      type="button"
+                    <BTN
+                      label={intl.formatMessage({ id: "SUBMIT" })}
+                      className="btn-light-success"
                       onClick={submit}
-                      className="btn py-2 btn-light-success"
-                    >
-                      {intl.formatMessage({ id: "SUBMIT" })}
-                    </button>
-                    <button
-                      type="button"
+                    />
+                    <BTN
+                      label="باز نشانی"
+                      className="btn-light-danger"
                       onClick={resetData}
-                      className="btn py-2 btn-light-danger"
-                    >
-                      باز نشانی
-                    </button>
-                    <button
-                      type="button"
-                      className="btn py-2 btn-light-primary"
-                    >
-                      ذخیره
-                    </button>
+                    />
+                    <BTN
+                      label="ذخیره"
+                      className="btn-light-primary"
+                      // onClick={resetData}
+                    />
                   </div>
                 </div>
               </div>

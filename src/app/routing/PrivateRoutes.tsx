@@ -7,11 +7,20 @@ import { MenuTestPage } from "../pages/MenuTestPage";
 import { getCSSVariableValue } from "../../_metronic/assets/ts/_utils";
 import { WithChildren } from "../../_metronic/helpers";
 import BuilderPageWrapper from "../pages/layout-builder/BuilderPageWrapper";
-import { Problems } from "../modules/profile/components/Problems";
-import { Overview } from "../modules/profile/components/Hosts";
-import { Discovery } from "../modules/profile/components/Discovery";
-import { Maps } from "../pages/Maps";
-import { LatestData } from "../modules/profile/components/LatestData";
+import { Problems } from "../pages/Monitoring/Problems";
+import { Overview } from "../pages/Monitoring/Hosts";
+import { Discovery } from "../pages/Monitoring/Discovery";
+import { Maps } from "../pages/Monitoring/Maps";
+import { LatestData } from "../pages/Monitoring/LatestData";
+import DataTemplatesGroups from "../pages/LatestData/DataTemplatesGroups";
+import { DataHostGroups } from "../pages/LatestData/DataHostGroups";
+import { SystemInfo } from "../pages/Reports/SystemInfo";
+import { Notifications } from "../pages/Reports/Notifications";
+import { ScheduledReports } from "../pages/Reports/ScheduledReports";
+import AuditLog from "../pages/Reports/AuditLog";
+import ActionLog from "../pages/Reports/ActionLog";
+import AvailabilityReport from "../pages/Reports/AvailabilityReport";
+import BusiestTriggers from "../pages/Reports/BusiestTriggers";
 
 const PrivateRoutes = () => {
   const ProfilePage = lazy(() => import("../modules/profile/ProfilePage"));
@@ -32,11 +41,33 @@ const PrivateRoutes = () => {
         <Route path="dashboard" element={<DashboardWrapper />} />
         <Route path="builder" element={<BuilderPageWrapper />} />
         <Route path="menu-test" element={<MenuTestPage />} />
-        <Route path="problems" element={<Problems />} />
-        <Route path="Hosts" element={<Overview />} />
-        <Route path="Discovery" element={<Discovery />} />
-        <Route path="Maps" element={<Maps />} />
-        <Route path="LatestData" element={<LatestData />} />
+        {/* MONITORING PAGES */}
+        <Route path="Monitoring/Problems" element={<Problems />} />
+        <Route path="Monitoring/Problems/:id/:value" element={<Problems />} />
+        <Route path="Monitoring/Hosts" element={<Overview />} />
+        <Route path="Monitoring/Discovery" element={<Discovery />} />
+        <Route path="Monitoring/Maps" element={<Maps />} />
+        <Route path="Monitoring/LatestData" element={<LatestData />} />
+        {/* REPORTS PAGES */}
+        <Route path="Reports/System-Info" element={<SystemInfo />} />
+        <Route
+          path="Reports/Scheduled-Reports"
+          element={<ScheduledReports />}
+        />
+        <Route path="Reports/Notifications" element={<Notifications />} />
+        <Route path="Reports/Availability-Report" element={<AvailabilityReport />} />
+        <Route path="Reports/Busiest-Triggers" element={<BusiestTriggers />} />
+        <Route path="Reports/Audit-log" element={<AuditLog />} />
+        <Route path="Reports/Action-log" element={<ActionLog />} />
+        {/* DATA PAGES */}
+        <Route path="Data/Templates-Groups" element={<DataTemplatesGroups />} />
+        <Route path="Data/Host-Groups" element={<DataHostGroups />} />
+        <Route path="Data/Templates" element={<Maps />} />
+        <Route path="Data/Hosts" element={<Maps />} />
+        <Route path="Data/Maintenance" element={<Maps />} />
+        <Route path="Data/Event-Correlation" element={<Maps />} />
+        <Route path="Data/Discovery" element={<Maps />} />
+
         {/* Lazy Modules */}
 
         <Route

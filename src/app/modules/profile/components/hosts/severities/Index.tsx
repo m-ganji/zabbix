@@ -36,7 +36,7 @@ export default function Index({
     },
     {
       id: 1,
-      title: intl.formatMessage({ id: "MONITORING.HOSTS.SEVERITY.OPTION4" }),
+      title: intl.formatMessage({ id: "INFO" }),
       color: "orangered",
     },
     {

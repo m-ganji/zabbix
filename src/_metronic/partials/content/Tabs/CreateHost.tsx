@@ -6,28 +6,24 @@ import { instance } from "../../../../services/axiosInstance";
 import { useIntl } from "react-intl";
 import Tags from "./Headers/Tags";
 import IPMI from "./Headers/IPMI";
-import Hosts from "./Headers/Hosts";
+import Host from "./Headers/Host";
 import Macros from "./Headers/Macros";
 import Inventory from "./Headers/Inventory";
-import Encription from "./Headers/Encription";
+import Encryption from "./Headers/Encryption";
 import Setvalue from "./Headers/Setvalue";
 import { useForm } from "react-hook-form";
 
 const CreateHost: FC = () => {
-  const { control, handleSubmit, reset, watch } = useForm<FormValues>({
-    defaultValues: {
-      name: "",
-      groups: [
-        {
-          groupid: "",
-        },
-      ],
-    },
-  });
+  const { control, handleSubmit, reset, watch, setValue } = useForm<FormValues>(
+    {
+      defaultValues: {
+        host: "",
+      },
+    }
+  );
 
   const onSubmit = async (data) => {
     console.log(data);
-    console.log(watch("name"));
 
     try {
       const response = await instance.post("/core/hosts/create", data);
@@ -35,10 +31,6 @@ const CreateHost: FC = () => {
     } catch (error) {
       console.error("Error occurred:", error);
     }
-  };
-
-  const logData = (data: string) => {
-    console.log("Data from Controller:", data);
   };
 
   return (
@@ -95,7 +87,7 @@ const CreateHost: FC = () => {
               <a
                 className="nav-link btn btn-sm btn-color-muted btn-active btn-active-light-primary fw-bold px-4"
                 data-bs-toggle="tab"
-                href="#tab-encription"
+                href="#tab-Encryption"
               >
                 رمز گذاری
               </a>
@@ -115,25 +107,25 @@ const CreateHost: FC = () => {
       <div className="card-body pt-0">
         <div className="tab-content">
           <div className="tab-pane active show" id="tab-hosts">
-            <Hosts logData={logData} />
+            <Host control={control} watch={watch} setValue={setValue} />
           </div>
           <div className="tab-pane container" id="tab-ipmi">
-            <IPMI />
+            <IPMI control={control} watch={watch} setValue={setValue} />
           </div>
           <div className="tab-pane" id="tab-tags">
-            <Tags />
+            <Tags control={control} watch={watch} />
           </div>
           <div className="tab-pane" id="tab-macro">
-            <Macros />
+            <Macros control={control} watch={watch} setValue={setValue} />
           </div>
           <div className="tab-pane" id="tab-inventory">
-            <Inventory />
+            <Inventory control={control} watch={watch} />
           </div>
-          <div className="tab-pane" id="tab-encription">
-            <Encription />
+          <div className="tab-pane" id="tab-Encryption">
+            <Encryption control={control} watch={watch} />
           </div>
           <div className="tab-pane" id="tab-set-value">
-            <Setvalue />
+            <Setvalue control={control} watch={watch} />
           </div>
         </div>
         <div className="position-absolute bottom-0 left-0 d-flex gap-3 mb-3 ">

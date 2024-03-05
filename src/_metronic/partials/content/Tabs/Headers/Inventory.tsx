@@ -2,8 +2,14 @@ import React from "react";
 import { useIntl } from "react-intl";
 import inputsTitle from "../../../../../app/modules/profile/components/InventoryList";
 import { useState } from "react";
+import { Controller } from "react-hook-form";
 
-export default function Inventory() {
+interface HostProps {
+  control: object;
+  watch: () => void;
+}
+
+const Inventory: React.FC<HostProps> = ({ control, watch }) => {
   const intl = useIntl();
   const [activeInventory, setActiveInventory] = useState<string>("");
 
@@ -11,7 +17,6 @@ export default function Inventory() {
   for (let i = 0; i < inputsTitle.length; i += 2) {
     pairs.push(inputsTitle.slice(i, i + 2));
   }
-  console.log(activeInventory);
 
   return (
     <div>
@@ -28,7 +33,7 @@ export default function Inventory() {
           data-bs-toggle="button"
         >
           {intl.formatMessage({
-            id: "MONITORING.HOSTS.CREATEHOST.INVENTORY.DISABLED",
+            id: "DISABLED",
           })}
         </button>
         <button
@@ -62,32 +67,41 @@ export default function Inventory() {
           })}
         </button>
       </div>
-
-      {pairs.map((pair, index) => (
-        <div key={index} className="d-flex">
-          {pair.map((input) => (
-            <div key={input.id} className="w-50 p-2">
-              <label
-                htmlFor={`exampleInputEmail${input.id}`}
-                className="form-label"
-              >
-                {input.title}
-              </label>
-              <input
-                type={input.isTextArea ? "textarea" : "text"}
-                disabled={activeInventory === "DISABLED"}
-                className="form-control py-2"
-                id={`exampleInputEmail${input.id}`}
-                aria-describedby="emailHelp"
-                placeholder={input.title}
-                name={input.name}
-                style={{ direction: "rtl" }}
-                dir="rtl"
-              />
-            </div>
-          ))}
-        </div>
-      ))}
+      <div style={{ maxHeight: "65vh", overflow: "auto" }} className="mt-3">
+        {pairs.map((pair, index) => (
+          <div key={index} className="d-flex">
+            {pair.map((input) => (
+              <div key={input.id} className="w-50 p-2">
+                <label
+                  htmlFor={`exampleInputEmail${input.id}`}
+                  className="form-label"
+                >
+                  {input.title}
+                </label>
+                <Controller
+                  name={`Inventory.${input.name}`}
+                  control={control}
+                  render={({ field }) => (
+                    <input
+                      {...field}
+                      type={input.isTextArea ? "textarea" : "text"}
+                      disabled={activeInventory === "DISABLED"}
+                      className="form-control py-2"
+                      id={`exampleInputEmail${input.id}`}
+                      aria-describedby="emailHelp"
+                      placeholder={input.title}
+                      style={{ direction: "rtl" }}
+                      dir="rtl"
+                    />
+                  )}
+                />
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
     </div>
   );
-}
+};
+
+export default Inventory;

@@ -1,6 +1,28 @@
 //
 // Theme style
 //
+.modal-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 700px !important;
+  color: var(--bs-modal-color);
+  pointer-events: auto;
+  background-color: var(--bs-modal-bg);
+  background-clip: padding-box;
+  border: var(--bs-modal-border-width) solid var(--bs-modal-border-color);
+  border-radius: var(--bs-modal-border-radius);
+  outline: 0;
+}
+
+.w-100.text-center.p-0.dropdown-menu.show {
+  max-height: 250px;
+  overflow: auto;
+}
+
+.dropdown-menu {
+  background-clip: unset !important;
+}
 
 // Initialize
 @import "init";

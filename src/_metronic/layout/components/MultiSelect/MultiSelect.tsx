@@ -16,6 +16,7 @@ const MultiSelect: React.FC<{
   setData: CallableFunction;
   currentData: number[];
   reset: boolean;
+  selectedValue: Option[];
 }> = ({
   title,
   options,
@@ -25,29 +26,34 @@ const MultiSelect: React.FC<{
   setData,
   currentData,
   reset,
+  selectedValue,
 }) => {
   const [selectedOptions, setSelectedOptions] = useState<Option[]>([]);
   const [isOpen, setIsOpen] = useState(false);
 
+  const intl = useIntl();
+
   useEffect(() => {
-    console.log(reset);
+    console.log(selectedValue?.length);
 
     setSelectedOptions([]);
-
     addAll && setSelectedOptions([...options]);
+
+    selectedValue?.[0]?.value && setSelectedOptions(selectedValue);
   }, [addAll, options, reset]);
 
   const toggleOption = (option: Option) => {
     const isSelected = selectedOptions.some(
       (selectedOption) => selectedOption.value === option.value
     );
+    console.log(isSelected);
 
     if (isSelected) {
       setData(
         DataName,
-        selectedOptions.filter(
-          (selectedOption) => selectedOption.value !== option.value
-        )
+        selectedOptions
+          .filter((selectedOption) => selectedOption.value !== option.value)
+          .map((i) => i.value)
       );
       setSelectedOptions(
         selectedOptions.filter(
@@ -56,7 +62,6 @@ const MultiSelect: React.FC<{
       );
     } else {
       console.log(currentData);
-
       setData(DataName, [...currentData, option.value]);
       setSelectedOptions([...selectedOptions, option]);
     }
@@ -79,11 +84,17 @@ const MultiSelect: React.FC<{
   };
 
   const deleteOption = (option: Option) => {
+    console.log(
+      selectedOptions
+        .filter((selectedOption) => selectedOption.value !== option.value)
+        .map((i) => i.value)
+    );
+
     setData(
       DataName,
-      selectedOptions.filter(
-        (selectedOption) => selectedOption.value !== option.value
-      )
+      selectedOptions
+        .filter((selectedOption) => selectedOption.value !== option.value)
+        .map((i) => i.value)
     );
     setSelectedOptions(
       selectedOptions.filter(
@@ -95,9 +106,7 @@ const MultiSelect: React.FC<{
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
-  console.log(selectedOptions);
 
-  const intl = useIntl();
   return (
     <Dropdown show={isOpen} onToggle={toggleDropdown}>
       <Dropdown.Toggle
@@ -106,26 +115,35 @@ const MultiSelect: React.FC<{
       >
         {selectedOptions?.length > 0 ? (
           <div className="d-flex flex-wrap gap-2">
-            {selectedOptions.map((option) => (
-              <div
-                dir="ltr"
-                className="d-flex gap-1"
-                style={{ maxWidth: "130px" }}
-                key={option.value}
-              >
-                <p
-                  style={{ textOverflow: "ellipsis" }}
-                  className="m-0  overflow-hidden"
-                >
-                  {option.label}
-                </p>
-                <img
-                  src="/media/icons/duotune/general/close-circle.svg"
-                  onClick={() => deleteOption(option)}
-                  alt="Close"
-                />
-              </div>
-            ))}
+            {selectedOptions.map(
+              (option, index) => (
+                console.log(selectedOptions),
+                (
+                  <div
+                    dir="ltr"
+                    className="d-flex gap-1"
+                    style={{
+                      maxWidth: "130px",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                    }}
+                    key={index}
+                  >
+                    <p
+                      style={{ textOverflow: "ellipsis" }}
+                      className="m-0  overflow-hidden"
+                    >
+                      {option.label}
+                    </p>
+                    <img
+                      src="/media/icons/duotune/general/close-circle.svg"
+                      onClick={() => deleteOption(option)}
+                      alt="Close"
+                    />
+                  </div>
+                )
+              )
+            )}
           </div>
         ) : (
           intl.formatMessage({ id: title })
@@ -154,9 +172,14 @@ const MultiSelect: React.FC<{
               </Dropdown.Item>
             </div>
             <Dropdown.Divider />
-            {options?.map((option) => (
+            {options?.map((option, index) => (
               <Dropdown.Item
-                key={option.value}
+                key={index}
+                style={{
+                  direction: "ltr",
+                  textOverflow: "ellipsis",
+                  maxHeight: "250px",
+                }}
                 onClick={() => toggleOption(option)}
                 active={selectedOptions.some(
                   (selectedOption) => selectedOption.value === option.value

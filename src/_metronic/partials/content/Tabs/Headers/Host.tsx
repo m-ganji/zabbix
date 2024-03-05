@@ -4,22 +4,22 @@ import { useIntl } from "react-intl";
 import { instance } from "../../../../../services/axiosInstance";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchHostGroup } from "../../../../../hostGroupSlice/hostGroupReducer";
-import { Controller, useFieldArray, useForm } from "react-hook-form";
+import { Controller } from "react-hook-form";
+interface HostProps {
+  control: object;
+  watch: () => void;
+}
 
-export default function Hosts({ logData }) {
-  const { control, handleSubmit, reset, watch, setValue } = useForm<FormValues>(
-    {
-      defaultValues: {
-        host: "",
-      },
-    }
-  );
-
+const Host: React.FC<HostProps> = ({ control, watch, setValue }) => {
   const intl = useIntl();
   const [templates, setTemplates] = useState<object>();
+  const [resetMultiSelect, setResetMultiSelect] = useState(false);
+  const currentGroupids = watch("groupids") ? watch("groupids") : [];
+  const currentTemplate = watch("template") ? watch("template") : [];
+
   const dispatch = useDispatch();
 
-  const hostGroupData = useSelector((state) => state.hostGroup);
+  const hostGroupData = useSelector((state) => (state as object).hostGroup);
 
   useEffect(() => {
     dispatch(fetchHostGroup({}));
@@ -31,8 +31,6 @@ export default function Hosts({ logData }) {
         const response = await instance.post("/core/templates/get", {});
         const mapped = response.data.map((e) => ({ label: e.name }));
         setTemplates(mapped);
-        // const labels = response.data.map((template) => template.name);
-        console.log(response.data);
       } catch (error) {
         console.error(error);
         throw error;
@@ -41,6 +39,7 @@ export default function Hosts({ logData }) {
 
     handleGetTemplates();
   }, []);
+
 
   return (
     <div>
@@ -54,13 +53,21 @@ export default function Hosts({ logData }) {
               <i className="bi bi-hdd-network" />
             </span>
 
-            <input
-              type="text"
-              className="form-control rounded-start-2 rounded-end-0"
-              placeholder="نام هاست"
-              aria-label="نام هاست"
-              aria-describedby="tab-hosts"
-              required
+            <Controller
+              name={`host`}
+              control={control}
+              defaultValue=""
+              render={({ field }) => (
+                <input
+                  {...field}
+                  type="text"
+                  className="form-control rounded-start-2 rounded-end-0"
+                  placeholder="نام هاست"
+                  aria-label="نام هاست"
+                  aria-describedby="tab-hosts"
+                  required
+                />
+              )}
             />
           </div>
           <div className="input-group mb-3 col">
@@ -70,15 +77,17 @@ export default function Hosts({ logData }) {
             >
               <i className="bi bi-bullseye" />
             </span>
-
             <input
               type="text"
               className="form-control rounded-start-2 rounded-end-0"
-              placeholder="نام نمایشی"
               aria-label="نام نمایشی"
               aria-describedby="tab-hosts"
               autoComplete="off"
-              onChange={() => setValue("name", field.value)}
+              placeholder={
+                watch("host") === ""
+                  ? "نام نمایشی"
+                  : `نام نمایشی : ${watch("host")}`
+              }
               required
             />
           </div>
@@ -88,36 +97,59 @@ export default function Hosts({ logData }) {
           <div className="col w-50">
             <MultiSelect
               title="MENU.SELECT.HOSTS.GP"
-              options={hostGroupData.data}
-              Loading={false}
+              reset={resetMultiSelect}
               addAll={false}
+              options={hostGroupData ? hostGroupData.data : []}
+              Loading={
+                hostGroupData &&
+                hostGroupData.meta &&
+                hostGroupData.meta.requestStatus !== "fulfilled"
+              }
+              DataName="groups.{groupid}"
+              setData={setValue}
+              currentData={currentGroupids}
             />
           </div>
           <div className="col">
             <MultiSelect
               title="MENU.SELECT.TEMPLATES"
-              options={templates}
-              Loading={false}
+              reset={resetMultiSelect}
               addAll={false}
+              options={templates}
+              // Loading={
+              //   hostGroupData &&
+              //   hostGroupData.meta &&
+              //   hostGroupData.meta.requestStatus !== "fulfilled"
+              // }
+              DataName="template"
+              setData={setValue}
+              currentData={currentTemplate}
             />
           </div>
         </div>
         <div className="row mt-3 position-relative" style={{ zIndex: 0 }}>
           <div className="col">
             <div dir="rtl" className="form-floating">
-              <textarea
-                className="form-control"
-                placeholder="توضیحات را اینجا وارد کنید"
-                id="floatingTextarea2"
-                style={{ height: 100 }}
+              <Controller
+                name={`description`}
+                control={control}
+                defaultValue=""
+                render={({ field }) => (
+                  <textarea
+                    {...field}
+                    className="form-control"
+                    title="توضیحات را اینجا وارد کنید"
+                    id="floatingTextarea2"
+                    style={{ height: 100 }}
+                  />
+                )}
               />
-              <label htmlFor="floatingTextarea2">توضیحات</label>
             </div>
             <div className="d-flex justify-content-start mt-5">
               <input type="checkbox" />
               <span className="me-2">
                 {intl.formatMessage({
-                  id: "MONITORING.HOSTS.CREATEHOST.HOST.ACTIVE",
+                  id: "ACTIVE",
                 })}
               </span>
             </div>
@@ -126,4 +158,6 @@ export default function Hosts({ logData }) {
       </div>
     </div>
   );
-}
+};
+
+export default Host;

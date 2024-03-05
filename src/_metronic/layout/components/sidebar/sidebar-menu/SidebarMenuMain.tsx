@@ -33,20 +33,24 @@ const SidebarMenuMain = () => {
         fontIcon="bi-archive"
         icon="eye"
       >
-        <SidebarMenuItem to="/Hosts" title="هاست" hasBullet={true} />
-        <SidebarMenuItem to="/Problems" title="مشکلات" hasBullet={true} />
+        <SidebarMenuItem to="/Monitoring/Hosts" title="هاست" hasBullet={true} />
         <SidebarMenuItem
-          to="/LatestData"
+          to="/Monitoring/Problems"
+          title="مشکلات"
+          hasBullet={true}
+        />
+        <SidebarMenuItem
+          to="/Monitoring/LatestData"
           title="آخرین داده ها"
           hasBullet={true}
         />
         <SidebarMenuItem
-          to="/Maps"
+          to="/Monitoring/Maps"
           title="نقشه ها"
           hasBullet={true}
         />
         <SidebarMenuItem
-          to="/Discovery"
+          to="/Monitoring/Discovery"
           title="اکتشاف"
           hasBullet={true}
         />
@@ -69,35 +73,85 @@ const SidebarMenuMain = () => {
         />
       </SidebarMenuItemWithSub>
       <SidebarMenuItemWithSub
+        to="/crafted/widgets"
+        title="فهرست"
+        icon="note-2"
+        fontIcon="bi-layers"
+      ></SidebarMenuItemWithSub>
+      <SidebarMenuItemWithSub
+        to="/crafted/widgets"
+        title="گزارشات"
+        icon="chart-pie-3"
+        fontIcon="bi-layers"
+      >
+        <SidebarMenuItem
+          to="Reports/System-Info"
+          title="اطلاعات سیستم"
+          hasBullet={true}
+        />
+        <SidebarMenuItem
+          to="Reports/Scheduled-Reports"
+          title="گزارش های برنامه ریزی شده"
+          hasBullet={true}
+        />
+        <SidebarMenuItem
+          to="Reports/Availability-Report"
+          title="گزارش در دسترس بودن"
+          hasBullet={true}
+        />
+            <SidebarMenuItem
+          to="Reports/Busiest-Triggers"
+          title="100 شلوغ ترین محرک"
+          hasBullet={true}
+        />
+            <SidebarMenuItem
+          to="Reports/Audit-log"
+          title="گزارش حسابرسی"
+          hasBullet={true}
+        />
+            <SidebarMenuItem
+          to="Reports/Action-log"
+          title="گزارش اقدام"
+          hasBullet={true}
+        />
+            <SidebarMenuItem
+          to="Reports/Notifications"
+          title="اعلانات"
+          hasBullet={true}
+        />
+      </SidebarMenuItemWithSub>
+      <SidebarMenuItemWithSub
         to="/crafted/accounts"
-        title="دیتا"
+        title="جمع آوری داده ها"
         icon="data"
       >
         <SidebarMenuItem
-          to="/crafted/account/overview"
+          to="/Data/Templates-Groups"
           title="گروه های قالب"
           hasBullet={true}
         />
         <SidebarMenuItem
-          to="/crafted/account/settings"
+          to="/Data/Host-Groups"
           title="گروه های هاست"
           hasBullet={true}
         />
         <SidebarMenuItem
-          to="/crafted/account/settings"
+          to="/Data/Templates"
           title="قالب ها"
           hasBullet={true}
         />
+        <SidebarMenuItem to="/Data/Hosts" title="هاست ها" hasBullet={true} />
         <SidebarMenuItem
-          to="/crafted/account/settings"
+          to="/Data/Maintenance"
           title="نگهداری"
           hasBullet={true}
         />
         <SidebarMenuItem
-          to="/crafted/account/settings"
+          to="/Data/Event-Correlation"
           title="همبستگی رویداد"
           hasBullet={true}
         />
+        <SidebarMenuItem to="/Data/Discovery" title="کشف" hasBullet={true} />
       </SidebarMenuItemWithSub>
       <SidebarMenuItemWithSub
         to="/error"
@@ -150,6 +204,12 @@ const SidebarMenuMain = () => {
           hasBullet={true}
         />
       </SidebarMenuItemWithSub>
+      <SidebarMenuItemWithSub
+        to="/crafted/widgets"
+        title="مدیریت"
+        icon="medal-star"
+        fontIcon="bi-layers"
+      ></SidebarMenuItemWithSub>
       <div className="menu-item">
         <div className="menu-content pt-8 pb-2">
           <span className="menu-section text-muted text-uppercase fs-7">

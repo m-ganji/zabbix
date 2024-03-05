@@ -1,5 +1,5 @@
 import React from "react";
-import { Problem } from "../../../../app/modules/profile/components/Problems";
+import { Problem } from "../../../../app/pages/Monitoring/Problems";
 import moment from "jalali-moment";
 
 interface ProblemTableProps {
@@ -57,8 +57,8 @@ const ProblemTable: React.FC<ProblemTableProps> = ({
         <div className="card-toolbar">
           <span className="text-muted mt-1 fw-semibold fs-7">
             {ProblemsData?.length === 0
-              ? `مشکلی یافت نشد`
-              : `مجموع ${ProblemsData?.length} عدد مشکل یافت شد.`}
+              ? `هاستی یافت نشد`
+              : `مجموع ${ProblemsData?.length} عدد هاست یافت شد.`}
           </span>
         </div>
       </div>
@@ -70,7 +70,7 @@ const ProblemTable: React.FC<ProblemTableProps> = ({
           {/* begin::Table */}
           {isLoaded ? (
             ProblemsData?.length === 0 ? (
-              <p>مشکلی یافت نشد</p>
+              <p>هاست یافت نشد</p>
             ) : (
               <table className="table align-middle gs-0 gy-4">
                 {/* begin::Table head */}

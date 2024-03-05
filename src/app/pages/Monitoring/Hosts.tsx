@@ -1,16 +1,18 @@
 import { useEffect, useState } from "react";
-import { Content } from "../../../../_metronic/layout/components/content";
+import { Content } from "../../../_metronic/layout/components/content";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
-import { TableHosts } from "../../../../_metronic/partials/widgets";
-import { PageTitle } from "../../../../_metronic/layout/core";
+import { TableHosts } from "../../../_metronic/partials/widgets";
+import { PageTitle } from "../../../_metronic/layout/core";
 import { useIntl } from "react-intl";
-import { ToolbarWrapper } from "../../../../_metronic/layout/components/toolbar";
-import { instance } from "../../../../services/axiosInstance";
-import { MultiSelect } from "../../../../_metronic/layout/components/MultiSelect/MultiSelect";
-import { fetchHostGroup } from "../../../../hostGroupSlice/hostGroupReducer";
+import { ToolbarWrapper } from "../../../_metronic/layout/components/toolbar";
+import { instance } from "../../../services/axiosInstance";
+import { MultiSelect } from "../../../_metronic/layout/components/MultiSelect/MultiSelect";
+import { fetchHostGroup } from "../../../hostGroupSlice/hostGroupReducer";
 import { useDispatch } from "react-redux";
-import Severities from "./hosts/severities/Index";
-import { Loader } from "../../../../_metronic/layout/components/loader/Loader";
+import Severities from "../../modules/profile/components/hosts/severities/Index";
+import { Loader } from "../../../_metronic/layout/components/loader/Loader";
+import { KTIcon } from "../../../_metronic/helpers";
+import BTN from "../../../_metronic/layout/components/BTN";
 
 interface FormValues {
   status: string;
@@ -55,6 +57,7 @@ export function Overview() {
   const [defaultData, setDefaultData] = useState([]);
   const [activeButtonTag, setActiveButtonTag] = useState<string>("");
   const [activeSituation, setActiveSituation] = useState<string>("");
+  const [resetMultiSelect, setResetMultiSelect] = useState(false);
   const [hostGroups, setHostGroups] = useState([]);
   const currentGroupids = watch("groupids") ? watch("groupids") : [];
   const dispatch = useDispatch();
@@ -68,14 +71,12 @@ export function Overview() {
   });
 
   const dataHost = async (data) => {
-    console.log(data);
     setIsLoaded(true);
     setIsError(false);
     try {
       const response = await instance.post("/core/hosts/get", data);
       setData(response.data);
       setIsLoaded(false);
-      console.log(response.data);
       return response;
     } catch (error) {
       console.error("Error fetching host data:", error);
@@ -85,8 +86,10 @@ export function Overview() {
   };
 
   const resetData = () => {
-    reset();
     dataHost(watch());
+    setResetMultiSelect(true);
+    resetMultiSelect && setResetMultiSelect(false);
+    reset();
   };
 
   useEffect(() => {
@@ -103,6 +106,14 @@ export function Overview() {
         <PageTitle breadcrumbs={[]}>
           {intl.formatMessage({ id: "MENU.HOSTS" })}
         </PageTitle>
+        <a
+          href="#"
+          id="kt_activities_toggle"
+          className="btn btn-sm btn-light-primary mt-3 float-start"
+        >
+          ساخت هاست
+          <KTIcon iconName="plus" className="fs-2" />
+        </a>
         <ToolbarWrapper />
         <div
           className="accordion"
@@ -134,7 +145,7 @@ export function Overview() {
                     >
                       <p>
                         {intl.formatMessage({
-                          id: "MONITORING.HOSTS.STATUS",
+                          id: "STATUS",
                         })}
                       </p>
                       <div className="w-100 ">
@@ -161,7 +172,7 @@ export function Overview() {
                                 data-bs-toggle="button"
                               >
                                 {intl.formatMessage({
-                                  id: "MONITORING.HOSTS.STATUS.ANY",
+                                  id: "ANY",
                                 })}
                               </button>
                             )}
@@ -381,15 +392,13 @@ export function Overview() {
                               )}
                             />
                           </div>
-                          <button
-                            type="button"
-                            className="btn btn-danger me-2 py-2"
-                            onClick={() => tagsRemove(index)}
-                          >
-                            {intl.formatMessage({
+                          <BTN
+                            label={intl.formatMessage({
                               id: "MONITORING.HOSTS.ADDTAG.REMOVEBUTTON",
                             })}
-                          </button>
+                            className="btn-light-danger"
+                            onClick={() => tagsRemove(index)}
+                          />
                         </div>
                       ))}
                     </div>
@@ -401,7 +410,7 @@ export function Overview() {
                       }}
                     >
                       {intl.formatMessage({
-                        id: "MONITORING.HOSTS.ADDTAG.ADDBUTTON",
+                        id: "ADD",
                       })}
                     </button>
                     <div className="mt-5 d-flex justify-content-start align-baseline gap-5 ">
@@ -561,7 +570,7 @@ export function Overview() {
                     <div className="row">
                       <p className="mt-5">
                         {intl.formatMessage({
-                          id: "MONITORING.HOSTS.SEVERITY",
+                          id: "SEVERITY",
                         })}
                       </p>
                       <Severities watch={watch} setValue={setValue} />
@@ -569,40 +578,29 @@ export function Overview() {
                   </div>
                 </div>
               </div>
-            </div>{" "}
-            <div className="d-flex justify-content-center mb-5 gap-5 ">
-              <button
-                type="button"
-                onClick={handleSubmit((data) => {
-                  dataHost(data);
-                })}
-                className="btn btn-light-success"
-              >
-                تایید
-              </button>
-
-              <button
-                type="button"
-                onClick={resetData}
-                className="btn btn-light-danger"
-              >
-                باز نشانی
-              </button>
-
-              <button type="button" className="btn btn-light-primary">
-                ذخیره
-              </button>
+              <div className="d-flex justify-content-center mb-5 gap-5 ">
+                <BTN
+                  label={intl.formatMessage({ id: "SUBMIT" })}
+                  className="btn-light-success"
+                  onClick={handleSubmit((data) => {
+                    dataHost(data);
+                  })}
+                />
+                <BTN
+                  label="باز نشانی"
+                  className="btn-light-danger"
+                  onClick={resetData}
+                />
+                <BTN
+                  label="ذخیره"
+                  className="btn-light-primary"
+                  // onClick={resetData}
+                />
+              </div>
             </div>
           </div>
         </div>
-        {/* {data.length == 0 && <p>هاستی یافت نشد</p>} */}
-        {!isLoaded ? (
-          <TableHosts data={data} />
-        ) : (
-          <div className="d-flex pt-7 w-100 justify-content-center">
-            <Loader />
-          </div>
-        )}
+        <TableHosts data={data} isLoaded={isLoaded} />
       </form>
     </Content>
   );
