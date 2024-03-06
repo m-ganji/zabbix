@@ -48,48 +48,28 @@ const MultiSelect: React.FC<{
     );
     console.log(isSelected);
 
+    const filteredOptions = selectedOptions.filter(
+      (selectedOption) => selectedOption.value !== option.value
+    );
+
     if (isSelected) {
       if (DataName === "groups") {
-        console.log(
-          selectedOptions
-            .filter((selectedOption) => selectedOption.value !== option.value)
-            .map((group) => ({
-              groupid: group.value,
-              name: group.label,
-            }))
-        );
-
-        setData(DataName, {
-          groups: [],
-        });
-        setSelectedOptions(
-          selectedOptions.filter(
-            (selectedOption) => selectedOption.value !== option.value
-          )
-        );
+        setData(DataName, [
+          ...currentData,
+          ...filteredOptions.map((group) => ({
+            groupid: group.value,
+            name: group.label,
+          })),
+        ]);
       } else {
         setData(
           DataName,
-          selectedOptions
-            .filter((selectedOption) => selectedOption.value !== option.value)
-            .map((i) => i.value)
-        );
-        setSelectedOptions(
-          selectedOptions.filter(
-            (selectedOption) => selectedOption.value !== option.value
-          )
+          filteredOptions.map((i) => i.value)
         );
       }
+      setSelectedOptions(filteredOptions);
     } else {
       if (DataName === "groups") {
-        console.log(
-          selectedOptions.map((group) => ({
-            groupid: group.value,
-            name: group.label,
-          }))
-        );
-        console.log(option);
-
         setData(DataName, [
           ...selectedOptions.map((group) => ({
             groupid: group.value,
@@ -109,13 +89,24 @@ const MultiSelect: React.FC<{
   };
 
   const toggleAllOptions = () => {
-    setSelectedOptions(
-      selectedOptions.length === options.length ? [] : [...options]
-    );
-    setData(
-      DataName,
-      currentData.length === options.length ? [] : options.map((i) => i.value)
-    );
+    if (DataName === "groups") {
+      setSelectedOptions(
+        selectedOptions.length === options.length ? [] : [...options]
+      );
+      setData(
+        DataName,
+        options.map((group) => ({
+          groupid: group.value,
+          name: group.label,
+        }))
+      );
+    } else {
+      setSelectedOptions([...options]);
+      setData(
+        DataName,
+        options.map((i) => i.value)
+      );
+    }
   };
 
   const deleteAllOptions = () => {
@@ -125,23 +116,25 @@ const MultiSelect: React.FC<{
   };
 
   const deleteOption = (option: Option) => {
-    console.log(
-      selectedOptions
-        .filter((selectedOption) => selectedOption.value !== option.value)
-        .map((i) => i.value)
+    const filteredOptions = selectedOptions.filter(
+      (selectedOption) => selectedOption.value !== option.value
     );
 
-    setData(
-      DataName,
-      selectedOptions
-        .filter((selectedOption) => selectedOption.value !== option.value)
-        .map((i) => i.value)
-    );
-    setSelectedOptions(
-      selectedOptions.filter(
-        (selectedOption) => selectedOption.value !== option.value
-      )
-    );
+    if (DataName === "groups") {
+      setData(
+        DataName,
+        filteredOptions.map((group) => ({
+          groupid: group.value,
+          name: group.label,
+        }))
+      );
+    } else {
+      setData(
+        DataName,
+        filteredOptions.map((i) => i.value)
+      );
+    }
+    setSelectedOptions(filteredOptions);
   };
 
   const toggleDropdown = () => {

@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { FC, useEffect, useState } from "react";
 import { MultiSelect } from "../../../layout/components/MultiSelect/MultiSelect";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,8 +13,18 @@ import Inventory from "./Headers/Inventory";
 import Encryption from "./Headers/Encryption";
 import Setvalue from "./Headers/Setvalue";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import Toast from "../../../layout/components/Toast";
+import ToastFire from "../../../layout/components/Toast";
+interface ApiError {
+  response?: {
+    status: number;
+  };
+}
 
 const CreateHost: FC = () => {
+  const navigate = useNavigate();
+
   const { control, handleSubmit, reset, watch, setValue } = useForm<FormValues>(
     {
       defaultValues: {
@@ -24,11 +35,19 @@ const CreateHost: FC = () => {
 
   const onSubmit = async (data) => {
     console.log(data);
-    
+
     try {
       const response = await instance.post("/core/hosts/create", data);
       console.log(response);
+           
     } catch (error) {
+      if ((error as ApiError).response?.status === 401) {
+        localStorage.removeItem("token");
+        navigate("/");
+        ToastFire("error", `توکن منقضی شده است`, "لطفا مجدد وارد شوید");
+
+       
+      }
       console.error("Error occurred:", error);
     }
   };
