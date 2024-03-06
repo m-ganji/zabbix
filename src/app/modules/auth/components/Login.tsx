@@ -1,39 +1,26 @@
 import { useState } from "react";
 import clsx from "clsx";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useFormik } from "formik";
-import { useAuth } from "../core/Auth";
 import { instance } from "../../../../services/axiosInstance";
 import { useIntl } from "react-intl";
 
-// const loginSchema = Yup.object().shape({
-//   email: Yup.string()
-//     .email("Wrong email format")
-//     .min(3, "Minimum 3 symbols")
-//     .max(50, "Maximum 50 symbols")
-//     .required("Email is required"),
-//   password: Yup.string()
-//     .min(3, "Minimum 3 symbols")
-//     .max(50, "Maximum 50 symbols")
-//     .required("Password is required"),
-// });
-
 const initialValues = {};
-
+interface LoginValues {
+  email: string;
+  password: string;
+}
 export function Login() {
   const intl = useIntl();
 
   const [loading, setLoading] = useState(false);
-  const { saveAuth, setCurrentUser } = useAuth();
 
   console.log(initialValues);
-
-  const navigate = useNavigate();
 
   const formik = useFormik({
     initialValues,
     // validationSchema: loginSchema,
-    onSubmit: async (values, { setStatus, setSubmitting }) => {
+    onSubmit: async (values: LoginValues) => {
       setLoading(true);
       try {
         const response = await instance.post(
@@ -45,10 +32,17 @@ export function Login() {
             },
           }
         );
-        // navigate("dashboard");
-        window.location.href = "/dashboard";
 
-        console.log(response.data.access_token);
+        window.location.href = "/dashboard";
+        if (
+          document.referrer.includes("https://persian-zabbix-frontend.com") ||
+          document.referrer.includes("http://localhost:")
+        ) {
+          // User came from another page within our domain, so go back in history
+          // window.history.back();
+        } else {
+          // User directly accessed the login page, so redirect to dashboard
+        }
 
         localStorage.setItem("token", response.data.access_token);
       } catch (error) {

@@ -13,10 +13,14 @@ import { useNavigate, useParams } from "react-router-dom";
 import { MultiSelect } from "../../../_metronic/layout/components/MultiSelect/MultiSelect";
 import { useDispatch } from "react-redux";
 import { Form, Modal } from "react-bootstrap";
+import Badge from "../../../_metronic/layout/components/Badge";
 import { fetchHostGroup } from "../../../hostGroupSlice/hostGroupReducer";
 import { Loader } from "../../../_metronic/layout/components/loader/Loader";
 import ToggleBtns from "../../../_metronic/layout/components/ToggleBtn/ToggleBtn";
 import BTN from "../../../_metronic/layout/components/BTN";
+import ModalContainer from "../../../_metronic/layout/components/ModalContainer";
+import { CheckBox } from "./../../../_metronic/layout/components/CheckBox/index";
+import { Select } from "../../../_metronic/layout/components/Select";
 
 interface hostGroupItems {
   value: string;
@@ -79,7 +83,7 @@ export interface Problem {
   cause_eventid: string;
   clock: string;
   correlationid: string;
-  hostids: object[];
+  hostids: (string | number)[];
   eventid: string;
   hosts: {
     active_available: string;
@@ -166,6 +170,11 @@ export function Problems() {
   const [age, setAge] = useState(0);
 
   useEffect(() => {
+    // setValue("groupids", );
+    console.log(watch("groupids"));
+
+    id && setSelectedHosts([{ value: id, label: value }]);
+
     watch("hostids")?.length === 0 && unregister("hostids");
     fetchPromsListData(watch());
     dispatch(
@@ -180,7 +189,7 @@ export function Problems() {
 
       setHostGroupWithoutParam(response);
     });
-  }, []);
+  }, [navigate]);
 
   const { control, watch, setValue, handleSubmit, reset, unregister } =
     useForm<FormValues>({
@@ -333,14 +342,16 @@ export function Problems() {
   };
 
   const resetData = () => {
-    setResetMultiSelect(true);
+    unregister("hostids");
     reset();
-    fetchPromsListData(watch());
+    navigate("/Monitoring/Problems");
+    setResetMultiSelect(true);
     setShowTags(0);
     setSelectedHosts([]);
     setSelectedHostGpTriggers(-1);
     setSelectedTriggers([]);
     resetMultiSelect && setResetMultiSelect(false);
+    fetchPromsListData(watch());
   };
 
   const submit = () => {
@@ -474,7 +485,7 @@ export function Problems() {
                             options={selectedHosts}
                             Loading={false}
                             DataName="hostids"
-                            selectedValue={[{ value: id, label: value }]}
+                            selectedValue={selectedHosts}
                             setData={setValue}
                             currentData={currentHostids}
                           />
@@ -572,120 +583,101 @@ export function Problems() {
                             currentData={currentTriggersIds}
                           />
                         </div>
-                        <button
-                          className="btn h-25 py-3 btn-light-primary px-0 col-2"
-                          onClick={() => setIsTriggersModalOpen(true)}
-                        >
-                          {intl.formatMessage({
+                        <BTN
+                          label={intl.formatMessage({
                             id: "MENU.SELECT",
                           })}
-                        </button>
+                          className="btn h-25 py-3 btn-light-primary px-0 col-2"
+                          onClick={() => setIsTriggersModalOpen(true)}
+                        />
                       </div>
-                      <Modal
+                      <ModalContainer
                         show={isTriggersModalOpen}
-                        onHide={() => setIsTriggersModalOpen(false)}
+                        setHide={setIsTriggersModalOpen}
+                        title="عامل های شروع"
                       >
-                        <Modal.Header closeButton>
-                          <Modal.Title>عامل های شروع</Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body dir="rtl">
-                          <Form.Select
-                            onChange={(e) => {
-                              fetchHostsData(e.currentTarget.value, true);
-                              setSelectedHostGpTriggers(e.currentTarget.value);
-                            }}
-                            defaultValue={-1}
-                          >
-                            <option value={-1}>
-                              {intl.formatMessage({
-                                id: "MENU.SELECT.HOSTS.GP",
-                              })}
-                            </option>
-                            {hostGroupWithParam?.payload?.map(
-                              (item: hostGroupItems, index: number) => {
-                                return (
-                                  <option value={item.value} key={index}>
-                                    {item.label}
-                                  </option>
-                                );
-                              }
-                            )}
-                          </Form.Select>
-                          <Form.Select
-                            defaultValue={-1}
-                            className="mt-3"
-                            onChange={(e) =>
-                              fetchTriggers(e.currentTarget.value)
+                        <Form.Select
+                          onChange={(e) => {
+                            fetchHostsData(e.currentTarget.value, true);
+                            setSelectedHostGpTriggers(e.currentTarget.value);
+                          }}
+                          defaultValue={-1}
+                        >
+                          <option value={-1}>
+                            {intl.formatMessage({
+                              id: "MENU.SELECT.HOSTS.GP",
+                            })}
+                          </option>
+                          {hostGroupWithParam?.payload?.map(
+                            (item: hostGroupItems, index: number) => {
+                              return (
+                                <option value={item.value} key={index}>
+                                  {item.label}
+                                </option>
+                              );
                             }
-                          >
-                            <option value={-1}>
-                              {intl.formatMessage({ id: "MENU.SELECT.HOSTS" })}
-                            </option>
-                            {hostsData?.map(
-                              (host: HostsData, index: number) => {
-                                return (
-                                  <option value={host.hostid} key={index}>
-                                    {host.host}
-                                  </option>
-                                );
-                              }
-                            )}
-                          </Form.Select>
-                          <p className="mt-2">راهنمای رنگ ها :</p>
-                          <div className="d-flex flex-wrap gap-2">
-                            <span className="badge badge-light-primary">
-                              اطلاع
-                            </span>
-                            <span className="badge badge-light-success">
-                              هشدار
-                            </span>
-                            <span className="badge badge-light-warning">
-                              عادی
-                            </span>
-                            <span className="badge badge-light-danger">
-                              بالا
-                            </span>
-                          </div>
-
-                          <div className=" h-350px overflow-y-scroll mt-2">
-                            {!IsTriggersLoading ? (
-                              Triggers.map((item: Triggers) => (
-                                <div
-                                  key={item.triggerid}
-                                  className={`w-100 justify-content-end my-3 gap-2 badge d-flex badge-light-${getPriorityBackgroundColor(
-                                    item.priority
-                                  )}`}
-                                >
-                                  {item.description}
-                                  <input
-                                    type="checkbox"
-                                    id={`host-${item.triggerid}`}
-                                    checked={currentTriggersIds.includes(
-                                      item.triggerid
-                                    )}
-                                    onChange={() =>
-                                      handleCheckboxTriggersChange(item)
-                                    }
-                                  />
-                                </div>
-                              ))
-                            ) : (
-                              <div className="d-flex pt-7 w-100 justify-content-center">
-                                <Loader />
+                          )}
+                        </Form.Select>
+                        <Form.Select
+                          defaultValue={-1}
+                          className="mt-3"
+                          onChange={(e) => fetchTriggers(e.currentTarget.value)}
+                        >
+                          <option value={-1}>
+                            {intl.formatMessage({ id: "MENU.SELECT.HOSTS" })}
+                          </option>
+                          {hostsData?.map((host: HostsData, index: number) => {
+                            return (
+                              <option value={host.hostid} key={index}>
+                                {host.host}
+                              </option>
+                            );
+                          })}
+                        </Form.Select>
+                        <p className="mt-2">راهنمای رنگ ها :</p>
+                        <div className="d-flex flex-wrap gap-2">
+                          <Badge title="اطلاع" bg="primary" />
+                          <Badge title="هشدار" bg="success" />
+                          <Badge title="عادی" bg="warning" />
+                          <Badge title="بالا" bg="danger" />
+                        </div>
+                        <div className=" h-350px overflow-y-scroll mt-2">
+                          {!IsTriggersLoading ? (
+                            Triggers.map((item: Triggers) => (
+                              <div
+                                key={item.triggerid}
+                                className={`w-100 justify-content-end my-3 gap-2 badge d-flex badge-light-${getPriorityBackgroundColor(
+                                  item.priority
+                                )}`}
+                              >
+                                <CheckBox
+                                  dir="ltr"
+                                  label={item.description}
+                                  onchange={() =>
+                                    handleCheckboxTriggersChange(item)
+                                  }
+                                  defaultChecked={currentTriggersIds.includes(
+                                    item.triggerid
+                                  )}
+                                />
                               </div>
-                            )}
-                          </div>
-                          <div className="d-flex justify-content-center mt-2">
-                            <button
-                              type="button"
-                              onClick={() => setIsTriggersModalOpen(false)}
-                              className="btn py-2 btn-light-danger"
-                            >
-                              بستن
-                            </button>
-                          </div>
-                        </Modal.Body>
-                      </Modal>
+                            ))
+                          ) : (
+                            <div className="d-flex pt-7 w-100 justify-content-center">
+                              <Loader />
+                            </div>
+                          )}
+                        </div>
+                        <div className="d-flex justify-content-center mt-2">
+                          <button
+                            type="button"
+                            onClick={() => setIsTriggersModalOpen(false)}
+                            className="btn py-2 btn-light-danger"
+                          >
+                            بستن
+                          </button>
+                        </div>
+                      </ModalContainer>
                       <Controller
                         control={control}
                         name={`search.name`}
@@ -700,7 +692,6 @@ export function Problems() {
                           />
                         )}
                       />
-
                       <div>
                         <p className="mt-5">
                           {intl.formatMessage({
@@ -720,7 +711,7 @@ export function Problems() {
                         :
                       </p>
                       {inventoryField.map((item, index) => (
-                        <div className="d-flex mb-3 row" key={item.id}>
+                        <div className="d-flex mb-3 mt-2 row" key={item.id}>
                           <Controller
                             control={control}
                             name={`inventory[${index}].field`}
@@ -739,7 +730,6 @@ export function Problems() {
                               </select>
                             )}
                           />
-
                           <div className="col">
                             <Controller
                               control={control}
@@ -756,30 +746,27 @@ export function Problems() {
                               )}
                             />
                           </div>
-                          <button
-                            type="button"
-                            className="btn btn-light-danger me-2 py-2"
-                            onClick={() => inventoryRemove(index)}
-                            style={{ width: "10%" }}
-                          >
-                            {intl.formatMessage({
-                              id: "MONITORING.HOSTS.ADDTAG.REMOVEBUTTON",
+                          <BTN
+                            label={intl.formatMessage({
+                              id: "DELETE",
                             })}
-                          </button>
+                            className="btn btn-light-danger col-2"
+                            onClick={() => inventoryRemove(index)}
+                          />
                         </div>
                       ))}
                     </div>
-                    <button
-                      type="button"
-                      className="btn btn-light-success py-2 w-25"
-                      onClick={() => {
-                        inventoryAppend({ field: "type", value: "" });
-                      }}
-                    >
-                      {intl.formatMessage({
-                        id: "ADD",
-                      })}
-                    </button>
+                    <div className="row">
+                      <BTN
+                        label={intl.formatMessage({
+                          id: "ADD",
+                        })}
+                        className="btn btn-light-success py-2 col-3"
+                        onClick={() => {
+                          inventoryAppend({ field: "type", value: "" });
+                        }}
+                      />
+                    </div>
                     <p className="m-0">
                       {intl.formatMessage({
                         id: "MONITORING.PROBLEMS.TAGS",
@@ -809,49 +796,57 @@ export function Problems() {
                               )}
                             />
                           </div>
-                          <Controller
-                            control={control}
-                            name={`tags[${index}].operator`}
-                            render={({ field }) => (
-                              <select
-                                className="form-select form-select-sm text-center col p-0"
-                                id={`floatingSelect${item.id}`}
-                                aria-label="Floating label select example"
-                                {...field}
-                              >
-                                <option value={"4"}>
-                                  {intl.formatMessage({
-                                    id: "MONITORING.HOSTS.ADDTAG.OPTION1",
-                                  })}
-                                </option>
-                                <option value={"1"}>
-                                  {intl.formatMessage({
-                                    id: "MONITORING.HOSTS.ADDTAG.OPTION2",
-                                  })}
-                                </option>
-                                <option selected value={"0"}>
-                                  {intl.formatMessage({
-                                    id: "MONITORING.HOSTS.ADDTAG.OPTION3",
-                                  })}
-                                </option>
-                                <option value={"5"}>
-                                  {intl.formatMessage({
-                                    id: "MONITORING.HOSTS.ADDTAG.OPTION4",
-                                  })}
-                                </option>
-                                <option value={"3"}>
-                                  {intl.formatMessage({
-                                    id: "MONITORING.HOSTS.ADDTAG.OPTION5",
-                                  })}
-                                </option>
-                                <option value={"2"}>
-                                  {intl.formatMessage({
-                                    id: "MONITORING.HOSTS.ADDTAG.OPTION6",
-                                  })}
-                                </option>
-                              </select>
-                            )}
-                          />
+                          <div className="col">
+                            <Controller
+                              control={control}
+                              name={`tags[${index}].operator`}
+                              render={({ field }) => (
+                                <Select
+                                  value={field.value}
+                                  defaultLabel="انتخاب کنید"
+                                  onChange={field.onChange}
+                                  options={[
+                                    {
+                                      value: "4",
+                                      label: intl.formatMessage({
+                                        id: "MONITORING.HOSTS.ADDTAG.OPTION1",
+                                      }),
+                                    },
+                                    {
+                                      value: "1",
+                                      label: intl.formatMessage({
+                                        id: "MONITORING.HOSTS.ADDTAG.OPTION2",
+                                      }),
+                                    },
+                                    {
+                                      value: "0",
+                                      label: intl.formatMessage({
+                                        id: "MONITORING.HOSTS.ADDTAG.OPTION3",
+                                      }),
+                                    },
+                                    {
+                                      value: "5",
+                                      label: intl.formatMessage({
+                                        id: "MONITORING.HOSTS.ADDTAG.OPTION4",
+                                      }),
+                                    },
+                                    {
+                                      value: "3",
+                                      label: intl.formatMessage({
+                                        id: "MONITORING.HOSTS.ADDTAG.OPTION5",
+                                      }),
+                                    },
+                                    {
+                                      value: "2",
+                                      label: intl.formatMessage({
+                                        id: "MONITORING.HOSTS.ADDTAG.OPTION6",
+                                      }),
+                                    },
+                                  ]}
+                                />
+                              )}
+                            />
+                          </div>
                           <div className="col p-0">
                             <Controller
                               control={control}
@@ -868,29 +863,27 @@ export function Problems() {
                               )}
                             />
                           </div>
-                          <button
-                            type="button"
+                          <BTN
+                            label={intl.formatMessage({
+                              id: "DELETE",
+                            })}
                             className="btn btn-light-danger py-2 col p-0"
                             onClick={() => tagsRemove(index)}
-                          >
-                            {intl.formatMessage({
-                              id: "MONITORING.HOSTS.ADDTAG.REMOVEBUTTON",
-                            })}
-                          </button>
+                          />
                         </div>
                       </div>
                     ))}
-                    <button
-                      type="button"
-                      className="btn btn-light-success py-2 w-25"
-                      onClick={() => {
-                        tagsAppend({ tag: "", operator: 0, value: "" });
-                      }}
-                    >
-                      {intl.formatMessage({
-                        id: "ADD",
-                      })}
-                    </button>
+                    <div className="row">
+                      <BTN
+                        label={intl.formatMessage({
+                          id: "ADD",
+                        })}
+                        className="btn btn-light-success py-2 col-3"
+                        onClick={() => {
+                          tagsAppend({ tag: "", operator: 0, value: "" });
+                        }}
+                      />
+                    </div>
                     <Tags
                       showTags={showTags}
                       setShowTags={setShowTags}
@@ -899,7 +892,6 @@ export function Problems() {
                       setValue={setValue}
                       activeButtonTag={watch("evaltype")}
                     />
-
                     <Controller
                       control={control}
                       name={`tag_priority`}

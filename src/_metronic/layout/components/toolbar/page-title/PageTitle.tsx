@@ -15,7 +15,7 @@ const PageTitle = () => {
       data-kt-swapper-mode='prepend'
       data-kt-swapper-parent="{default: '#kt_content_container', 'lg': '#kt_toolbar_container'}"
       className={clsx(
-        'page-title d-flex flex-wrap me-3',
+        'page-title d-flex flex-wrap',
         classes.pageTitle.join(' '),
         config.app?.pageTitle?.class,
         {

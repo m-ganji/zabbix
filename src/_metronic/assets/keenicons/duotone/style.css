@@ -13,6 +13,13 @@
 input {
   direction: rtl !important;
 }
+.swal2-popup {
+  backdrop-filter: blur(2px);
+  direction: rtl;
+}
+.swal2-popup .swal2-title {
+  color: white !important;
+}
 .ki-duotone {
   /* use !important to prevent issues with browser extensions that change fonts */
   font-family: "keenicons-duotone" !important;

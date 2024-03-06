@@ -100,12 +100,11 @@ const ProblemTable: React.FC<ProblemTableProps> = ({
                           </span>
                         </td>
                         <td className="text-center">
-                          <a
-                            href="#"
+                          <span
                             className="text-gray-900 text-hover-primary d-block mb-1"
                           >
                             {data.name}
-                          </a>
+                          </span>
                         </td>
                         <td className="text-center">
                           <span

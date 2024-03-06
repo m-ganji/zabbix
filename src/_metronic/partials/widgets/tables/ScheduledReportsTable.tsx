@@ -63,7 +63,9 @@ const ScheduledReportsTabel = () => {
             {/* begin::Table body */}
             <tbody>
               <tr>
-                <td></td>
+                <td>
+                  <CheckBox />
+                </td>
                 <td>
                   <span className="badge badge-light-primary fs-6">linux</span>
                 </td>

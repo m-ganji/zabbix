@@ -16,7 +16,7 @@ const MultiSelect: React.FC<{
   setData: CallableFunction;
   currentData: number[];
   reset: boolean;
-  selectedValue: Option[];
+  selectedValue?: Option[];
 }> = ({
   title,
   options,

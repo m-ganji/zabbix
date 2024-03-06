@@ -72,19 +72,19 @@ export const ImportMap: React.FC<CreateMapProps> = () => {
                             {intl.formatMessage({ id: "MONITORING.MAPS" })}
                           </td>
                           <td>
-                            <CheckBox />
+                            <input type="checkbox" value="1" />
                           </td>
                           <td>
-                            <CheckBox />
+                            <input type="checkbox" value="1" />
                           </td>
                         </tr>
                         <tr>
                           <td>{intl.formatMessage({ id: "IMAGES" })}</td>
                           <td>
-                            <CheckBox />
+                            <input type="checkbox" value="1" />
                           </td>
                           <td>
-                            <CheckBox />
+                            <input type="checkbox" value="1" />
                           </td>
                         </tr>
                       </tbody>
