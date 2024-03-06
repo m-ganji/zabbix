@@ -174,6 +174,8 @@
 
   "MONITORING.ERROR.404.TITLE": "صفحه موردنظر یافت نشد!",
   "MONITORING.ERROR.404.RETURN": "برگشت",
+  
+  "MONITORING.ERROR.500.TITLE": "مشکلی پیش آمده است! لطقا دوباره تلاش کنید",
 
   "MONITORING.DISCOVERY": "اکتشاف",
   "MONITORING.DISCOVERY.SELECT": "انتخاب اکتشاف",
