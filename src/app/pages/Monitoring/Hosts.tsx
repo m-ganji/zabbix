@@ -7,7 +7,7 @@ import { useIntl } from "react-intl";
 import { ToolbarWrapper } from "../../../_metronic/layout/components/toolbar";
 import { instance } from "../../../services/axiosInstance";
 import { MultiSelect } from "../../../_metronic/layout/components/MultiSelect/MultiSelect";
-import { fetchHostGroup } from "../../../hostGroupSlice/hostGroupReducer";
+// import { fetchHostGroup } from "../../../hostGroupSlice/hostGroupReducer";
 import { useDispatch } from "react-redux";
 import Severities from "../../modules/profile/components/hosts/severities/Index";
 import { KTIcon } from "../../../_metronic/helpers";

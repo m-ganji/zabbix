@@ -3,11 +3,15 @@ import { MultiSelect } from "../../../../layout/components/MultiSelect/MultiSele
 import { useIntl } from "react-intl";
 import { instance } from "../../../../../services/axiosInstance";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchHostGroup } from "../../../../../hostGroupSlice/hostGroupReducer";
 import { Controller } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import Toast from "../../../../layout/components/Toast";
 import ToastFire from "../../../../layout/components/Toast";
+import {
+  selectApiData,
+  selectApiError,
+  selectApiLoading,
+} from "../../../../../store/store";
+import { fetchHostGroup } from "../../../../../hostGroupSlice/hostGroupReducer";
 interface HostProps {
   control: object;
   watch: () => void;
@@ -29,12 +33,16 @@ const Host: React.FC<HostProps> = ({ control, watch, setValue }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const hostGroupData = useSelector((state) => (state as object).hostGroup);
+  const HostGroupData = useSelector(selectApiData);
+  const loading = useSelector(selectApiLoading);
+  const error = useSelector(selectApiError);
 
   useEffect(() => {
+    // dispatch(fetchHostGroup({}));
     dispatch(fetchHostGroup({}));
   }, [dispatch]);
 
+  console.log(HostGroupData, loading, error);
   useEffect(() => {
     const handleGetTemplates = async () => {
       try {
@@ -112,12 +120,8 @@ const Host: React.FC<HostProps> = ({ control, watch, setValue }) => {
               title="MENU.SELECT.HOSTS.GP"
               reset={resetMultiSelect}
               addAll={false}
-              options={hostGroupData ? hostGroupData.data : []}
-              Loading={
-                hostGroupData &&
-                hostGroupData.meta &&
-                hostGroupData.meta.requestStatus !== "fulfilled"
-              }
+              options={HostGroupData}
+              Loading={loading}
               DataName="groups"
               setData={setValue}
               currentData={currentGroupids}

@@ -11,9 +11,15 @@ import { ToolbarWrapper } from "../../../_metronic/layout/components/toolbar";
 import { instance } from "../../../services/axiosInstance";
 import { useNavigate, useParams } from "react-router-dom";
 import { MultiSelect } from "../../../_metronic/layout/components/MultiSelect/MultiSelect";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Form, Modal } from "react-bootstrap";
 import Badge from "../../../_metronic/layout/components/Badge";
+import {
+  selectApiData,
+  selectApiError,
+  selectApiLoading,
+} from "./../../../store/store";
+
 import { fetchHostGroup } from "../../../hostGroupSlice/hostGroupReducer";
 import { Loader } from "../../../_metronic/layout/components/loader/Loader";
 import ToggleBtns from "../../../_metronic/layout/components/ToggleBtn/ToggleBtn";
@@ -25,6 +31,7 @@ import { Select } from "../../../_metronic/layout/components/Select";
 interface hostGroupItems {
   value: string | number;
   label: string;
+  map?: string[];
 }
 interface Triggers {
   priority: string;
@@ -35,12 +42,10 @@ interface TriggersGp {
   value: number;
   label: string;
 }
-interface HostGroupData {
-  payload: [];
-  meta: {
-    requestStatus: string;
-  };
-}
+type HostGroupData = {
+  value: number;
+  label: string;
+};
 
 interface FormValues {
   selectTags: string;
@@ -153,8 +158,9 @@ export function Problems() {
   const { id, value } = useParams<ProblemParams>();
 
   const [hostGroupWithParam, setHostGroupWithParam] = useState([]);
-  const [hostGroupWithoutParam, setHostGroupWithoutParam] =
-    useState<HostGroupData | null>(null);
+  const [hostGroupWithoutParam, setHostGroupWithoutParam] = useState<
+    HostGroupData[] | null
+  >(null);
   const [Triggers, setTriggers] = useState([]);
   const [IsTriggersLoading, setIsTriggersLoading] = useState<boolean>(false);
   const [ProblemsData, setProblemsData] = useState<Problem[]>([]);
@@ -175,26 +181,30 @@ export function Problems() {
   const [tagNameVisible, setTagNameVisible] = useState<number>(0);
   const [age, setAge] = useState(0);
 
-  useEffect(() => {
-    // setValue("groupids", );
-    console.log(watch("groupids"));
+  const HostGroupData = useSelector(selectApiData);
+  const HostGroupLoading = useSelector(selectApiLoading);
+  const HostGroupError = useSelector(selectApiError);
 
-    id && setSelectedHosts([{ value: id, label: value }]);
+  useEffect(() => {
+    console.log(HostGroupData);
+    // setValue("groupids", );
+
+    id && value && setSelectedHosts([{ value: id, label: value }]);
+
+    dispatch(fetchHostGroup({}));
+
+    if (Array.isArray(HostGroupData[0])) {
+      const mappedData = HostGroupData[0].map(
+        (group: { groupid: number; name: string }) => ({
+          value: group.groupid,
+          label: group.name,
+        })
+      );
+      setHostGroupWithoutParam(mappedData);
+    }
 
     watch("hostids")?.length === 0 && unregister("hostids");
     fetchPromsListData(watch());
-    dispatch(
-      fetchHostGroup({
-        with_triggers: true,
-        output: "extend",
-      })
-    ).then((response) => setHostGroupWithParam(response));
-
-    dispatch(fetchHostGroup({})).then((response) => {
-      console.log(response);
-
-      setHostGroupWithoutParam(response);
-    });
   }, [navigate]);
 
   const { control, watch, setValue, handleSubmit, reset, unregister } =
@@ -462,21 +472,13 @@ export function Problems() {
                           initialData={watch("recent")}
                         />
                       </div>
+                      {console.log(hostGroupWithoutParam)}
                       <MultiSelect
                         reset={resetMultiSelect}
                         addAll={false}
                         title="MENU.SELECT.HOSTS.GP"
-                        options={
-                          hostGroupWithoutParam
-                            ? hostGroupWithoutParam.payload
-                            : []
-                        }
-                        Loading={
-                          hostGroupWithoutParam &&
-                          hostGroupWithoutParam.meta &&
-                          hostGroupWithoutParam.meta.requestStatus !==
-                            "fulfilled"
-                        }
+                        options={hostGroupWithoutParam}
+                        Loading={HostGroupLoading}
                         DataName="groupids"
                         setData={setValue}
                         currentData={currentGroupids}
