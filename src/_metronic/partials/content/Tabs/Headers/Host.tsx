@@ -11,6 +11,7 @@ import ToastFire from "../../../../layout/components/Toast";
 interface HostProps {
   control: object;
   watch: () => void;
+  setValue: object;
 }
 
 interface ApiError {

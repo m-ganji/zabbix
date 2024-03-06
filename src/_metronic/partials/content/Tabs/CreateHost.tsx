@@ -14,7 +14,6 @@ import Encryption from "./Headers/Encryption";
 import Setvalue from "./Headers/Setvalue";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import Toast from "../../../layout/components/Toast";
 import ToastFire from "../../../layout/components/Toast";
 interface ApiError {
   response?: {
@@ -39,14 +38,11 @@ const CreateHost: FC = () => {
     try {
       const response = await instance.post("/core/hosts/create", data);
       console.log(response);
-           
     } catch (error) {
       if ((error as ApiError).response?.status === 401) {
         localStorage.removeItem("token");
         navigate("/");
         ToastFire("error", `توکن منقضی شده است`, "لطفا مجدد وارد شوید");
-
-       
       }
       console.error("Error occurred:", error);
     }
