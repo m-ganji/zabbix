@@ -39,6 +39,10 @@ interface FormValues {
     status: string;
   };
   tags: string[];
+  inventory: { field: string; value: string }[]; 
+}
+
+interface FormValues {
   inventory: { field: string; value: string }[];
 }
 
@@ -83,7 +87,7 @@ export function Overview() {
     name: "tags",
   });
 
-  const dataHost = async (data) => {
+  async function dataHost(data:object) {
     setIsLoaded(true);
     setIsError(false);
     try {
@@ -96,7 +100,7 @@ export function Overview() {
       setIsError(true);
       throw error;
     }
-  };
+  }
 
   const resetData = () => {
     dataHost(watch());
