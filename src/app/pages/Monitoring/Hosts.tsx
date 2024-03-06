@@ -10,11 +10,21 @@ import { MultiSelect } from "../../../_metronic/layout/components/MultiSelect/Mu
 import { fetchHostGroup } from "../../../hostGroupSlice/hostGroupReducer";
 import { useDispatch } from "react-redux";
 import Severities from "../../modules/profile/components/hosts/severities/Index";
-import { Loader } from "../../../_metronic/layout/components/loader/Loader";
 import { KTIcon } from "../../../_metronic/helpers";
 import BTN from "../../../_metronic/layout/components/BTN";
 
 interface FormValues {
+  selectProblems: string;
+  selectGraphs: string;
+  selectTags: string;
+  selectDashboards: string;
+  selectInterfaces: string;
+  search: {
+    name: string;
+    ip: string;
+    dns: string;
+    port: string;
+  };
   status: string;
   evaltype: string;
   maintenance_status: string;
@@ -25,8 +35,14 @@ interface FormValues {
   port: string;
   severities: number[];
   groupids: string[];
-  filter: [];
+  filter: {
+    status: string;
+  };
   tags: string[];
+  inventory: { field: string; value: string }[]; 
+}
+
+interface FormValues {
   inventory: { field: string; value: string }[];
 }
 
@@ -52,15 +68,16 @@ export function Overview() {
   const intl = useIntl();
 
   const [isLoaded, setIsLoaded] = useState<boolean>(true);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isError, setIsError] = useState<boolean>(false);
   const [data, setData] = useState([]);
-  const [defaultData, setDefaultData] = useState([]);
   const [activeButtonTag, setActiveButtonTag] = useState<string>("");
   const [activeSituation, setActiveSituation] = useState<string>("");
   const [resetMultiSelect, setResetMultiSelect] = useState(false);
   const [hostGroups, setHostGroups] = useState([]);
   const currentGroupids = watch("groupids") ? watch("groupids") : [];
   const dispatch = useDispatch();
+
   const {
     fields: tagsField,
     append: tagsAppend,
@@ -70,7 +87,7 @@ export function Overview() {
     name: "tags",
   });
 
-  const dataHost = async (data) => {
+  async function dataHost(data:object) {
     setIsLoaded(true);
     setIsError(false);
     try {
@@ -83,7 +100,7 @@ export function Overview() {
       setIsError(true);
       throw error;
     }
-  };
+  }
 
   const resetData = () => {
     dataHost(watch());

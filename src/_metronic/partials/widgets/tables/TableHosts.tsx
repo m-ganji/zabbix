@@ -15,18 +15,20 @@ interface Host {
   status: number;
   statusColor?: string;
   issuesColor?: string;
-  problems: any[];
-  graphs?: any[];
-  dashboards?: any[];
+  problems: [];
+  graphs?: [];
+  dashboards?: [];
 }
 
 interface TableHostsProps {
   data: Host[];
   isLoaded: boolean;
+  isError: boolean;
 }
 
-const TableHosts: React.FC<TableHostsProps> = ({ data, isLoaded }) => {
+const TableHosts: React.FC<TableHostsProps> = ({ data, isLoaded, isError }) => {
   const intl = useIntl();
+  isError && console.log(isError);
 
   return (
     <div style={{ boxShadow: "0 0 10px -10px black" }} className={`card mt-5`}>
