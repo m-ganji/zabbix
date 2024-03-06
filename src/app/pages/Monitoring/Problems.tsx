@@ -23,20 +23,17 @@ import { CheckBox } from "./../../../_metronic/layout/components/CheckBox/index"
 import { Select } from "../../../_metronic/layout/components/Select";
 
 interface hostGroupItems {
-  value: string;
+  value: string | number;
   label: string;
 }
-
-interface HostsData {
-  id: number;
-  name: string;
-  host: string;
-  hostid: string;
-}
 interface Triggers {
-  id: number;
-  triggerid: string;
+  priority: string;
+  triggerid: number;
   description: string;
+}
+interface TriggersGp {
+  value: number;
+  label: string;
 }
 interface HostGroupData {
   payload: [];
@@ -63,7 +60,7 @@ interface FormValues {
   evaltype: string;
   tags: {
     tag: string;
-    operator: number;
+    operator: number | string;
     value: string;
   }[];
   inventory: {
@@ -74,7 +71,7 @@ interface FormValues {
     };
   }[];
   severities: number[];
-  objectids: [];
+  objectids: number[];
   groupids: [];
 }
 
@@ -83,7 +80,7 @@ export interface Problem {
   cause_eventid: string;
   clock: string;
   correlationid: string;
-  hostids: (string | number)[];
+  hostids: (number | undefined)[];
   eventid: string;
   hosts: {
     active_available: string;
@@ -133,10 +130,14 @@ export interface Problem {
   urls: never[];
   userid: string;
 }
-interface ProblemParams {
+interface ProblemParams extends Record<string, string> {
   id: string;
   value: string;
 }
+type HostsData = {
+  host: string;
+  hostid: number; // Assuming hostid is of type number
+};
 
 export function Problems() {
   const intl = useIntl();
@@ -145,7 +146,6 @@ export function Problems() {
 
   const { id, value } = useParams<ProblemParams>();
 
-  const [sortBasedOn, setSortBasedOn] = useState("");
   const [hostGroupWithParam, setHostGroupWithParam] = useState([]);
   const [hostGroupWithoutParam, setHostGroupWithoutParam] =
     useState<HostGroupData | null>(null);
@@ -155,7 +155,7 @@ export function Problems() {
   const [showTags, setShowTags] = useState<number>(3);
   const [hostsData, setHostsData] = useState<HostsData[]>([]);
   const [selectedHosts, setSelectedHosts] = useState<hostGroupItems[]>([]);
-  const [SelectedTriggers, setSelectedTriggers] = useState([]);
+  const [SelectedTriggers, setSelectedTriggers] = useState<TriggersGp[]>([]);
   const [SelectedHostGpTriggers, setSelectedHostGpTriggers] = useState<
     string | number
   >(-1);
@@ -208,7 +208,7 @@ export function Problems() {
         tags: [],
         inventory: [],
         recent: "1",
-        hostids: id ? [id] : [],
+        hostids: id ? [parseInt(id as string, 10)] : [],
       },
     });
 
@@ -229,17 +229,18 @@ export function Problems() {
     control,
     name: "tags",
   });
-  const currentHostids = watch("hostids") ? watch("hostids") : [];
-  const currentTriggersIds = watch("objectids") ? watch("objectids") : [];
-  const currentGroupids = watch("groupids") ? watch("groupids") : [];
 
-  const handleCheckboxChange = (host) => {
+  const currentHostids: number[] = watch("hostids") ?? [];
+  const currentTriggersIds: number[] = watch("objectids") ?? [];
+  const currentGroupids: number[] = watch("groupids") ?? [];
+
+  const handleCheckboxChange = (host: HostsData) => {
     if (currentHostids.includes(host.hostid)) {
-      const newData = selectedHosts.filter((id) => id.value != host.hostid);
+      const newData = selectedHosts.filter((id) => id.value !== host.hostid);
       setSelectedHosts(newData);
       setValue(
         "hostids",
-        newData.map((i) => i.value)
+        newData.map((i) => i.value as number)
       );
       console.log(newData);
     } else {
@@ -251,7 +252,7 @@ export function Problems() {
     }
   };
 
-  const handleCheckboxTriggersChange = (trigger) => {
+  const handleCheckboxTriggersChange = (trigger: Triggers) => {
     console.log(currentTriggersIds);
 
     if (currentTriggersIds.includes(trigger.triggerid)) {
@@ -261,14 +262,17 @@ export function Problems() {
       setSelectedTriggers(newData);
       setValue(
         "objectids",
-        newData.map((i) => i.value)
+        newData.map((i) => i.value as number)
       );
     } else {
       setSelectedTriggers([
         ...SelectedTriggers,
         { label: trigger.description, value: trigger.triggerid },
       ]);
-      setValue("objectids", [...currentTriggersIds, trigger.triggerid]);
+      setValue("objectids", [
+        ...currentTriggersIds,
+        trigger.triggerid,
+      ] as unknown as []);
     }
   };
 
@@ -362,15 +366,15 @@ export function Problems() {
     handleSubmit(fetchPromsListData)();
   };
 
-  const handleAgeData = (e) => {
+  const handleAgeData = (e: React.ChangeEvent<HTMLInputElement>) => {
     const today = new Date();
-    setAge(e.currentTarget.value);
-    const DaysAgo = new Date(
-      today.setDate(today.getDate() - e.currentTarget.value)
-    );
+    const ageValue = parseInt(e.currentTarget.value, 10); // Parse the input value as an integer
+    setAge(ageValue);
+
+    const DaysAgo = new Date(today.setDate(today.getDate() - ageValue));
     console.log(DaysAgo);
 
-    setValue("time_from", Date.parse(new Date(DaysAgo)));
+    setValue("time_from", DaysAgo.toISOString()); // Convert the date to ISO string before setting the value
   };
 
   const getPriorityBackgroundColor = (priority: string): string => {
@@ -656,8 +660,8 @@ export function Problems() {
                                   onchange={() =>
                                     handleCheckboxTriggersChange(item)
                                   }
-                                  defaultChecked={currentTriggersIds.includes(
-                                    item.triggerid
+                                  checked={currentTriggersIds.includes(
+                                    Number(item.triggerid)
                                   )}
                                 />
                               </div>

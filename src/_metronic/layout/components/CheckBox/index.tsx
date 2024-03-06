@@ -6,14 +6,15 @@ interface CheckBoxProps {
   state?: boolean;
   label?: string;
   dir?: string;
+  checked: boolean;
 }
 
 export const CheckBox: React.FC<CheckBoxProps> = ({
   className,
   onchange,
-  state,
   label,
   dir,
+  checked,
 }) => {
   return (
     <label
@@ -24,7 +25,7 @@ export const CheckBox: React.FC<CheckBoxProps> = ({
         type="checkbox"
         className={className}
         onChange={onchange}
-        defaultChecked={state}
+        checked={checked}
       />
       <span className="form-check-label">{label}</span>
     </label>

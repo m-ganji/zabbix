@@ -1,8 +1,8 @@
-import { useState } from "react";
+// import { useState } from "react";
 import { Content } from "../../../_metronic/layout/components/content";
 import { useForm } from "react-hook-form";
 import { useIntl } from "react-intl";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { MultiSelect } from "../../../_metronic/layout/components/MultiSelect/MultiSelect";
 import { MapsTable } from "../../../_metronic/partials/widgets/tables/MapsTable";
 import BTN from "../../../_metronic/layout/components/BTN";
@@ -22,11 +22,11 @@ interface FormValues {
 
 export function Maps() {
   const intl = useIntl();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-  const [resetMultiSelect, setResetMultiSelect] = useState(false);
+  // const [resetMultiSelect, setResetMultiSelect] = useState(false);
 
-  const { control, watch, setValue, handleSubmit, reset, unregister } =
+  const { control, watch, setValue, handleSubmit, reset } =
     useForm<FormValues>({
       defaultValues: {
         search: { name: "" },
@@ -40,7 +40,7 @@ export function Maps() {
       },
     });
 
-  const currentName = watch("search.name") ? watch("search.name") : [];
+  // const currentName = watch("search.name") ? watch("search.name") : [];
 
   const fetchPromsListData = async (e: object) => {
     console.log(e);
@@ -69,7 +69,7 @@ export function Maps() {
     // setIsLoaded(true);
   };
   const resetData = () => {
-    setResetMultiSelect(true);
+    // setResetMultiSelect(true);
     reset();
     fetchPromsListData(watch());
   };

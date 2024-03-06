@@ -1,5 +1,4 @@
 import { useIntl } from "react-intl";
-import { CheckBox } from "./../../../layout/components/CheckBox/index";
 
 const HostsGpTable = () => {
   const intl = useIntl();
@@ -34,7 +33,7 @@ const HostsGpTable = () => {
             <thead>
               <tr className="fw-bold text-muted">
                 <th className="w-25px">
-                  <CheckBox />
+                  <input type="checkbox" />
                 </th>
                 <th className="min-w-150px">
                   {intl.formatMessage({ id: "NAME" })}
@@ -49,7 +48,7 @@ const HostsGpTable = () => {
             <tbody>
               <tr>
                 <td>
-                  <CheckBox />
+                  <input type="checkbox" />
                 </td>
                 <td>
                   <div className="d-flex align-items-center">

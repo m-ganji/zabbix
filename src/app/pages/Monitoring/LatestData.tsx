@@ -1,18 +1,17 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Content } from "../../../_metronic/layout/components/content";
-import { useForm, useFieldArray, Controller } from "react-hook-form";
-import { ProblemTable } from "../../../_metronic/partials/widgets";
+import { useForm, Controller } from "react-hook-form";
+// import { ProblemTable } from "../../../_metronic/partials/widgets";
 import { PageTitle } from "../../../_metronic/layout/core";
 import { useIntl } from "react-intl";
 import { ToolbarWrapper } from "../../../_metronic/layout/components/toolbar";
 import { MultiSelect } from "../../../_metronic/layout/components/MultiSelect/MultiSelect";
-import { fetchHostGroup } from "../../../hostGroupSlice/hostGroupReducer";
-import { useDispatch } from "react-redux";
-import { Loader } from "../../../_metronic/layout/components/loader/Loader";
+// import { fetchHostGroup } from "../../../hostGroupSlice/hostGroupReducer";
+// import { useDispatch } from "react-redux";
+// import { Loader } from "../../../_metronic/layout/components/loader/Loader";
 import BTN from "../../../_metronic/layout/components/BTN";
 import { Modal } from "react-bootstrap";
 import Input from "../../../_metronic/layout/components/Input";
-import ToggleBtns from "../../../_metronic/layout/components/ToggleBtn/ToggleBtn";
 import Tags from "../../modules/profile/components/hosts/tags/Index";
 
 interface HostGroupData {
@@ -23,6 +22,11 @@ interface HostGroupData {
 }
 
 interface FormValues {
+  selectProblems: string;
+  selectGraphs: string;
+  selectTags: string;
+  selectDashboards: string;
+  selectInterfaces: string;
   status: string;
   evaltype: string;
   maintenance_status: string;
@@ -39,109 +43,106 @@ interface FormValues {
   search: { name: string };
 }
 
-interface HostsData {
-  id: number;
-  name: string;
-  host: string;
-  hostid: string;
-}
+// interface HostsData {
+//   id: number;
+//   name: string;
+//   host: string;
+//   hostid: string;
+// }
 
 export function LatestData() {
-  const { control, watch, setValue, handleSubmit, reset } = useForm<FormValues>(
-    {
-      defaultValues: {
-        selectProblems: "extend",
-        selectGraphs: "extend",
-        selectTags: "extend",
-        selectDashboards: "extend",
-        selectInterfaces: "extend",
-        evaltype: "",
-        maintenance_status: "",
-        show_suppressed: "",
-        search: { name: "" },
-        filter: { status: "" },
-        tags: [],
-      },
-    }
-  );
+  const { control, watch, setValue, reset } = useForm<FormValues>({
+    defaultValues: {
+      selectProblems: "extend",
+      selectGraphs: "extend",
+      selectTags: "extend",
+      selectDashboards: "extend",
+      selectInterfaces: "extend",
+      evaltype: "",
+      maintenance_status: "",
+      show_suppressed: "",
+      search: { name: "" },
+      tags: [],
+    },
+  });
 
   const intl = useIntl();
 
-  const [isLoaded, setIsLoaded] = useState<boolean>(false);
-  const [isError, setIsError] = useState<boolean>(false);
-  const [hostsData, setHostsData] = useState<HostsData[]>([]);
-  const [hostGroupWithoutParam, setHostGroupWithoutParam] =
-    useState<HostGroupData | null>(null);
-  const [activeButtonTag, setActiveButtonTag] = useState<string>("");
-  const [activeSituation, setActiveSituation] = useState<string>("");
-  const [hostGroups, setHostGroups] = useState([]);
-  const currentGroupids = watch("groupids") ? watch("groupids") : [];
-  const dispatch = useDispatch();
+  // const [isLoaded, setIsLoaded] = useState<boolean>(false);
+  // const [isError, setIsError] = useState<boolean>(false);
+  // const [hostsData, setHostsData] = useState<HostsData[]>([]);
+  // const [hostGroupWithoutParam, setHostGroupWithoutParam] =
+  useState<HostGroupData | null>(null);
+  // const [activeButtonTag, setActiveButtonTag] = useState<string>("");
+  // const [activeSituation, setActiveSituation] = useState<string>("");
+  // const [hostGroups, setHostGroups] = useState([]);
+  // const currentGroupids = watch("groupids") ? watch("groupids") : [];
+  // const dispatch = useDispatch();
   const [isHostsModalOpen, setisHostsModalOpen] = useState<boolean>(false);
-  const [isHostsDataLoading, setIsHostsDataLoading] = useState<boolean>(false);
-  const [resetMultiSelect, setresetMultiSelect] = useState(false);
-  const [selectedHosts, setSelectedHosts] = useState([]);
-  const [showTags, setShowTags] = useState<number | string>(3);
+  // const [isHostsDataLoading, setIsHostsDataLoading] = useState<boolean>(false);
+  // const [resetMultiSelect, setresetMultiSelect] = useState(false);
+  // const [selectedHosts, setSelectedHosts] = useState([]);
+  const [showTags, setShowTags] = useState<number>(3);
   const [tagNameVisible, setTagNameVisible] = useState<number>(0);
 
-  const currentHostids = watch("hostids") ? watch("hostids") : [];
+  // const currentHostids = watch("hostids") ? watch("hostids") : [];
 
-  const {
-    fields: tagsField,
-    append: tagsAppend,
-    remove: tagsRemove,
-  } = useFieldArray({
-    control,
-    name: "tags",
-  });
+  // const {
+  //   fields: tagsField,
+  //   append: tagsAppend,
+  //   remove: tagsRemove,
+  // } = useFieldArray({
+  //   control,
+  //   name: "tags",
+  // });
 
-  const dataHost = async (data) => {
-    // console.log(data);
-    // setIsLoaded(true);
-    // setIsError(false);
-    // try {
-    //   const response = await instance.post("/core/hosts/get", data);
-    //   setData(response.data);
-    //   setIsLoaded(false);
-    //   console.log(response.data);
-    //   return response;
-    // } catch (error) {
-    //   console.error("Error fetching host data:", error);
-    //   setIsError(true);
-    //   throw error;
-    // }
-  };
+  // const dataHost = async (data) => {
+  //   // console.log(data);
+  //   setIsLoaded(true);
+  //   // setIsError(false);
+  //   try {
+  //     const response = await instance.post("/core/hosts/get", data);
+  //     setData(response);
+  //     setIsLoaded(false);
+  //     console.log(response.data);
+  //     return response;
+  //   } catch (error) {
+  //     console.error("Error fetching host data:", error);
+  //     setIsError(true);
+  //     throw error;
+  //   }
+  // };
 
   const resetData = () => {
     reset();
-    dataHost(watch());
+    // dataHost(watch());
   };
 
-  useEffect(() => {
-    dataHost(watch());
-  }, []);
+  // useEffect(() => {
+  //   dataHost(watch());
+  // }, []);
 
-  useEffect(() => {
-    dispatch(fetchHostGroup({})).then((response) => setHostGroups(response));
-  }, []);
+  // useEffect(() => {
+  //   dispatch(fetchHostGroup({})).then((response) => setHostGroups(response));
+  // }, []);
 
-  const handleCheckboxChange = (host) => {
-    if (currentHostids.includes(host.hostid)) {
-      const newData = selectedHosts.filter((id) => id.value != host.hostid);
-      setSelectedHosts(newData);
-      setValue(
-        "hostids",
-        newData.map((i) => i.value)
-      );
-      console.log(newData);
-    } else {
-      setSelectedHosts([
-        ...selectedHosts,
-        { label: host.host, value: host.hostid },
-      ]);
-      setValue("hostids", [...currentHostids, host.hostid]);
-    }
-  };
+  // const handleCheckboxChange = (host) => {
+  //   if (currentHostids.includes(host.hostid)) {
+  //     const newData = selectedHosts.filter((id) => id.value != host.hostid);
+  //     setSelectedHosts(newData);
+  //     setValue(
+  //       "hostids",
+  //       newData.map((i) => i.value)
+  //     );
+  //     console.log(newData);
+  //   } else {
+  //     setSelectedHosts([
+  //       ...selectedHosts,
+  //       { label: host.host, value: host.hostid },
+  //     ]);
+  //     setValue("hostids", [...currentHostids, host.hostid]);
+  //   }
+  // };
 
   return (
     <Content>
@@ -179,23 +180,20 @@ export function LatestData() {
                       data-toggle="buttons"
                     >
                       <MultiSelect
-                        reset={resetMultiSelect}
+                        // reset={resetMultiSelect}
                         addAll={false}
                         title="MENU.SELECT.HOSTS.GP"
                         options={
-                          hostGroupWithoutParam
-                            ? hostGroupWithoutParam.payload
-                            : []
+                          // hostGroupWithoutParam
+                          //   ? hostGroupWithoutParam.payload
+                          //   : []
+                          []
                         }
-                        Loading={
-                          hostGroupWithoutParam &&
-                          hostGroupWithoutParam.meta &&
-                          hostGroupWithoutParam.meta.requestStatus !==
-                            "fulfilled"
-                        }
+                        Loading={false}
                         DataName="groupids"
                         setData={setValue}
-                        currentData={currentGroupids}
+                        currentData={[]}
+                        reset={false}
                       />
                       <div className="row column-gap-3 m-0 my-3">
                         <div className="col p-0">
@@ -203,11 +201,11 @@ export function LatestData() {
                             reset={false}
                             addAll={true}
                             title="MENU.SELECT.HOSTS.GP"
-                            options={selectedHosts}
+                            options={[]}
                             Loading={false}
                             DataName="hostids"
                             setData={setValue}
-                            currentData={currentHostids}
+                            currentData={[]}
                           />
                         </div>
                         <button
@@ -249,7 +247,7 @@ export function LatestData() {
                             )}
                           </Form.Select> */}
                           <div className=" h-350px overflow-y-scroll mt-2">
-                            {!isHostsDataLoading ? (
+                            {/* {!true ? (
                               hostsData.map((host) => (
                                 // console.log(currentHostids, host),
                                 <div
@@ -276,7 +274,7 @@ export function LatestData() {
                               <div className="d-flex pt-7 w-100 justify-content-center">
                                 <Loader />
                               </div>
-                            )}
+                            )} */}
                           </div>
 
                           <div className="d-flex justify-content-center mt-2">
@@ -328,7 +326,7 @@ export function LatestData() {
                         })}
                         :
                       </p>
-                      {tagsField.map((item, index) => (
+                      {/* {tagsField.map((item, index) => (
                         <div className="row gap-3" key={item.id}>
                           <div className="col p-0">
                             <Controller
@@ -430,15 +428,15 @@ export function LatestData() {
                             })}
                           </button>
                         </div>
-                      ))}
+                      ))} */}
                     </div>
                     <div className="row">
                       <BTN
                         label={intl.formatMessage({ id: "ADD" })}
                         className="btn-light-success py-2 m-0 col-3"
-                        onClick={() => {
-                          tagsAppend({ tag: "", operator: 0, value: "" });
-                        }}
+                        // onClick={() => {
+                        //   tagsAppend({ tag: "", operator: 0, value: "" });
+                        // }}
                       />
                     </div>
 
@@ -456,7 +454,7 @@ export function LatestData() {
                           setTagNameVisible={setTagNameVisible}
                           setValue={setValue}
                           activeButtonTag={watch("evaltype")}
-                          control={control}
+                          // control={control}
                         />
                       </div>
                     </div>
@@ -484,13 +482,13 @@ export function LatestData() {
           </div>
         </div>
         {/* {data.length == 0 && <p>هاستی یافت نشد</p>} */}
-        {!isLoaded ? (
+        {/* {!isLoaded ? (
           <ProblemTable ProblemsData={[]} isLoaded={true} />
         ) : (
           <div className="d-flex pt-7 w-100 justify-content-center">
             <Loader />
           </div>
-        )}
+        )} */}
       </form>
     </Content>
   );

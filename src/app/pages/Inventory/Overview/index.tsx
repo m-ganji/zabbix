@@ -1,10 +1,10 @@
-import { useState } from "react";
+// import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { MultiSelect } from "../../../../_metronic/layout/components/MultiSelect/MultiSelect";
 import { useIntl } from "react-intl";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { instance } from "../../../../services/axiosInstance";
+// import { useDispatch } from "react-redux";
+// import { useNavigate } from "react-router-dom";
+// import { instance } from "../../../../services/axiosInstance";
 import BTN from "../../../../_metronic/layout/components/BTN";
 import { Content } from "../../../../_metronic/layout/components/content";
 import { Select } from "../../../../_metronic/layout/components/Select";
@@ -45,119 +45,113 @@ interface FormValues {
   objectids: [];
   groupids: [];
 }
-interface HostsData {
-  id: number;
-  name: string;
-  host: string;
-  hostid: string;
-}
-interface hostGroupItems {
-  value: string;
-  label: string;
-}
-interface HostGroupData {
-  payload: [];
-  meta: {
-    requestStatus: string;
-  };
-}
+// interface HostsData {
+//   id: number;
+//   name: string;
+//   host: string;
+//   hostid: string;
+// }
+// interface hostGroupItems {
+//   value: string;
+//   label: string;
+// }
+// interface HostGroupData {
+//   payload: [];
+//   meta: {
+//     requestStatus: string;
+//   };
+// }
 const InventoryOverview = () => {
   const intl = useIntl();
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+  // const navigate = useNavigate();
+  // const dispatch = useDispatch();
 
-  const [hostsData, setHostsData] = useState<HostsData[]>([]);
-  const [hostGroupWithoutParam, setHostGroupWithoutParam] =
-    useState<HostGroupData | null>(null);
-  const [selectedHosts, setSelectedHosts] = useState<hostGroupItems[]>([]);
-  const [resetMultiSelect, setresetMultiSelect] = useState(false);
-  const [isHostsModalOpen, setisHostsModalOpen] = useState<boolean>(false);
-  const [isHostsDataLoading, setIsHostsDataLoading] = useState<boolean>(false);
-  const [Mood, setMood] = useState<string>("0");
-  const { control, watch, setValue, handleSubmit, reset, unregister } =
-    useForm<FormValues>({
-      defaultValues: {
-        selectTags: "extend",
-        selectHosts: "extend",
-        search: { name: "" },
-        tag_name_format: 0,
-        time_from: "14",
-        age_state: "0",
-        acknowledged: false,
-        suppressed: false,
-        symptom: false,
-        tag_priority: "",
-        evaltype: "0",
-        tags: [],
-        inventory: [],
-        hostids: [],
-        recent: "1",
-      },
-    });
+  // const [hostsData, setHostsData] = useState<HostsData[]>([]);
+  // const [hostGroupWithoutParam, setHostGroupWithoutParam] =
+  // useState<HostGroupData | null>(null);
+  // const [selectedHosts, setSelectedHosts] = useState<hostGroupItems[]>([]);
+  // const [resetMultiSelect, setresetMultiSelect] = useState(false);
+  // const [isHostsModalOpen, setisHostsModalOpen] = useState<boolean>(false);
+  // const [isHostsDataLoading, setIsHostsDataLoading] = useState<boolean>(false);
+  const { watch, setValue, reset, unregister } = useForm<FormValues>({
+    defaultValues: {
+      selectTags: "extend",
+      selectHosts: "extend",
+      search: { name: "" },
+      tag_name_format: 0,
+      time_from: "14",
+      age_state: "0",
+      acknowledged: false,
+      suppressed: false,
+      symptom: false,
+      tag_priority: "",
+      evaltype: "0",
+      tags: [],
+      inventory: [],
+      hostids: [],
+      recent: "1",
+    },
+  });
 
   const currentHostids = watch("hostids") ? watch("hostids") : [];
   const currentGroupids = watch("groupids") ? watch("groupids") : [];
 
-  const fetchHostsData = async (params: string, with_triggers: boolean) => {
-    console.log(with_triggers);
+  // const fetchHostsData = async (params: string, with_triggers: boolean) => {
+  //   console.log(with_triggers);
 
-    setIsHostsDataLoading(true);
-    const param =
-      Number(params) === -1
-        ? with_triggers
-          ? { with_triggers: "extend" }
-          : {}
-        : with_triggers
-        ? { groupids: [params], with_triggers: "extend" }
-        : { groupids: [params] };
+  //   setIsHostsDataLoading(true);
+  //   const param =
+  //     Number(params) === -1
+  //       ? with_triggers
+  //         ? { with_triggers: "extend" }
+  //         : {}
+  //       : with_triggers
+  //       ? { groupids: [params], with_triggers: "extend" }
+  //       : { groupids: [params] };
 
-    try {
-      const response = await instance.post("/core/hosts/get", param);
-      setHostsData(response.data);
-      console.log(response);
-    } catch (error) {
-      console.log(error);
-    }
-    setIsHostsDataLoading(false);
-  };
-  const handleCheckboxChange = (host) => {
-    if (currentHostids.includes(host.hostid)) {
-      const newData = selectedHosts.filter((id) => id.value != host.hostid);
-      setSelectedHosts(newData);
-      setValue(
-        "hostids",
-        newData.map((i) => i.value)
-      );
-      console.log(newData);
-    } else {
-      setSelectedHosts([
-        ...selectedHosts,
-        { label: host.host, value: host.hostid },
-      ]);
-      setValue("hostids", [...currentHostids, host.hostid]);
-    }
-  };
+  //   try {
+  //     const response = await instance.post("/core/hosts/get", param);
+  //     setHostsData(response.data);
+  //     console.log(response);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  //   setIsHostsDataLoading(false);
+  // };
+  // const handleCheckboxChange = (host) => {
+  //   if (currentHostids.includes(host.hostid)) {
+  //     const newData = selectedHosts.filter((id) => id.value != host.hostid);
+  //     setSelectedHosts(newData);
+  //     setValue(
+  //       "hostids",
+  //       newData.map((i) => i.value)
+  //     );
+  //     console.log(newData);
+  //   } else {
+  //     setSelectedHosts([
+  //       ...selectedHosts,
+  //       { label: host.host, value: host.hostid },
+  //     ]);
+  //     setValue("hostids", [...currentHostids, host.hostid]);
+  //   }
+  // };
 
   const resetData = () => {
-    setResetMultiSelect(true);
+    // setResetMultiSelect(true);
     reset();
-    setSelectedHosts([]);
-    resetMultiSelect && setResetMultiSelect(false);
+    // setSelectedHosts([]);
+    // resetMultiSelect && setResetMultiSelect(false);
   };
 
   const submit = () => {
     currentHostids.length === 0 && unregister("hostids");
     currentGroupids.length === 0 && unregister("groupids");
-    handleSubmit(fetchPromsListData)();
+    // handleSubmit(fetchPromsListData)();
   };
 
-  const handleDateChange = (e) => {
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     console.log(e);
     // Your logic here
-  };
-
-  const handleMood = (e) => {
-    setMood(e);
   };
 
   return (
@@ -197,19 +191,21 @@ const InventoryOverview = () => {
                     <div className="d-flex flex-column align-items-center gap-3">
                       <div className="w-50">
                         <MultiSelect
-                          reset={resetMultiSelect}
+                          reset={false}
                           addAll={false}
                           title="MENU.SELECT.HOSTS.GP"
                           options={
-                            hostGroupWithoutParam
-                              ? hostGroupWithoutParam.payload
-                              : []
+                            // hostGroupWithoutParam
+                            //   ? hostGroupWithoutParam.payload
+                            //   : []
+                            []
                           }
                           Loading={
-                            hostGroupWithoutParam &&
-                            hostGroupWithoutParam.meta &&
-                            hostGroupWithoutParam.meta.requestStatus !==
-                              "fulfilled"
+                            // hostGroupWithoutParam &&
+                            // hostGroupWithoutParam.meta &&
+                            // hostGroupWithoutParam.meta.requestStatus !==
+                            //   "fulfilled"
+                            false
                           }
                           DataName="groupids"
                           setData={setValue}

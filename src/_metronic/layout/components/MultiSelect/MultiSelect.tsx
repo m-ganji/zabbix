@@ -3,7 +3,7 @@ import { Dropdown, Spinner } from "react-bootstrap";
 import { useIntl } from "react-intl";
 
 interface Option {
-  value: string;
+  value: string | number;
   label: string;
 }
 
@@ -37,7 +37,7 @@ const MultiSelect: React.FC<{
     console.log(selectedValue?.length);
 
     setSelectedOptions([]);
-    addAll && setSelectedOptions([...options]);
+    addAll && setSelectedOptions(options);
 
     selectedValue?.[0]?.value && setSelectedOptions(selectedValue);
   }, [addAll, options, reset]);
