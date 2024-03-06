@@ -8,4 +8,15 @@ const Toast = Swal.mixin({
   timerProgressBar: true,
   
 });
-export default Toast;
+
+ const ToastFire = (icon,title,text) => {
+  Toast.fire({
+    icon: icon,
+    title: title,
+    text: text,
+    position: "bottom-start",
+    background: "rgb(16 79 153 / 90%)",
+  });
+}
+
+export default ToastFire;

@@ -139,6 +139,12 @@ type HostsData = {
   hostid: number; // Assuming hostid is of type number
 };
 
+interface ApiError {
+  response?: {
+    status: number;
+  };
+}
+
 export function Problems() {
   const intl = useIntl();
   const navigate = useNavigate();
@@ -329,11 +335,6 @@ export function Problems() {
       setProblemsData(response.data || []);
       console.log(response.data);
     } catch (error) {
-      interface ApiError {
-        response?: {
-          status: number;
-        };
-      }
       console.error(error);
 
       if ((error as ApiError).response?.status === 401) {

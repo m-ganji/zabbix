@@ -5,9 +5,18 @@ import { instance } from "../../../../../services/axiosInstance";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchHostGroup } from "../../../../../hostGroupSlice/hostGroupReducer";
 import { Controller } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import Toast from "../../../../layout/components/Toast";
+import ToastFire from "../../../../layout/components/Toast";
 interface HostProps {
   control: object;
   watch: () => void;
+}
+
+interface ApiError {
+  response?: {
+    status: number;
+  };
 }
 
 const Host: React.FC<HostProps> = ({ control, watch, setValue }) => {
@@ -18,6 +27,7 @@ const Host: React.FC<HostProps> = ({ control, watch, setValue }) => {
   const currentTemplate = watch("template") ? watch("template") : [];
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const hostGroupData = useSelector((state) => (state as object).hostGroup);
 
@@ -32,7 +42,11 @@ const Host: React.FC<HostProps> = ({ control, watch, setValue }) => {
         const mapped = response.data.map((e) => ({ label: e.name }));
         setTemplates(mapped);
       } catch (error) {
-        console.error(error);
+        if ((error as ApiError).response?.status === 401) {
+          localStorage.removeItem("token");
+          navigate("/");
+          ToastFire("error", `توکن منقضی شده است`, "لطفا مجدد وارد شوید");
+        }
         throw error;
       }
     };
