@@ -49,21 +49,62 @@ const MultiSelect: React.FC<{
     console.log(isSelected);
 
     if (isSelected) {
-      setData(
-        DataName,
-        selectedOptions
-          .filter((selectedOption) => selectedOption.value !== option.value)
-          .map((i) => i.value)
-      );
-      setSelectedOptions(
-        selectedOptions.filter(
-          (selectedOption) => selectedOption.value !== option.value
-        )
-      );
+      if (DataName === "groups") {
+        console.log(
+          selectedOptions
+            .filter((selectedOption) => selectedOption.value !== option.value)
+            .map((group) => ({
+              groupid: group.value,
+              name: group.label,
+            }))
+        );
+
+        setData(DataName, {
+          groups: [],
+        });
+        setSelectedOptions(
+          selectedOptions.filter(
+            (selectedOption) => selectedOption.value !== option.value
+          )
+        );
+      } else {
+        setData(
+          DataName,
+          selectedOptions
+            .filter((selectedOption) => selectedOption.value !== option.value)
+            .map((i) => i.value)
+        );
+        setSelectedOptions(
+          selectedOptions.filter(
+            (selectedOption) => selectedOption.value !== option.value
+          )
+        );
+      }
     } else {
-      console.log(currentData);
-      setData(DataName, [...currentData, option.value]);
-      setSelectedOptions([...selectedOptions, option]);
+      if (DataName === "groups") {
+        console.log(
+          selectedOptions.map((group) => ({
+            groupid: group.value,
+            name: group.label,
+          }))
+        );
+        console.log(option);
+
+        setData(DataName, [
+          ...selectedOptions.map((group) => ({
+            groupid: group.value,
+            name: group.label,
+          })),
+          ...[option].map((group) => ({
+            groupid: group.value,
+            name: group.label,
+          })),
+        ]);
+        setSelectedOptions([...selectedOptions, option]);
+      } else {
+        setData(DataName, [...currentData, option.value]);
+        setSelectedOptions([...selectedOptions, option]);
+      }
     }
   };
 

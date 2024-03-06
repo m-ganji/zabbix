@@ -40,7 +40,6 @@ const Host: React.FC<HostProps> = ({ control, watch, setValue }) => {
     handleGetTemplates();
   }, []);
 
-
   return (
     <div>
       <div className="container text-center">
@@ -105,7 +104,7 @@ const Host: React.FC<HostProps> = ({ control, watch, setValue }) => {
                 hostGroupData.meta &&
                 hostGroupData.meta.requestStatus !== "fulfilled"
               }
-              DataName="groups.{groupid}"
+              DataName="groups"
               setData={setValue}
               currentData={currentGroupids}
             />

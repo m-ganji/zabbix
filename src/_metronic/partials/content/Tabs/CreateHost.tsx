@@ -24,7 +24,7 @@ const CreateHost: FC = () => {
 
   const onSubmit = async (data) => {
     console.log(data);
-
+    
     try {
       const response = await instance.post("/core/hosts/create", data);
       console.log(response);
