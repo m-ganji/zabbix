@@ -33,7 +33,6 @@ const Macros: React.FC<HostProps> = ({ control, watch, setValue }) => {
             (activeMacro === "HOSTMACROS" ? " active" : "")
           }
           onClick={() => {
-            // setValue("filter.status", [0, 1]);
             setActiveMacro("HOSTMACROS");
           }}
           data-bs-toggle="button"
@@ -50,7 +49,6 @@ const Macros: React.FC<HostProps> = ({ control, watch, setValue }) => {
             (activeMacro === "INHERITED" ? " active" : "")
           }
           onClick={() => {
-            // setValue("filter.status", 1);
             setActiveMacro("INHERITED");
           }}
           data-bs-toggle="button"
@@ -80,17 +78,6 @@ const Macros: React.FC<HostProps> = ({ control, watch, setValue }) => {
           />
         </div>
       )}
-      {/* <button
-        type="button"
-        className="btn btn-success py-2 d-block mt-5 "
-        onClick={() => {
-          macrosAppend({ tag: "", value: "" });
-        }}
-      >
-        {intl.formatMessage({
-          id: "ADD",
-        })}
-      </button> */}
     </div>
   );
 };

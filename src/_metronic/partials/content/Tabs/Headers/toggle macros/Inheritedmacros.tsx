@@ -177,18 +177,19 @@ const Inheritedmacros: React.FC = ({
         </Modal.Header>
         <Modal.Body dir="rtl">
           {globalUserMacro.map((e, index) => (
-            <div className="d-flex py-2 mb-5 gap-5 " key={index}>
+            <div className="d-flex py-2 mb-5 gap-5 ">
               <input
                 type="text"
                 className="form-control "
                 defaultValue={e.macro}
                 dir="rtl"
                 style={{ width: "33%", direction: "rtl" }}
+                key={index}
               />
               <div className="d-flex" style={{ width: "33%" }}>
                 <input
                   type="text"
-                  className="form-control py-2 w-75"
+                  className="form-control py-2"
                   placeholder={intl.formatMessage({
                     id: "MONITORING.HOSTS.ADDTAG.VALUE",
                   })}
@@ -340,7 +341,7 @@ const Inheritedmacros: React.FC = ({
                     message: "Input should be in the format '{$test}'",
                   })}
                   type="text"
-                  className="form-control py-2 w-75"
+                  className="form-control py-2"
                   aria-describedby="emailHelp"
                   placeholder={intl.formatMessage({
                     id: "MONITORING.HOSTS.ADDTAG.VALUE",
@@ -349,14 +350,39 @@ const Inheritedmacros: React.FC = ({
                   dir="rtl"
                 />
                 <div
+                  {...register("type")}
                   className={`custom-dropdown border border-${secondaryColor} border-2 `}
-                  onClick={() => {
+                  onClick={(option, index) => {
                     setIsOpenAdd((prevIsOpen) => !prevIsOpen);
+                    setValue(`type`, 1);
                   }}
                 >
                   <div className="selected-option mt-2">{selectedOption}</div>
                   {isOpenAdd && (
-                    <div className="options position-absolute">{options}</div>
+                    <div
+                      className="options position-absolute"
+                      onClick={(e) => {
+                        const innerHTML = e.target.innerHTML;
+                        console.log(innerHTML);
+                        if (innerHTML.includes("text")) {
+                          setSelectedOption(
+                            <KTIcon iconName="text" className="fs-2" />
+                          );
+                        }
+                        if (innerHTML.includes("secret ")) {
+                          setSelectedOption(
+                            <KTIcon iconName="eye-slash" className="fs-2" />
+                          );
+                        }
+                        if (innerHTML.includes("lock")) {
+                          setSelectedOption(
+                            <KTIcon iconName="lock-2" className="fs-2" />
+                          );
+                        }
+                      }}
+                    >
+                      {options}
+                    </div>
                   )}
                 </div>
               </div>
@@ -394,7 +420,7 @@ const Inheritedmacros: React.FC = ({
             <div className="d-flex" style={{ width: "33%" }}>
               <input
                 type="text"
-                className="form-control py-2 w-75"
+                className="form-control py-2"
                 aria-describedby="emailHelp"
                 placeholder={intl.formatMessage({
                   id: "MONITORING.HOSTS.ADDTAG.VALUE",

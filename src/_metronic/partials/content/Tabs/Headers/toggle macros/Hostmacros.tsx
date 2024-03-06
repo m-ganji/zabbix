@@ -76,7 +76,7 @@ const Hostmacros: React.FC = ({
                 <input
                   {...field}
                   type="text"
-                  className="form-control py-2 w-75"
+                  className="form-control py-2"
                   id={`exampleInputEmailValue${item.id}`}
                   aria-describedby="emailHelp"
                   placeholder={intl.formatMessage({
