@@ -86,94 +86,103 @@ const TableHosts: React.FC<TableHostsProps> = ({ data, isLoaded, isError }) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {data.map((item) => (
-                    <tr key={item.id || Math.random()}>
-                      <td className="text-center">
-                        <Badge title={item.name} bg="success" />
-                      </td>
-                      <td className="text-center">
-                        {item.interfaces?.map((i) => (
-                          <Badge
-                            title={`${i.ip + " : " + i.port}`}
-                            bg="primary"
-                          />
-                        ))}
-                      </td>
-                      <td className="text-center">
-                        <span className="text-muted fw-semibold text-muted d-block fs-7">
-                          {item.inventory_mode === 1 ? (
-                            <i className="bi bi-circle-fill text-danger"></i>
-                          ) : (
-                            item.inventory_mode === 0 && (
-                              <i className="bi bi-circle-fill text-success"></i>
-                            )
-                          )}
-                          {item.inventory_mode === -1 && (
-                            <i className="bi bi-circle-fill"></i>
-                          )}
-                        </span>
-                      </td>
-                      <td className="text-center">
-                        <div className="d-flex flex-column gap-2">
-                          {item.tags?.map((value) => (
-                            <div className="d-flex justify-content-center">
-                              <Badge
-                                title={`${value.tag + " : " + value.value}`}
-                                bg="info"
-                              />
-                            </div>
+                  {data &&
+                    data.map((item, index) => (
+                      <tr key={index}>
+                        <td className="text-center">
+                          <Badge title={item.name} bg="success" />
+                        </td>
+                        <td className="text-center">
+                          {item.interfaces?.map((i, index) => (
+                            <Badge
+                              title={`${i.ip + " : " + i.port}`}
+                              bg="primary"
+                              key={index}
+                            />
                           ))}
-                        </div>
-                      </td>
-                      <td className="text-center">
-                        {item.status === 0 ? (
-                          <KTIcon
-                            iconName="check"
-                            className="fs-1 text-success"
-                          />
-                        ) : (
-                          <KTIcon
-                            iconName="cross"
-                            className="fs-1 text-danger"
-                          />
-                        )}
-                      </td>
-                      <td className="text-center">
-                        <a href="">آخرین دیتا</a>
-                      </td>
-                      <td className="text-center">
-                        {item?.problems[0] ? (
-                          <Link
-                            to={`/Monitoring/Problems/${item?.hostid}/${item?.host}`}
-                            className={`badge badge-light-${
-                              item.issuesColor || "primary"
-                            } fs-7 fw-semibold`}
-                          >
-                            {item?.problems.length}
-                          </Link>
-                        ) : (
-                          <span className="text-gray-400">بدون مشکل</span>
-                        )}
-                      </td>
-                      <td className="text-center">
-                        {item.graphs?.length > 0 ? (
-                          <Badge title={item.graphs.length} bg="primary" />
-                        ) : (
-                          <span className="text-gray-400">بدون گراف</span>
-                        )}
-                      </td>
-                      <td className="text-center">
-                        {item.dashboards?.length > 0 ? (
-                          <Badge title={item.dashboards?.length} bg="primary" />
-                        ) : (
-                          <span className="text-gray-400">بدون داشبورد</span>
-                        )}
-                      </td>
-                      <td className="text-center">
-                        <span className="text-gray-400">وب</span>
-                      </td>
-                    </tr>
-                  ))}
+                        </td>
+                        <td className="text-center">
+                          <span className="text-muted fw-semibold text-muted d-block fs-7">
+                            {item.inventory_mode === 1 ? (
+                              <i className="bi bi-circle-fill text-danger"></i>
+                            ) : (
+                              item.inventory_mode === 0 && (
+                                <i className="bi bi-circle-fill text-success"></i>
+                              )
+                            )}
+                            {item.inventory_mode === -1 && (
+                              <i className="bi bi-circle-fill"></i>
+                            )}
+                          </span>
+                        </td>
+                        <td className="text-center">
+                          <div className="d-flex flex-column gap-2">
+                            {item.tags?.map((value, index) => (
+                              <div
+                                className="d-flex justify-content-center"
+                                key={index}
+                              >
+                                <Badge
+                                  title={`${value.tag + " : " + value.value}`}
+                                  bg="info"
+                                  key={index}
+                                />
+                              </div>
+                            ))}
+                          </div>
+                        </td>
+                        <td className="text-center">
+                          {item.status === 0 ? (
+                            <KTIcon
+                              iconName="check"
+                              className="fs-1 text-success"
+                            />
+                          ) : (
+                            <KTIcon
+                              iconName="cross"
+                              className="fs-1 text-danger"
+                            />
+                          )}
+                        </td>
+                        <td className="text-center">
+                          <a href="">آخرین دیتا</a>
+                        </td>
+                        <td className="text-center">
+                          {item?.problems[0] ? (
+                            <Link
+                              to={`/Monitoring/Problems/${item?.hostid}/${item?.host}`}
+                              className={`badge badge-light-${
+                                item.issuesColor || "primary"
+                              } fs-7 fw-semibold`}
+                            >
+                              {item?.problems.length}
+                            </Link>
+                          ) : (
+                            <span className="text-gray-400">بدون مشکل</span>
+                          )}
+                        </td>
+                        <td className="text-center">
+                          {item.graphs?.length > 0 ? (
+                            <Badge title={item.graphs.length} bg="primary" />
+                          ) : (
+                            <span className="text-gray-400">بدون گراف</span>
+                          )}
+                        </td>
+                        <td className="text-center">
+                          {item.dashboards?.length > 0 ? (
+                            <Badge
+                              title={item.dashboards?.length}
+                              bg="primary"
+                            />
+                          ) : (
+                            <span className="text-gray-400">بدون داشبورد</span>
+                          )}
+                        </td>
+                        <td className="text-center">
+                          <span className="text-gray-400">وب</span>
+                        </td>
+                      </tr>
+                    ))}
                 </tbody>
               </table>
             </div>

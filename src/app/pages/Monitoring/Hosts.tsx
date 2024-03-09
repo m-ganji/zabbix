@@ -80,7 +80,7 @@ export function Overview() {
   const [activeButtonTag, setActiveButtonTag] = useState<string>("");
   const [resetMultiSelect, setResetMultiSelect] = useState(false);
   const currentGroupids = watch("groupids") ? watch("groupids") : [];
-  
+
   const HostGroupData: hostGroupItems[] = useSelector(selectApiData);
   const HostGroupLoading = useSelector(selectApiLoading);
 
@@ -520,11 +520,7 @@ export function Overview() {
                   className="btn-light-danger"
                   onClick={resetData}
                 />
-                <BTN
-                  label="ذخیره"
-                  className="btn-light-primary"
-                  // onClick={resetData}
-                />
+                <BTN label="ذخیره" className="btn-light-primary" />
               </div>
             </div>
           </div>

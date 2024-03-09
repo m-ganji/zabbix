@@ -23,9 +23,9 @@ type Inputs = {
 
 const Inheritedmacros: React.FC = ({
   macrosField,
-  control,
-  macrosRemove,
-  macrosAppend,
+  // control,
+  // macrosRemove,
+  // macrosAppend,
   setValue,
 }) => {
   const intl = useIntl();
@@ -194,6 +194,7 @@ const Inheritedmacros: React.FC = ({
                     id: "MONITORING.HOSTS.ADDTAG.VALUE",
                   })}
                   style={{ direction: "rtl" }}
+                  defaultValue={e.value}
                   dir="rtl"
                   key={index}
                 />
@@ -408,12 +409,13 @@ const Inheritedmacros: React.FC = ({
           <Loader />
         </div>
       )) ||
-        globalUserMacro.map((e) => (
+        globalUserMacro.map((e, index) => (
           <div className="d-flex py-2 mb-5 gap-5 me-3">
             <input
               type="text"
               className="form-control "
               defaultValue={e.macro}
+              key={index}   
               dir="rtl"
               style={{ width: "33%", direction: "rtl" }}
             />
@@ -425,6 +427,7 @@ const Inheritedmacros: React.FC = ({
                 placeholder={intl.formatMessage({
                   id: "MONITORING.HOSTS.ADDTAG.VALUE",
                 })}
+                defaultValue={e.value}
                 style={{ direction: "rtl" }}
                 dir="rtl"
               />
@@ -462,7 +465,6 @@ const Inheritedmacros: React.FC = ({
                 </div>
               </div>
             </div>
-
             <input
               type="text"
               className="form-control py-2"

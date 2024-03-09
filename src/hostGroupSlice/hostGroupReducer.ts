@@ -27,6 +27,7 @@ const initialState: ApiState = {
 // Create slice
 const apiSlice = createSlice({
   name: "hostGroup",
+  name: "hostGroup",
   initialState,
   reducers: {},
   extraReducers: (builder) => {

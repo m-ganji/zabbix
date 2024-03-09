@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { Controller, useFieldArray } from "react-hook-form";
 import { useIntl } from "react-intl";
 
