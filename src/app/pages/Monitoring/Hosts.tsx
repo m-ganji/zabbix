@@ -123,10 +123,6 @@ export function Overview() {
     dispatch(fetchHostGroup());
   }, [dispatch]);
 
-  useEffect(() => {
-    // dispatch(fetchHostGroup({})).then((response) => setHostGroups(response));
-  }, []);
-
   return (
     <Content>
       <form>

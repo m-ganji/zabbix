@@ -24,13 +24,12 @@ interface ApiError {
 const CreateHost: FC = () => {
   const navigate = useNavigate();
 
-  const { control, handleSubmit, reset, watch, setValue } = useForm<FormValues>(
-    {
+  const { control, handleSubmit, reset, watch, setValue, register } =
+    useForm<FormValues>({
       defaultValues: {
         host: "",
       },
-    }
-  );
+    });
 
   const onSubmit = async (data) => {
     console.log(data);
@@ -137,7 +136,7 @@ const CreateHost: FC = () => {
             <Inventory control={control} watch={watch} />
           </div>
           <div className="tab-pane" id="tab-Encryption">
-            <Encryption control={control} watch={watch} />
+            <Encryption control={control} watch={watch} register={register} />
           </div>
           <div className="tab-pane" id="tab-set-value">
             <Setvalue control={control} watch={watch} />

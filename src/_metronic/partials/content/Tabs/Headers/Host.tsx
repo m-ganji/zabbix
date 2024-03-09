@@ -6,12 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Controller, useFieldArray } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import ToastFire from "../../../../layout/components/Toast";
-import {
-  selectApiData,
-  selectApiError,
-  selectApiLoading,
-} from "../../../../../store/store";
-import { fetchHostGroup } from "../../../../../hostGroupSlice/hostGroupReducer";
+import { selectApiData, selectApiLoading } from "../../../../../store/store";
 import Dropdown from "react-bootstrap/Dropdown";
 
 interface HostProps {
@@ -38,12 +33,12 @@ const Host: React.FC<HostProps> = ({ control, watch, setValue }) => {
 
   const HostGroupData = useSelector(selectApiData);
   const loading = useSelector(selectApiLoading);
-  const error = useSelector(selectApiError);
+  // const error = useSelector(selectApiError);
 
-  useEffect(() => {
-    // dispatch(fetchHostGroup({}));
-    dispatch(fetchHostGroup({}));
-  }, [dispatch]);
+  // useEffect(() => {
+  //   // dispatch(fetchHostGroup({}));
+  //   dispatch(fetchHostGroup({}));
+  // }, [dispatch]);
 
   useEffect(() => {
     const handleGetTemplates = async () => {
