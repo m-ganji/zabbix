@@ -1,14 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Dropdown, Spinner } from "react-bootstrap";
 import { useIntl } from "react-intl";
-
-interface Option {
-  value: string;
-  label: string;
-}
+import { hostGroupItems } from "../../../../hostGroupSlice/hostGroupReducer";
 
 const MultiSelect: React.FC<{
-  options: Option[];
+  options: hostGroupItems[];
   Loading: null | boolean | string;
   title: string;
   addAll: boolean;
@@ -16,7 +12,7 @@ const MultiSelect: React.FC<{
   setData: CallableFunction;
   currentData: number[];
   reset: boolean;
-  selectedValue: Option[];
+  selectedValue?: hostGroupItems[];
 }> = ({
   title,
   options,
@@ -28,53 +24,82 @@ const MultiSelect: React.FC<{
   reset,
   selectedValue,
 }) => {
-  const [selectedOptions, setSelectedOptions] = useState<Option[]>([]);
+  const [selectedOptions, setSelectedOptions] = useState<hostGroupItems[]>([]);
   const [isOpen, setIsOpen] = useState(false);
 
   const intl = useIntl();
 
   useEffect(() => {
-    console.log(selectedValue?.length);
-
-    setSelectedOptions([]);
-    addAll && setSelectedOptions([...options]);
+    addAll && setSelectedOptions(options);
 
     selectedValue?.[0]?.value && setSelectedOptions(selectedValue);
   }, [addAll, options, reset]);
 
-  const toggleOption = (option: Option) => {
+  const toggleOption = (option: hostGroupItems) => {
     const isSelected = selectedOptions.some(
       (selectedOption) => selectedOption.value === option.value
     );
     console.log(isSelected);
 
+    const filteredOptions = selectedOptions.filter(
+      (selectedOption) => selectedOption.value !== option.value
+    );
+
     if (isSelected) {
-      setData(
-        DataName,
-        selectedOptions
-          .filter((selectedOption) => selectedOption.value !== option.value)
-          .map((i) => i.value)
-      );
-      setSelectedOptions(
-        selectedOptions.filter(
-          (selectedOption) => selectedOption.value !== option.value
-        )
-      );
+      if (DataName === "groups") {
+        setData(DataName, [
+          ...currentData,
+          ...filteredOptions.map((group) => ({
+            groupid: group.value,
+            name: group.label,
+          })),
+        ]);
+      } else {
+        setData(
+          DataName,
+          filteredOptions.map((i) => i.value)
+        );
+      }
+      setSelectedOptions(filteredOptions);
     } else {
-      console.log(currentData);
-      setData(DataName, [...currentData, option.value]);
-      setSelectedOptions([...selectedOptions, option]);
+      if (DataName === "groups") {
+        setData(DataName, [
+          ...selectedOptions.map((group) => ({
+            groupid: group.value,
+            name: group.label,
+          })),
+          ...[option].map((group) => ({
+            groupid: group.value,
+            name: group.label,
+          })),
+        ]);
+        setSelectedOptions([...selectedOptions, option]);
+      } else {
+        setData(DataName, [...currentData, option.value]);
+        setSelectedOptions([...selectedOptions, option]);
+      }
     }
   };
 
   const toggleAllOptions = () => {
-    setSelectedOptions(
-      selectedOptions.length === options.length ? [] : [...options]
-    );
-    setData(
-      DataName,
-      currentData.length === options.length ? [] : options.map((i) => i.value)
-    );
+    if (DataName === "groups") {
+      setSelectedOptions(
+        selectedOptions.length === options.length ? [] : [...options]
+      );
+      setData(
+        DataName,
+        options.map((group) => ({
+          groupid: group.value,
+          name: group.label,
+        }))
+      );
+    } else {
+      setSelectedOptions([...options]);
+      setData(
+        DataName,
+        options.map((i) => i.value)
+      );
+    }
   };
 
   const deleteAllOptions = () => {
@@ -83,24 +108,26 @@ const MultiSelect: React.FC<{
     setData(DataName, []);
   };
 
-  const deleteOption = (option: Option) => {
-    console.log(
-      selectedOptions
-        .filter((selectedOption) => selectedOption.value !== option.value)
-        .map((i) => i.value)
+  const deleteOption = (option: hostGroupItems) => {
+    const filteredOptions = selectedOptions.filter(
+      (selectedOption) => selectedOption.value !== option.value
     );
 
-    setData(
-      DataName,
-      selectedOptions
-        .filter((selectedOption) => selectedOption.value !== option.value)
-        .map((i) => i.value)
-    );
-    setSelectedOptions(
-      selectedOptions.filter(
-        (selectedOption) => selectedOption.value !== option.value
-      )
-    );
+    if (DataName === "groups") {
+      setData(
+        DataName,
+        filteredOptions.map((group) => ({
+          groupid: group.value,
+          name: group.label,
+        }))
+      );
+    } else {
+      setData(
+        DataName,
+        filteredOptions.map((i) => i.value)
+      );
+    }
+    setSelectedOptions(filteredOptions);
   };
 
   const toggleDropdown = () => {
@@ -115,35 +142,30 @@ const MultiSelect: React.FC<{
       >
         {selectedOptions?.length > 0 ? (
           <div className="d-flex flex-wrap gap-2">
-            {selectedOptions.map(
-              (option, index) => (
-                console.log(selectedOptions),
-                (
-                  <div
-                    dir="ltr"
-                    className="d-flex gap-1"
-                    style={{
-                      maxWidth: "130px",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                    }}
-                    key={index}
-                  >
-                    <p
-                      style={{ textOverflow: "ellipsis" }}
-                      className="m-0  overflow-hidden"
-                    >
-                      {option.label}
-                    </p>
-                    <img
-                      src="/media/icons/duotune/general/close-circle.svg"
-                      onClick={() => deleteOption(option)}
-                      alt="Close"
-                    />
-                  </div>
-                )
-              )
-            )}
+            {selectedOptions.map((option, index) => (
+              <div
+                dir="ltr"
+                className="d-flex gap-1"
+                style={{
+                  maxWidth: "130px",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                }}
+                key={index}
+              >
+                <p
+                  style={{ textOverflow: "ellipsis" }}
+                  className="m-0  overflow-hidden"
+                >
+                  {option.label}
+                </p>
+                <img
+                  src="/media/icons/duotune/general/close-circle.svg"
+                  onClick={() => deleteOption(option)}
+                  alt="Close"
+                />
+              </div>
+            ))}
           </div>
         ) : (
           intl.formatMessage({ id: title })

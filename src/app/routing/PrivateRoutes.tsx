@@ -21,6 +21,8 @@ import AuditLog from "../pages/Reports/AuditLog";
 import ActionLog from "../pages/Reports/ActionLog";
 import AvailabilityReport from "../pages/Reports/AvailabilityReport";
 import BusiestTriggers from "../pages/Reports/BusiestTriggers";
+import InventoryOverview from "../pages/Inventory/Overview";
+import InventoryHost from "../pages/Inventory/Host";
 
 const PrivateRoutes = () => {
   const ProfilePage = lazy(() => import("../modules/profile/ProfilePage"));
@@ -48,6 +50,9 @@ const PrivateRoutes = () => {
         <Route path="Monitoring/Discovery" element={<Discovery />} />
         <Route path="Monitoring/Maps" element={<Maps />} />
         <Route path="Monitoring/LatestData" element={<LatestData />} />
+        {/* INVENTORY PAGES */}
+        <Route path="/Inventory/Overview" element={<InventoryOverview />} />
+        <Route path="/Inventory/Host" element={<InventoryHost />} />
         {/* REPORTS PAGES */}
         <Route path="Reports/System-Info" element={<SystemInfo />} />
         <Route
@@ -55,7 +60,10 @@ const PrivateRoutes = () => {
           element={<ScheduledReports />}
         />
         <Route path="Reports/Notifications" element={<Notifications />} />
-        <Route path="Reports/Availability-Report" element={<AvailabilityReport />} />
+        <Route
+          path="Reports/Availability-Report"
+          element={<AvailabilityReport />}
+        />
         <Route path="Reports/Busiest-Triggers" element={<BusiestTriggers />} />
         <Route path="Reports/Audit-log" element={<AuditLog />} />
         <Route path="Reports/Action-log" element={<ActionLog />} />

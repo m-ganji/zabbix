@@ -22,9 +22,13 @@ export const CreateReport: React.FC<CreateMapProps> = ({
   const intl = useIntl();
 
   const [IsOwnerModalOpen, setIsOwnerModalOpen] = useState(false);
-  const [IsTimePicker, setIsTimePicker] = useState(false);
+  // const [IsTimePicker, setIsTimePicker] = useState(false);
+
+  // Remove this after saving data
+  const [FakeData, setFakeData] = useState(false);
 
   const handleDateChange = (e) => {
+    console.log(FakeData);
     console.log(e);
     // Your logic here
   };
@@ -141,7 +145,7 @@ export const CreateReport: React.FC<CreateMapProps> = ({
                           },
                         ]}
                         data=""
-                        // setData={setShowTags}
+                        setData={setFakeData}
                         // initialData={showTags}
                       />
                     </div>
@@ -172,7 +176,7 @@ export const CreateReport: React.FC<CreateMapProps> = ({
                           },
                         ]}
                         data=""
-                        // setData={setShowTags}
+                        setData={setFakeData}
                         // initialData={showTags}
                       />
                     </div>

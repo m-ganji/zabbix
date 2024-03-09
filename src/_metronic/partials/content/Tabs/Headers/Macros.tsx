@@ -1,15 +1,15 @@
 import { useState } from "react";
-import { Controller, useFieldArray, useForm } from "react-hook-form";
+import { Control, useFieldArray } from "react-hook-form";
 import { useIntl } from "react-intl";
-import { KTIcon } from "../../../../helpers";
 import Hostmacros from "./toggle macros/Hostmacros";
 import Inheritedmacros from "./toggle macros/Inheritedmacros";
 interface HostProps {
-  control: object;
-  watch: () => void;
+  control: Control;
+  watch: CallableFunction;
+  setValue: CallableFunction;
 }
 
-const Macros: React.FC<HostProps> = ({ control, watch, setValue }) => {
+const Macros: React.FC<HostProps> = ({ control, setValue }) => {
   const intl = useIntl();
 
   const [activeMacro, setActiveMacro] = useState<string>("HOSTMACROS");
@@ -33,7 +33,6 @@ const Macros: React.FC<HostProps> = ({ control, watch, setValue }) => {
             (activeMacro === "HOSTMACROS" ? " active" : "")
           }
           onClick={() => {
-            // setValue("filter.status", [0, 1]);
             setActiveMacro("HOSTMACROS");
           }}
           data-bs-toggle="button"
@@ -50,7 +49,6 @@ const Macros: React.FC<HostProps> = ({ control, watch, setValue }) => {
             (activeMacro === "INHERITED" ? " active" : "")
           }
           onClick={() => {
-            // setValue("filter.status", 1);
             setActiveMacro("INHERITED");
           }}
           data-bs-toggle="button"
@@ -80,17 +78,6 @@ const Macros: React.FC<HostProps> = ({ control, watch, setValue }) => {
           />
         </div>
       )}
-      {/* <button
-        type="button"
-        className="btn btn-success py-2 d-block mt-5 "
-        onClick={() => {
-          macrosAppend({ tag: "", value: "" });
-        }}
-      >
-        {intl.formatMessage({
-          id: "ADD",
-        })}
-      </button> */}
     </div>
   );
 };

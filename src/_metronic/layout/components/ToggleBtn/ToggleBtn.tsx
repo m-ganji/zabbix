@@ -3,13 +3,13 @@ import { useIntl } from "react-intl";
 
 interface Option {
   label: string;
-  value: string | number;
+  value: string | number | string[];
 }
 
 interface Props {
   options: Option[];
-  initialData: string | number;
-  data: string;
+  initialData?: string | number | string[];
+  data?: string;
   setData: CallableFunction;
 }
 

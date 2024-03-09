@@ -2,30 +2,37 @@ import { useIntl } from "react-intl";
 import { instance } from "../../../../../../services/axiosInstance";
 import { useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
-import { useForm } from "react-hook-form";
+import { Control, useForm } from "react-hook-form";
 import { Loader } from "../../../../../layout/components/loader/Loader";
 import { getCSSVariableValue } from "../../../../../assets/ts/_utils";
 import { KTIcon } from "../../../../../helpers";
 
 interface ItemType {
-  description: string;
-  globalmacroid: string;
-  macro: string;
-  type: string;
+  description?: string;
+  globalmacroid?: string;
+  macro?: string;
+  type?: string;
+  value?: string;
 }
 
 type Inputs = {
   macro: string;
-  value: string;
-  type: string;
-  description: string;
+  value?: string;
+  type?: string;
+  description?: string;
 };
-
-const Inheritedmacros: React.FC = ({
+interface Macro {
+  macrosField: object[];
+  control: Control;
+  macrosRemove: CallableFunction;
+  macrosAppend: CallableFunction;
+  setValue: CallableFunction;
+}
+const Inheritedmacros: React.FC<Macro> = ({
   macrosField,
-  control,
-  macrosRemove,
-  macrosAppend,
+  // control,
+  // macrosRemove,
+  // macrosAppend,
   setValue,
 }) => {
   const intl = useIntl();
@@ -46,7 +53,6 @@ const Inheritedmacros: React.FC = ({
           output: "extend",
           globalmacro: true,
         });
-        globalUserMacro.map((e) => setGlobalUserMacro(e.macro));
 
         setGlobalUserMacro(response.data || []);
         setIsLoaded(true);
@@ -63,7 +69,7 @@ const Inheritedmacros: React.FC = ({
     defaultValues: {},
   });
 
-  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+  const onSubmit = async (data: Inputs) => {
     console.log(data);
     try {
       const response = await instance.post(
@@ -94,7 +100,10 @@ const Inheritedmacros: React.FC = ({
     setDropdownStates(newDropdownStates);
   };
 
-  const selectOption = (option, index) => {
+  const selectOption = (
+    option: { props: { iconName: string } },
+    index: number
+  ) => {
     let typeValue;
     if (option.props.iconName === "text") {
       typeValue = 0;
@@ -110,7 +119,6 @@ const Inheritedmacros: React.FC = ({
     toggleDropdown(index);
   };
 
-  const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isOpenAdd, setIsOpenAdd] = useState<boolean>(false);
   const [selectedOption, setSelectedOption] = useState<JSX.Element>(
     <KTIcon iconName="text" className="fs-2" />
@@ -160,7 +168,6 @@ const Inheritedmacros: React.FC = ({
       {isLoaded && (
         <p
           className="d-flex justify-content-center align-content-center btn btn-light-primary w-25"
-          type="button"
           style={{ marginRight: "70%" }}
           onClick={() => setisInheritedModalOpen(true)}
         >
@@ -177,23 +184,21 @@ const Inheritedmacros: React.FC = ({
         </Modal.Header>
         <Modal.Body dir="rtl">
           {globalUserMacro.map((e, index) => (
-            <div className="d-flex py-2 mb-5 gap-5 " key={index}>
+            <div className="d-flex py-2 mb-5 gap-5 ">
               <input
                 type="text"
                 className="form-control "
-                defaultValue={e.macro}
-                dir="rtl"
-                style={{ width: "33%", direction: "rtl" }}
+                style={{ width: "33%" }}
+                key={index}
               />
               <div className="d-flex" style={{ width: "33%" }}>
                 <input
                   type="text"
-                  className="form-control py-2 w-75"
+                  className="form-control py-2"
                   placeholder={intl.formatMessage({
                     id: "MONITORING.HOSTS.ADDTAG.VALUE",
                   })}
-                  style={{ direction: "rtl" }}
-                  dir="rtl"
+                  defaultValue={e.value}
                   key={index}
                 />
                 <div
@@ -297,7 +302,6 @@ const Inheritedmacros: React.FC = ({
                   id: "MONITORING.HOSTS.ADDTAG.VALUE",
                 })}
                 style={{ width: "33%" }}
-                dir="rtl"
               />
             </div>
           ))}
@@ -330,33 +334,52 @@ const Inheritedmacros: React.FC = ({
                 {...register("macro")}
                 type="text"
                 className="form-control"
-                dir="rtl"
-                style={{ width: "33%", direction: "rtl" }}
+                style={{ width: "33%" }}
               />
               <div className="d-flex" style={{ width: "33%" }}>
                 <input
                   {...register("value", {
                     pattern: /^\{\$test\}$/i,
-                    message: "Input should be in the format '{$test}'",
                   })}
                   type="text"
-                  className="form-control py-2 w-75"
+                  className="form-control py-2"
                   aria-describedby="emailHelp"
                   placeholder={intl.formatMessage({
                     id: "MONITORING.HOSTS.ADDTAG.VALUE",
                   })}
-                  style={{ direction: "rtl" }}
-                  dir="rtl"
                 />
                 <div
+                  {...register("type")}
                   className={`custom-dropdown border border-${secondaryColor} border-2 `}
-                  onClick={() => {
-                    setIsOpenAdd((prevIsOpen) => !prevIsOpen);
-                  }}
                 >
                   <div className="selected-option mt-2">{selectedOption}</div>
                   {isOpenAdd && (
-                    <div className="options position-absolute">{options}</div>
+                    <div
+                      className="options position-absolute"
+                      onClick={(
+                        e: React.MouseEvent<HTMLDivElement, MouseEvent>
+                      ) => {
+                        const innerHTML = (e.target as HTMLElement).innerHTML;
+                        console.log(innerHTML);
+                        if (innerHTML.includes("text")) {
+                          setSelectedOption(
+                            <KTIcon iconName="text" className="fs-2" />
+                          );
+                        }
+                        if (innerHTML.includes("secret ")) {
+                          setSelectedOption(
+                            <KTIcon iconName="eye-slash" className="fs-2" />
+                          );
+                        }
+                        if (innerHTML.includes("lock")) {
+                          setSelectedOption(
+                            <KTIcon iconName="lock-2" className="fs-2" />
+                          );
+                        }
+                      }}
+                    >
+                      {options}
+                    </div>
                   )}
                 </div>
               </div>
@@ -364,11 +387,10 @@ const Inheritedmacros: React.FC = ({
                 {...register("description")}
                 type="text"
                 className="form-control py-2"
-                dir="rtl"
                 placeholder={intl.formatMessage({
                   id: "MONITORING.HOSTS.ADDTAG.VALUE",
                 })}
-                style={{ width: "33%", direction: "rtl" }}
+                style={{ width: "33%" }}
               />
             </div>
             <button type="submit" className="btn btn-success py-2 d-block mt-5">
@@ -382,25 +404,24 @@ const Inheritedmacros: React.FC = ({
           <Loader />
         </div>
       )) ||
-        globalUserMacro.map((e) => (
+        globalUserMacro.map((e, index) => (
           <div className="d-flex py-2 mb-5 gap-5 me-3">
             <input
               type="text"
               className="form-control "
               defaultValue={e.macro}
-              dir="rtl"
-              style={{ width: "33%", direction: "rtl" }}
+              key={index}
+              style={{ width: "33%" }}
             />
             <div className="d-flex" style={{ width: "33%" }}>
               <input
                 type="text"
-                className="form-control py-2 w-75"
+                className="form-control py-2"
                 aria-describedby="emailHelp"
                 placeholder={intl.formatMessage({
                   id: "MONITORING.HOSTS.ADDTAG.VALUE",
                 })}
-                style={{ direction: "rtl" }}
-                dir="rtl"
+                defaultValue={e.value}
               />
               <div
                 className={`custom-dropdown border border-${secondaryColor} border-2`}
@@ -436,7 +457,6 @@ const Inheritedmacros: React.FC = ({
                 </div>
               </div>
             </div>
-
             <input
               type="text"
               className="form-control py-2"
@@ -445,7 +465,6 @@ const Inheritedmacros: React.FC = ({
                 id: "MONITORING.HOSTS.ADDTAG.VALUE",
               })}
               style={{ width: "33%" }}
-              dir="rtl"
             />
           </div>
         ))}

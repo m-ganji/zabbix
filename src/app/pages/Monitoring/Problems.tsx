@@ -11,35 +11,37 @@ import { ToolbarWrapper } from "../../../_metronic/layout/components/toolbar";
 import { instance } from "../../../services/axiosInstance";
 import { useNavigate, useParams } from "react-router-dom";
 import { MultiSelect } from "../../../_metronic/layout/components/MultiSelect/MultiSelect";
-import { useDispatch } from "react-redux";
-import { Form, Modal } from "react-bootstrap";
-import { fetchHostGroup } from "../../../hostGroupSlice/hostGroupReducer";
+import { useDispatch, useSelector } from "react-redux";
+import { Form } from "react-bootstrap";
+import Badge from "../../../_metronic/layout/components/Badge";
+import {
+  AppDispatch,
+  selectApiData,
+  selectApiLoading,
+} from "./../../../store/store";
+import {
+  fetchHostGroup,
+  hostGroupItems,
+} from "../../../hostGroupSlice/hostGroupReducer";
 import { Loader } from "../../../_metronic/layout/components/loader/Loader";
 import ToggleBtns from "../../../_metronic/layout/components/ToggleBtn/ToggleBtn";
 import BTN from "../../../_metronic/layout/components/BTN";
+import ModalContainer from "../../../_metronic/layout/components/ModalContainer";
+import { CheckBox } from "./../../../_metronic/layout/components/CheckBox/index";
 
-interface hostGroupItems {
-  value: string;
-  label: string;
-}
-
-interface HostsData {
-  id: number;
-  name: string;
-  host: string;
-  hostid: string;
-}
 interface Triggers {
-  id: number;
-  triggerid: string;
+  priority: string;
+  triggerid: number;
   description: string;
 }
-interface HostGroupData {
-  payload: [];
-  meta: {
-    requestStatus: string;
-  };
+interface TriggersGp {
+  value: number;
+  label: string;
 }
+type HostGroupData = {
+  value: number;
+  label: string;
+};
 
 interface FormValues {
   selectTags: string;
@@ -59,99 +61,50 @@ interface FormValues {
   evaltype: string;
   tags: {
     tag: string;
-    operator: number;
+    operator: number | string;
     value: string;
   }[];
   inventory: {
     field: string;
     value: string;
-    [index: number]: {
-      field: string;
-    };
   }[];
   severities: number[];
-  objectids: [];
+  objectids: number[];
   groupids: [];
 }
 
-export interface Problem {
-  acknowledged: string;
-  cause_eventid: string;
-  clock: string;
-  correlationid: string;
-  hostids: object[];
-  eventid: string;
-  hosts: {
-    active_available: string;
-    auto_compress: string;
-    custom_interfaces: string;
-    description: string;
-    flags: string;
-    host: string;
-    hostid: string;
-    inventory_mode: string;
-    ipmi_authtype: string;
-    ipmi_password: string;
-    ipmi_privilege: string;
-    ipmi_username: string;
-    maintenance_from: string;
-    maintenance_status: string;
-    maintenance_type: string;
-    maintenanceid: string;
-    name: string;
-    proxy_address: string;
-    proxy_hostid: string;
-    status: string;
-    templateid: string;
-    tls_accept: string;
-    tls_connect: string;
-    tls_issuer: string;
-    tls_subject: string;
-    uuid: string;
-    vendor_name: string;
-    vendor_version: string;
-  }[];
-  name: string;
-  ns: string;
-  object: string;
-  objectid: string;
-  opdata: string;
-  r_clock: string;
-  r_eventid: string;
-  r_ns: string;
-  severity: string;
-  source: string;
-  suppressed: string;
-  tags: {
-    tag: string;
-    value: string;
-  }[];
-  urls: never[];
-  userid: string;
-}
-interface ProblemParams {
+interface ProblemParams extends Record<string, string> {
   id: string;
   value: string;
+}
+type HostsData = {
+  host: string;
+  hostid: number; // Assuming hostid is of type number
+};
+
+interface ApiError {
+  response?: {
+    status: number;
+  };
 }
 
 export function Problems() {
   const intl = useIntl();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   const { id, value } = useParams<ProblemParams>();
 
-  const [sortBasedOn, setSortBasedOn] = useState("");
-  const [hostGroupWithParam, setHostGroupWithParam] = useState([]);
-  const [hostGroupWithoutParam, setHostGroupWithoutParam] =
-    useState<HostGroupData | null>(null);
+  const [hostGroupWithoutParam, setHostGroupWithoutParam] = useState<
+    HostGroupData[]
+  >([]);
   const [Triggers, setTriggers] = useState([]);
   const [IsTriggersLoading, setIsTriggersLoading] = useState<boolean>(false);
-  const [ProblemsData, setProblemsData] = useState<Problem[]>([]);
+  const [ProblemsData, setProblemsData] = useState([]);
   const [showTags, setShowTags] = useState<number>(3);
   const [hostsData, setHostsData] = useState<HostsData[]>([]);
   const [selectedHosts, setSelectedHosts] = useState<hostGroupItems[]>([]);
-  const [SelectedTriggers, setSelectedTriggers] = useState([]);
+  const [SelectedTriggers, setSelectedTriggers] = useState<TriggersGp[]>([]);
   const [SelectedHostGpTriggers, setSelectedHostGpTriggers] = useState<
     string | number
   >(-1);
@@ -165,43 +118,35 @@ export function Problems() {
   const [tagNameVisible, setTagNameVisible] = useState<number>(0);
   const [age, setAge] = useState(0);
 
-  useEffect(() => {
-    watch("hostids")?.length === 0 && unregister("hostids");
-    fetchPromsListData(watch());
-    dispatch(
-      fetchHostGroup({
-        with_triggers: true,
-        output: "extend",
-      })
-    ).then((response) => setHostGroupWithParam(response));
+  const HostGroupData: hostGroupItems[] = useSelector(selectApiData);
+  const HostGroupLoading = useSelector(selectApiLoading);
 
-    dispatch(fetchHostGroup({})).then((response) => {
-      console.log(response);
-
-      setHostGroupWithoutParam(response);
-    });
-  }, []);
-
-  const { control, watch, setValue, handleSubmit, reset, unregister } =
-    useForm<FormValues>({
-      defaultValues: {
-        selectTags: "extend",
-        selectHosts: "extend",
-        search: { name: "" },
-        tag_name_format: 0,
-        time_from: "14",
-        age_state: "0",
-        acknowledged: false,
-        suppressed: false,
-        symptom: false,
-        tag_priority: "",
-        evaltype: "0",
-        tags: [],
-        inventory: [],
-        recent: "1",
-        hostids: id ? [id] : [],
-      },
-    });
+  const {
+    control,
+    watch,
+    setValue,
+    handleSubmit,
+    reset,
+    unregister,
+    register,
+  } = useForm<FormValues>({
+    defaultValues: {
+      selectTags: "extend",
+      selectHosts: "extend",
+      search: { name: "" },
+      tag_name_format: 0,
+      time_from: "14",
+      age_state: "0",
+      acknowledged: false,
+      suppressed: false,
+      symptom: false,
+      tag_priority: "",
+      evaltype: "0",
+      inventory: [],
+      recent: "1",
+      hostids: id ? [parseInt(id as string, 10)] : [],
+    },
+  });
 
   const {
     fields: inventoryField,
@@ -220,17 +165,44 @@ export function Problems() {
     control,
     name: "tags",
   });
-  const currentHostids = watch("hostids") ? watch("hostids") : [];
-  const currentTriggersIds = watch("objectids") ? watch("objectids") : [];
-  const currentGroupids = watch("groupids") ? watch("groupids") : [];
 
-  const handleCheckboxChange = (host) => {
+  const currentHostids: number[] = watch("hostids") ?? [];
+  const currentTriggersIds: number[] = watch("objectids") ?? [];
+  const currentGroupids: number[] = watch("groupids") ?? [];
+
+  useEffect(() => {
+    id && value && setSelectedHosts([{ value: id, label: value }]);
+
+    dispatch(fetchHostGroup());
+
+    watch("hostids")?.length === 0 && unregister("hostids");
+    fetchPromsListData(watch());
+  }, [navigate, dispatch]);
+
+  useEffect(() => {
+    isTriggersModalOpen && fetchTriggerHostGps();
+  }, [isTriggersModalOpen]);
+
+  const fetchTriggerHostGps = async () => {
+    const response = await instance.post("/core/hostgroup/get", {
+      with_triggers: true,
+    });
+
+    setHostGroupWithoutParam(
+      response?.data.map((group: hostGroupItems) => ({
+        value: group.groupid,
+        label: group.name,
+      }))
+    );
+  };
+
+  const handleCheckboxChange = (host: HostsData) => {
     if (currentHostids.includes(host.hostid)) {
-      const newData = selectedHosts.filter((id) => id.value != host.hostid);
+      const newData = selectedHosts.filter((id) => id.value !== host.hostid);
       setSelectedHosts(newData);
       setValue(
         "hostids",
-        newData.map((i) => i.value)
+        newData.map((i) => i.value as number)
       );
       console.log(newData);
     } else {
@@ -242,7 +214,7 @@ export function Problems() {
     }
   };
 
-  const handleCheckboxTriggersChange = (trigger) => {
+  const handleCheckboxTriggersChange = (trigger: Triggers) => {
     console.log(currentTriggersIds);
 
     if (currentTriggersIds.includes(trigger.triggerid)) {
@@ -252,14 +224,17 @@ export function Problems() {
       setSelectedTriggers(newData);
       setValue(
         "objectids",
-        newData.map((i) => i.value)
+        newData.map((i) => i.value as number)
       );
     } else {
       setSelectedTriggers([
         ...SelectedTriggers,
         { label: trigger.description, value: trigger.triggerid },
       ]);
-      setValue("objectids", [...currentTriggersIds, trigger.triggerid]);
+      setValue("objectids", [
+        ...currentTriggersIds,
+        trigger.triggerid,
+      ] as unknown as []);
     }
   };
 
@@ -279,8 +254,13 @@ export function Problems() {
     try {
       const response = await instance.post("/core/hosts/get", param);
       setHostsData(response.data);
-      console.log(response);
+      console.log("res", response?.status);
     } catch (error) {
+      console.log("error", error);
+      if ((error as ApiError).response?.status === 401) {
+        localStorage.removeItem("token");
+        navigate("/");
+      }
       console.log(error);
     }
     setIsHostsDataLoading(false);
@@ -316,11 +296,6 @@ export function Problems() {
       setProblemsData(response.data || []);
       console.log(response.data);
     } catch (error) {
-      interface ApiError {
-        response?: {
-          status: number;
-        };
-      }
       console.error(error);
 
       if ((error as ApiError).response?.status === 401) {
@@ -333,14 +308,16 @@ export function Problems() {
   };
 
   const resetData = () => {
-    setResetMultiSelect(true);
+    unregister("hostids");
     reset();
-    fetchPromsListData(watch());
+    navigate("/Monitoring/Problems");
+    setResetMultiSelect(true);
     setShowTags(0);
     setSelectedHosts([]);
     setSelectedHostGpTriggers(-1);
     setSelectedTriggers([]);
     resetMultiSelect && setResetMultiSelect(false);
+    fetchPromsListData(watch());
   };
 
   const submit = () => {
@@ -351,15 +328,14 @@ export function Problems() {
     handleSubmit(fetchPromsListData)();
   };
 
-  const handleAgeData = (e) => {
+  const handleAgeData = (e: React.ChangeEvent<HTMLInputElement>) => {
     const today = new Date();
-    setAge(e.currentTarget.value);
-    const DaysAgo = new Date(
-      today.setDate(today.getDate() - e.currentTarget.value)
-    );
-    console.log(DaysAgo);
+    const ageValue = parseInt(e.currentTarget.value, 10); // Parse the input value as an integer
+    setAge(ageValue);
 
-    setValue("time_from", Date.parse(new Date(DaysAgo)));
+    const DaysAgo = new Date(today.setDate(today.getDate() - ageValue));
+
+    setValue("time_from", DaysAgo.toISOString()); // Convert the date to ISO string before setting the value
   };
 
   const getPriorityBackgroundColor = (priority: string): string => {
@@ -447,20 +423,14 @@ export function Problems() {
                         />
                       </div>
                       <MultiSelect
-                        reset={resetMultiSelect}
+                        reset={false}
                         addAll={false}
                         title="MENU.SELECT.HOSTS.GP"
-                        options={
-                          hostGroupWithoutParam
-                            ? hostGroupWithoutParam.payload
-                            : []
-                        }
-                        Loading={
-                          hostGroupWithoutParam &&
-                          hostGroupWithoutParam.meta &&
-                          hostGroupWithoutParam.meta.requestStatus !==
-                            "fulfilled"
-                        }
+                        options={HostGroupData.map((group) => ({
+                          value: group.groupid,
+                          label: group.name,
+                        }))}
+                        Loading={HostGroupLoading}
                         DataName="groupids"
                         setData={setValue}
                         currentData={currentGroupids}
@@ -474,7 +444,7 @@ export function Problems() {
                             options={selectedHosts}
                             Loading={false}
                             DataName="hostids"
-                            selectedValue={[{ value: id, label: value }]}
+                            selectedValue={selectedHosts}
                             setData={setValue}
                             currentData={currentHostids}
                           />
@@ -488,77 +458,39 @@ export function Problems() {
                           })}
                         </button>
                       </div>
-                      <Modal
+                      <ModalContainer
                         show={isHostsModalOpen}
-                        onHide={() => setisHostsModalOpen(false)}
+                        setHide={setisHostsModalOpen}
+                        title={intl.formatMessage({ id: "MENU.SELECT.HOSTS" })}
                       >
-                        <Modal.Header closeButton>
-                          <Modal.Title>
-                            {intl.formatMessage({ id: "MENU.SELECT.HOSTS" })}
-                          </Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body dir="rtl">
-                          <Form.Select
-                            defaultValue={-1}
-                            onChange={(e) =>
-                              fetchHostsData(e.currentTarget.value, false)
-                            }
-                          >
-                            <option value={-1}>
-                              {intl.formatMessage({ id: "MENU.SELECT.ALL" })}
-                            </option>
-                            {hostGroupWithoutParam?.payload?.map(
-                              (item: hostGroupItems, index: number) => {
-                                return (
-                                  <option value={item.value} key={index}>
-                                    {item.label}
-                                  </option>
-                                );
-                              }
-                            )}
-                          </Form.Select>
-                          <div className=" h-350px overflow-y-scroll mt-2">
-                            {!isHostsDataLoading ? (
-                              hostsData.map((host) => (
-                                // console.log(currentHostids, host),
-                                <div
-                                  key={host.hostid}
-                                  className="w-100 justify-content-end my-3 gap-2 d-flex"
-                                >
-                                  <label
-                                    className="form-check-label"
-                                    htmlFor={`host-${host.hostid}`}
-                                  >
-                                    {host.host}
-                                  </label>
-                                  <input
-                                    type="checkbox"
-                                    id={`host-${host.hostid}`}
-                                    checked={currentHostids.includes(
-                                      host.hostid
-                                    )}
-                                    onChange={() => handleCheckboxChange(host)}
-                                  />
-                                </div>
-                              ))
-                            ) : (
-                              <div className="d-flex pt-7 w-100 justify-content-center">
-                                <Loader />
+                        <div className=" h-350px overflow-y-scroll mt-2">
+                          {!isHostsDataLoading ? (
+                            hostsData.map((host) => (
+                              <div
+                                key={host.hostid}
+                                className="w-100 justify-content-end my-3 gap-2 d-flex"
+                              >
+                                <CheckBox
+                                  label={host.host}
+                                  checked={currentHostids.includes(host.hostid)}
+                                  onchange={() => handleCheckboxChange(host)}
+                                />
                               </div>
-                            )}
-                          </div>
-
-                          <div className="d-flex justify-content-center mt-2">
-                            <button
-                              type="button"
-                              onClick={() => setisHostsModalOpen(false)}
-                              className="btn py-2 btn-light-danger"
-                            >
-                              بستن
-                            </button>
-                          </div>
-                        </Modal.Body>
-                      </Modal>
+                            ))
+                          ) : (
+                            <div className="d-flex pt-7 w-100 justify-content-center">
+                              <Loader />
+                            </div>
+                          )}
+                        </div>
+                        <div className="d-flex justify-content-center mt-2">
+                          <BTN
+                            className="btn-light-danger"
+                            onClick={() => setisHostsModalOpen(false)}
+                            label={intl.formatMessage({ id: "CANCEL" })}
+                          />
+                        </div>
+                      </ModalContainer>
                       <div className="row column-gap-3 m-0">
                         <div className="col pe-0">
                           <MultiSelect
@@ -572,120 +504,101 @@ export function Problems() {
                             currentData={currentTriggersIds}
                           />
                         </div>
-                        <button
-                          className="btn h-25 py-3 btn-light-primary px-0 col-2"
-                          onClick={() => setIsTriggersModalOpen(true)}
-                        >
-                          {intl.formatMessage({
+                        <BTN
+                          label={intl.formatMessage({
                             id: "MENU.SELECT",
                           })}
-                        </button>
+                          className="btn h-25 py-3 btn-light-primary px-0 col-2"
+                          onClick={() => setIsTriggersModalOpen(true)}
+                        />
                       </div>
-                      <Modal
+                      <ModalContainer
                         show={isTriggersModalOpen}
-                        onHide={() => setIsTriggersModalOpen(false)}
+                        setHide={setIsTriggersModalOpen}
+                        title="عامل های شروع"
                       >
-                        <Modal.Header closeButton>
-                          <Modal.Title>عامل های شروع</Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body dir="rtl">
-                          <Form.Select
-                            onChange={(e) => {
-                              fetchHostsData(e.currentTarget.value, true);
-                              setSelectedHostGpTriggers(e.currentTarget.value);
-                            }}
-                            defaultValue={-1}
-                          >
-                            <option value={-1}>
-                              {intl.formatMessage({
-                                id: "MENU.SELECT.HOSTS.GP",
-                              })}
-                            </option>
-                            {hostGroupWithParam?.payload?.map(
-                              (item: hostGroupItems, index: number) => {
-                                return (
-                                  <option value={item.value} key={index}>
-                                    {item.label}
-                                  </option>
-                                );
-                              }
-                            )}
-                          </Form.Select>
-                          <Form.Select
-                            defaultValue={-1}
-                            className="mt-3"
-                            onChange={(e) =>
-                              fetchTriggers(e.currentTarget.value)
+                        <Form.Select
+                          onChange={(e) => {
+                            fetchHostsData(e.currentTarget.value, true);
+                            setSelectedHostGpTriggers(e.currentTarget.value);
+                          }}
+                          defaultValue={-1}
+                        >
+                          <option value={-1}>
+                            {intl.formatMessage({
+                              id: "MENU.SELECT.HOSTS.GP",
+                            })}
+                          </option>
+                          {hostGroupWithoutParam?.map(
+                            (item: hostGroupItems, index: number) => {
+                              return (
+                                <option value={item.value} key={index}>
+                                  {item.label}
+                                </option>
+                              );
                             }
-                          >
-                            <option value={-1}>
-                              {intl.formatMessage({ id: "MENU.SELECT.HOSTS" })}
-                            </option>
-                            {hostsData?.map(
-                              (host: HostsData, index: number) => {
-                                return (
-                                  <option value={host.hostid} key={index}>
-                                    {host.host}
-                                  </option>
-                                );
-                              }
-                            )}
-                          </Form.Select>
-                          <p className="mt-2">راهنمای رنگ ها :</p>
-                          <div className="d-flex flex-wrap gap-2">
-                            <span className="badge badge-light-primary">
-                              اطلاع
-                            </span>
-                            <span className="badge badge-light-success">
-                              هشدار
-                            </span>
-                            <span className="badge badge-light-warning">
-                              عادی
-                            </span>
-                            <span className="badge badge-light-danger">
-                              بالا
-                            </span>
-                          </div>
-
-                          <div className=" h-350px overflow-y-scroll mt-2">
-                            {!IsTriggersLoading ? (
-                              Triggers.map((item: Triggers) => (
-                                <div
-                                  key={item.triggerid}
-                                  className={`w-100 justify-content-end my-3 gap-2 badge d-flex badge-light-${getPriorityBackgroundColor(
-                                    item.priority
-                                  )}`}
-                                >
-                                  {item.description}
-                                  <input
-                                    type="checkbox"
-                                    id={`host-${item.triggerid}`}
-                                    checked={currentTriggersIds.includes(
-                                      item.triggerid
-                                    )}
-                                    onChange={() =>
-                                      handleCheckboxTriggersChange(item)
-                                    }
-                                  />
-                                </div>
-                              ))
-                            ) : (
-                              <div className="d-flex pt-7 w-100 justify-content-center">
-                                <Loader />
+                          )}
+                        </Form.Select>
+                        <Form.Select
+                          defaultValue={-1}
+                          className="mt-3"
+                          onChange={(e) => fetchTriggers(e.currentTarget.value)}
+                        >
+                          <option value={-1}>
+                            {intl.formatMessage({ id: "MENU.SELECT.HOSTS" })}
+                          </option>
+                          {hostsData?.map((host: HostsData, index: number) => {
+                            return (
+                              <option value={host.hostid} key={index}>
+                                {host.host}
+                              </option>
+                            );
+                          })}
+                        </Form.Select>
+                        <p className="mt-2">راهنمای رنگ ها :</p>
+                        <div className="d-flex flex-wrap gap-2">
+                          <Badge title="اطلاع" bg="primary" />
+                          <Badge title="هشدار" bg="success" />
+                          <Badge title="عادی" bg="warning" />
+                          <Badge title="بالا" bg="danger" />
+                        </div>
+                        <div className=" h-350px overflow-y-scroll mt-2">
+                          {!IsTriggersLoading ? (
+                            Triggers.map((item: Triggers) => (
+                              <div
+                                key={item.triggerid}
+                                className={`w-100 justify-content-end my-3 gap-2 badge d-flex badge-light-${getPriorityBackgroundColor(
+                                  item.priority
+                                )}`}
+                              >
+                                <CheckBox
+                                  dir="ltr"
+                                  label={item.description}
+                                  onchange={() =>
+                                    handleCheckboxTriggersChange(item)
+                                  }
+                                  checked={currentTriggersIds.includes(
+                                    Number(item.triggerid)
+                                  )}
+                                />
                               </div>
-                            )}
-                          </div>
-                          <div className="d-flex justify-content-center mt-2">
-                            <button
-                              type="button"
-                              onClick={() => setIsTriggersModalOpen(false)}
-                              className="btn py-2 btn-light-danger"
-                            >
-                              بستن
-                            </button>
-                          </div>
-                        </Modal.Body>
-                      </Modal>
+                            ))
+                          ) : (
+                            <div className="d-flex pt-7 w-100 justify-content-center">
+                              <Loader />
+                            </div>
+                          )}
+                        </div>
+                        <div className="d-flex justify-content-center mt-2">
+                          <button
+                            type="button"
+                            onClick={() => setIsTriggersModalOpen(false)}
+                            className="btn py-2 btn-light-danger"
+                          >
+                            بستن
+                          </button>
+                        </div>
+                      </ModalContainer>
                       <Controller
                         control={control}
                         name={`search.name`}
@@ -700,7 +613,6 @@ export function Problems() {
                           />
                         )}
                       />
-
                       <div>
                         <p className="mt-5">
                           {intl.formatMessage({
@@ -720,66 +632,47 @@ export function Problems() {
                         :
                       </p>
                       {inventoryField.map((item, index) => (
-                        <div className="d-flex mb-3 row" key={item.id}>
-                          <Controller
-                            control={control}
-                            name={`inventory[${index}].field`}
-                            render={({ field }) => (
-                              <select
-                                className="form-select form-select-sm col"
-                                id={`floatingSelect${item.id}`}
-                                aria-label="Floating label select example"
-                                {...field}
-                              >
-                                {InventoryList.map((item) => (
-                                  <option key={item.id} value={item.id}>
-                                    {item.title}
-                                  </option>
-                                ))}
-                              </select>
-                            )}
-                          />
-
+                        <div className="d-flex mb-3 mt-2 row" key={item.id}>
+                          <select
+                            className="form-select form-select-sm col"
+                            {...register(`inventory.${index}.field`)}
+                          >
+                            {InventoryList.map((item) => (
+                              <option key={item.id} value={item.id}>
+                                {item.title}
+                              </option>
+                            ))}
+                          </select>
                           <div className="col">
-                            <Controller
-                              control={control}
-                              name={`inventory[${index}].value`}
-                              render={({ field }) => (
-                                <input
-                                  className="form-control py-2"
-                                  id={`exampleInputEmailValue${item.id}`}
-                                  placeholder={intl.formatMessage({
-                                    id: "MONITORING.HOSTS.ADDTAG.VALUE",
-                                  })}
-                                  {...field}
-                                />
-                              )}
+                            <input
+                              className="form-control py-2"
+                              placeholder={intl.formatMessage({
+                                id: "MONITORING.HOSTS.ADDTAG.VALUE",
+                              })}
+                              {...register(`inventory.${index}.value`)}
                             />
                           </div>
-                          <button
-                            type="button"
-                            className="btn btn-light-danger me-2 py-2"
-                            onClick={() => inventoryRemove(index)}
-                            style={{ width: "10%" }}
-                          >
-                            {intl.formatMessage({
-                              id: "MONITORING.HOSTS.ADDTAG.REMOVEBUTTON",
+                          <BTN
+                            label={intl.formatMessage({
+                              id: "DELETE",
                             })}
-                          </button>
+                            className="btn btn-light-danger col-2"
+                            onClick={() => inventoryRemove(index)}
+                          />
                         </div>
                       ))}
                     </div>
-                    <button
-                      type="button"
-                      className="btn btn-light-success py-2 w-25"
-                      onClick={() => {
-                        inventoryAppend({ field: "type", value: "" });
-                      }}
-                    >
-                      {intl.formatMessage({
-                        id: "ADD",
-                      })}
-                    </button>
+                    <div className="row">
+                      <BTN
+                        label={intl.formatMessage({
+                          id: "ADD",
+                        })}
+                        className="btn btn-light-success py-2 col-3"
+                        onClick={() => {
+                          inventoryAppend({ field: "type", value: "" });
+                        }}
+                      />
+                    </div>
                     <p className="m-0">
                       {intl.formatMessage({
                         id: "MONITORING.PROBLEMS.TAGS",
@@ -787,110 +680,86 @@ export function Problems() {
                       :
                     </p>
                     {tagsField.map((item, index) => (
-                      <div className="d-grid">
-                        <div
-                          dir="rtl"
-                          className="row mb-3 gap-3 "
-                          key={item.id}
-                        >
+                      <div key={item.id} className="d-grid">
+                        <div dir="rtl" className="row mb-3 gap-3 ">
                           <div className="col p-0">
-                            <Controller
-                              control={control}
-                              name={`tags[${index}].tag`}
-                              render={({ field }) => (
-                                <input
-                                  type="email"
-                                  className="form-control py-2"
-                                  placeholder={intl.formatMessage({
-                                    id: "MONITORING.HOSTS.ADDTAG.TITLE",
-                                  })}
-                                  {...field}
-                                />
-                              )}
+                            <input
+                              type="email"
+                              className="form-control py-2"
+                              placeholder={intl.formatMessage({
+                                id: "MONITORING.HOSTS.ADDTAG.TITLE",
+                              })}
+                              {...register(`tags.${index}.tag`)}
                             />
                           </div>
-                          <Controller
-                            control={control}
-                            name={`tags[${index}].operator`}
-                            render={({ field }) => (
-                              <select
-                                className="form-select form-select-sm text-center col p-0"
-                                id={`floatingSelect${item.id}`}
-                                aria-label="Floating label select example"
-                                {...field}
-                              >
-                                <option value={"4"}>
-                                  {intl.formatMessage({
-                                    id: "MONITORING.HOSTS.ADDTAG.OPTION1",
-                                  })}
-                                </option>
-                                <option value={"1"}>
-                                  {intl.formatMessage({
-                                    id: "MONITORING.HOSTS.ADDTAG.OPTION2",
-                                  })}
-                                </option>
-                                <option selected value={"0"}>
-                                  {intl.formatMessage({
-                                    id: "MONITORING.HOSTS.ADDTAG.OPTION3",
-                                  })}
-                                </option>
-                                <option value={"5"}>
-                                  {intl.formatMessage({
-                                    id: "MONITORING.HOSTS.ADDTAG.OPTION4",
-                                  })}
-                                </option>
-                                <option value={"3"}>
-                                  {intl.formatMessage({
-                                    id: "MONITORING.HOSTS.ADDTAG.OPTION5",
-                                  })}
-                                </option>
-                                <option value={"2"}>
-                                  {intl.formatMessage({
-                                    id: "MONITORING.HOSTS.ADDTAG.OPTION6",
-                                  })}
-                                </option>
-                              </select>
-                            )}
-                          />
+                          <div className="col">
+                            <select
+                              className="form-select form-select-sm col"
+                              {...register(`tags.${index}.operator`)}
+                            >
+                              <option value="4">
+                                {intl.formatMessage({
+                                  id: "MONITORING.HOSTS.ADDTAG.OPTION1",
+                                })}
+                              </option>
+                              <option value="1">
+                                {intl.formatMessage({
+                                  id: "MONITORING.HOSTS.ADDTAG.OPTION2",
+                                })}
+                              </option>
+                              <option value="0">
+                                {intl.formatMessage({
+                                  id: "MONITORING.HOSTS.ADDTAG.OPTION3",
+                                })}
+                              </option>
+                              <option value="5">
+                                {intl.formatMessage({
+                                  id: "MONITORING.HOSTS.ADDTAG.OPTION4",
+                                })}
+                              </option>
+                              <option value="3">
+                                {intl.formatMessage({
+                                  id: "MONITORING.HOSTS.ADDTAG.OPTION5",
+                                })}
+                              </option>
+                              <option value="2">
+                                {intl.formatMessage({
+                                  id: "MONITORING.HOSTS.ADDTAG.OPTION6",
+                                })}
+                              </option>
+                            </select>
+                          </div>
                           <div className="col p-0">
-                            <Controller
-                              control={control}
-                              name={`tags[${index}].value`}
-                              render={({ field }) => (
-                                <input
-                                  type="email"
-                                  className="form-control py-2"
-                                  placeholder={intl.formatMessage({
-                                    id: "MONITORING.HOSTS.ADDTAG.VALUE",
-                                  })}
-                                  {...field}
-                                />
-                              )}
+                            <input
+                              type="email"
+                              className="form-control py-2"
+                              placeholder={intl.formatMessage({
+                                id: "MONITORING.HOSTS.ADDTAG.VALUE",
+                              })}
+                              {...register(`tags.${index}.value`)}
                             />
                           </div>
-                          <button
-                            type="button"
+                          <BTN
+                            label={intl.formatMessage({
+                              id: "DELETE",
+                            })}
                             className="btn btn-light-danger py-2 col p-0"
                             onClick={() => tagsRemove(index)}
-                          >
-                            {intl.formatMessage({
-                              id: "MONITORING.HOSTS.ADDTAG.REMOVEBUTTON",
-                            })}
-                          </button>
+                          />
                         </div>
                       </div>
                     ))}
-                    <button
-                      type="button"
-                      className="btn btn-light-success py-2 w-25"
-                      onClick={() => {
-                        tagsAppend({ tag: "", operator: 0, value: "" });
-                      }}
-                    >
-                      {intl.formatMessage({
-                        id: "ADD",
-                      })}
-                    </button>
+                    <div className="row">
+                      <BTN
+                        label={intl.formatMessage({
+                          id: "ADD",
+                        })}
+                        className="btn btn-light-success py-2 col-3"
+                        onClick={() => {
+                          tagsAppend({ tag: "", operator: 0, value: "" });
+                        }}
+                      />
+                    </div>
                     <Tags
                       showTags={showTags}
                       setShowTags={setShowTags}
@@ -899,7 +768,6 @@ export function Problems() {
                       setValue={setValue}
                       activeButtonTag={watch("evaltype")}
                     />
-
                     <Controller
                       control={control}
                       name={`tag_priority`}
@@ -950,28 +818,64 @@ export function Problems() {
                     </div>
                     <div className="d-flex align-baseline justify-content-between">
                       <div>
-                        <input type="checkbox" name="Checkboxes15" />
-                        <span className="form-check-label m-2 ">
-                          {intl.formatMessage({
-                            id: "MONITORING.PROBLEMS.SYMPTOMS",
-                          })}
-                        </span>
+                        <Controller
+                          control={control}
+                          name="symptom"
+                          render={({ field }) => (
+                            <>
+                              <input
+                                type="checkbox"
+                                checked={field.value}
+                                onChange={field.onChange}
+                              />
+                              <span className="form-check-label m-2 ">
+                                {intl.formatMessage({
+                                  id: "MONITORING.PROBLEMS.SYMPTOMS",
+                                })}
+                              </span>
+                            </>
+                          )}
+                        />
                       </div>
                       <div>
-                        <input type="checkbox" name="Checkboxes15" />
-                        <span className="form-check-label m-2 ">
-                          {intl.formatMessage({
-                            id: "MONITORING.PROBLEMS.SUPPRESSEDPROBLEMS",
-                          })}
-                        </span>
+                        <Controller
+                          control={control}
+                          name="suppressed"
+                          render={({ field }) => (
+                            <>
+                              <input
+                                type="checkbox"
+                                checked={field.value}
+                                onChange={field.onChange}
+                              />
+                              <span className="form-check-label m-2 ">
+                                {intl.formatMessage({
+                                  id: "MONITORING.PROBLEMS.SUPPRESSEDPROBLEMS",
+                                })}
+                              </span>
+                            </>
+                          )}
+                        />
                       </div>
                       <div>
-                        <input type="checkbox" name="Checkboxes15" />
-                        <span className="form-check-label m-2 ">
-                          {intl.formatMessage({
-                            id: "MONITORING.PROBLEMS.UNACKNOWLEDGED",
-                          })}
-                        </span>
+                        <Controller
+                          control={control}
+                          name="acknowledged"
+                          render={({ field }) => (
+                            <>
+                              <input
+                                type="checkbox"
+                                checked={field.value}
+                                onChange={field.onChange}
+                              />
+                              <span className="form-check-label m-2 ">
+                                {intl.formatMessage({
+                                  id: "MONITORING.PROBLEMS.ACKNOWLEDGED",
+                                })}
+                              </span>
+                            </>
+                          )}
+                        />
                       </div>
                     </div>
                   </div>

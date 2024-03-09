@@ -2,14 +2,12 @@ import React from "react";
 import { useIntl } from "react-intl";
 import inputsTitle from "../../../../../app/modules/profile/components/InventoryList";
 import { useState } from "react";
-import { Controller } from "react-hook-form";
 
 interface HostProps {
-  control: object;
-  watch: () => void;
+  register: CallableFunction;
 }
 
-const Inventory: React.FC<HostProps> = ({ control, watch }) => {
+const Inventory: React.FC<HostProps> = ({ register }) => {
   const intl = useIntl();
   const [activeInventory, setActiveInventory] = useState<string>("");
 
@@ -78,22 +76,16 @@ const Inventory: React.FC<HostProps> = ({ control, watch }) => {
                 >
                   {input.title}
                 </label>
-                <Controller
-                  name={`Inventory.${input.name}`}
-                  control={control}
-                  render={({ field }) => (
-                    <input
-                      {...field}
-                      type={input.isTextArea ? "textarea" : "text"}
-                      disabled={activeInventory === "DISABLED"}
-                      className="form-control py-2"
-                      id={`exampleInputEmail${input.id}`}
-                      aria-describedby="emailHelp"
-                      placeholder={input.title}
-                      style={{ direction: "rtl" }}
-                      dir="rtl"
-                    />
-                  )}
+                <input
+                  {...register(`Inventory.${input.name}`)}
+                  type={input.isTextArea ? "textarea" : "text"}
+                  disabled={activeInventory === "DISABLED"}
+                  className="form-control py-2"
+                  id={`exampleInputEmail${input.id}`}
+                  aria-describedby="emailHelp"
+                  placeholder={input.title}
+                  style={{ direction: "rtl" }}
+                  dir="rtl"
                 />
               </div>
             ))}

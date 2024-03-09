@@ -436,7 +436,7 @@ export const CreateMap: React.FC<CreateMapProps> = ({ control, setValue }) => {
                             </div>
                             <BTN
                               label={intl.formatMessage({
-                                id: "MONITORING.HOSTS.ADDTAG.REMOVEBUTTON",
+                                id: "DELETE",
                               })}
                               className="btn-light-danger col-1 p-0"
                               onClick={() => URLsRemove(index)}
@@ -536,7 +536,7 @@ export const CreateMap: React.FC<CreateMapProps> = ({ control, setValue }) => {
                                   <td>
                                     <BTN
                                       label={intl.formatMessage({
-                                        id: "MONITORING.HOSTS.ADDTAG.REMOVEBUTTON",
+                                        id: "DELETE",
                                       })}
                                       className="btn-light-danger"
                                       onClick={() => URLsRemove(index)}
@@ -618,7 +618,7 @@ export const CreateMap: React.FC<CreateMapProps> = ({ control, setValue }) => {
                                   <td>
                                     <BTN
                                       label={intl.formatMessage({
-                                        id: "MONITORING.HOSTS.ADDTAG.REMOVEBUTTON",
+                                        id: "DELETE",
                                       })}
                                       className="btn-light-danger"
                                       onClick={() => URLsRemove(index)}

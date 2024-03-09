@@ -7,14 +7,34 @@ import { useIntl } from "react-intl";
 import { ToolbarWrapper } from "../../../_metronic/layout/components/toolbar";
 import { instance } from "../../../services/axiosInstance";
 import { MultiSelect } from "../../../_metronic/layout/components/MultiSelect/MultiSelect";
-import { fetchHostGroup } from "../../../hostGroupSlice/hostGroupReducer";
-import { useDispatch } from "react-redux";
+// import { fetchHostGroup } from "../../../hostGroupSlice/hostGroupReducer";
+import { useDispatch, useSelector } from "react-redux";
 import Severities from "../../modules/profile/components/hosts/severities/Index";
-import { Loader } from "../../../_metronic/layout/components/loader/Loader";
 import { KTIcon } from "../../../_metronic/helpers";
 import BTN from "../../../_metronic/layout/components/BTN";
+import ToggleBtns from "../../../_metronic/layout/components/ToggleBtn/ToggleBtn";
+import {
+  fetchHostGroup,
+  hostGroupItems,
+} from "../../../hostGroupSlice/hostGroupReducer";
+import {
+  AppDispatch,
+  selectApiData,
+  selectApiLoading,
+} from "../../../store/store";
 
 interface FormValues {
+  selectProblems: string;
+  selectGraphs: string;
+  selectTags: string;
+  selectDashboards: string;
+  selectInterfaces: string;
+  search: {
+    name: string;
+    ip: string;
+    dns: string;
+    port: string;
+  };
   status: string;
   evaltype: string;
   maintenance_status: string;
@@ -24,15 +44,17 @@ interface FormValues {
   dns: string;
   port: string;
   severities: number[];
-  groupids: string[];
-  filter: [];
-  tags: string[];
+  groupids: number[];
+  filter: {
+    status: string | string[];
+  };
+  tags: { tag: string; operator: string; value: string }[];
   inventory: { field: string; value: string }[];
 }
 
 export function Overview() {
-  const { control, watch, setValue, handleSubmit, reset } = useForm<FormValues>(
-    {
+  const { control, watch, setValue, handleSubmit, reset, register } =
+    useForm<FormValues>({
       defaultValues: {
         selectProblems: "extend",
         selectGraphs: "extend",
@@ -43,24 +65,27 @@ export function Overview() {
         maintenance_status: "",
         show_suppressed: "",
         search: { name: "", ip: "", dns: "", port: "" },
-        filter: { status: "" },
+        filter: { status: ["0", "1"] },
         tags: [],
       },
-    }
-  );
+    });
 
   const intl = useIntl();
 
   const [isLoaded, setIsLoaded] = useState<boolean>(true);
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isError, setIsError] = useState<boolean>(false);
   const [data, setData] = useState([]);
-  const [defaultData, setDefaultData] = useState([]);
   const [activeButtonTag, setActiveButtonTag] = useState<string>("");
-  const [activeSituation, setActiveSituation] = useState<string>("");
   const [resetMultiSelect, setResetMultiSelect] = useState(false);
-  const [hostGroups, setHostGroups] = useState([]);
   const currentGroupids = watch("groupids") ? watch("groupids") : [];
-  const dispatch = useDispatch();
+
+  const HostGroupData: hostGroupItems[] = useSelector(selectApiData);
+  const HostGroupLoading = useSelector(selectApiLoading);
+
+  const dispatch = useDispatch<AppDispatch>();
+
   const {
     fields: tagsField,
     append: tagsAppend,
@@ -70,7 +95,8 @@ export function Overview() {
     name: "tags",
   });
 
-  const dataHost = async (data) => {
+  async function dataHost(data: object) {
+    console.log(data);
     setIsLoaded(true);
     setIsError(false);
     try {
@@ -83,7 +109,7 @@ export function Overview() {
       setIsError(true);
       throw error;
     }
-  };
+  }
 
   const resetData = () => {
     dataHost(watch());
@@ -94,11 +120,8 @@ export function Overview() {
 
   useEffect(() => {
     dataHost(watch());
-  }, []);
-
-  useEffect(() => {
-    dispatch(fetchHostGroup({})).then((response) => setHostGroups(response));
-  }, []);
+    dispatch(fetchHostGroup());
+  }, [dispatch]);
 
   return (
     <Content>
@@ -149,86 +172,31 @@ export function Overview() {
                         })}
                       </p>
                       <div className="w-100 ">
-                        <div
-                          className="btn-group py-2"
-                          role="group"
-                          aria-label="Basic example"
-                        >
-                          <Controller
-                            name="filter.status"
-                            control={control}
-                            defaultValue=""
-                            render={() => (
-                              <button
-                                type="button"
-                                className={
-                                  "btn btn-primary rounded-end-2 py-2" +
-                                  (activeSituation === "همه" ? " active" : "")
-                                }
-                                onClick={() => {
-                                  setValue("filter.status", [0, 1]);
-                                  setActiveSituation("همه");
-                                }}
-                                data-bs-toggle="button"
-                              >
-                                {intl.formatMessage({
-                                  id: "ANY",
-                                })}
-                              </button>
-                            )}
-                          />
-                          <Controller
-                            name="filter.status"
-                            control={control}
-                            defaultValue=""
-                            render={() => (
-                              <button
-                                type="button"
-                                className={
-                                  "btn btn-primary py-2" +
-                                  (activeSituation === "فعال شده ها"
-                                    ? " active"
-                                    : "")
-                                }
-                                onClick={() => {
-                                  setValue("filter.status", 0);
-                                  setActiveSituation("فعال شده ها");
-                                }}
-                                data-bs-toggle="button"
-                              >
-                                {intl.formatMessage({
-                                  id: "MONITORING.HOSTS.STATUS.ENABLED",
-                                })}
-                              </button>
-                            )}
-                          />
-
-                          <Controller
-                            name="filter.status"
-                            control={control}
-                            defaultValue=""
-                            render={() => (
-                              <button
-                                type="button"
-                                className={
-                                  "btn btn-primary rounded-start-2 py-2" +
-                                  (activeSituation === "غیر فعال ها"
-                                    ? " active"
-                                    : "")
-                                }
-                                onClick={() => {
-                                  setValue("filter.status", 1);
-                                  setActiveSituation("غیر فعال ها");
-                                }}
-                                data-bs-toggle="button"
-                              >
-                                {intl.formatMessage({
-                                  id: "MONITORING.HOSTS.STATUS.DISABLED",
-                                })}
-                              </button>
-                            )}
-                          />
-                        </div>
+                        <ToggleBtns
+                          options={[
+                            {
+                              value: ["0", "1"],
+                              label: intl.formatMessage({
+                                id: "ALL",
+                              }),
+                            },
+                            {
+                              value: "0",
+                              label: intl.formatMessage({
+                                id: "MONITORING.HOSTS.STATUS.ENABLED",
+                              }),
+                            },
+                            {
+                              value: "1",
+                              label: intl.formatMessage({
+                                id: "MONITORING.HOSTS.STATUS.DISABLED",
+                              }),
+                            },
+                          ]}
+                          data="filter.status"
+                          setData={setValue}
+                          initialData={watch("filter.status")}
+                        />
                       </div>
                     </div>
 
@@ -259,7 +227,7 @@ export function Overview() {
                                     : "")
                                 }
                                 onClick={() => {
-                                  setValue("evaltype", 0);
+                                  setValue("evaltype", "0");
                                   setActiveButtonTag("and/or");
                                 }}
                                 data-bs-toggle="button"
@@ -270,30 +238,22 @@ export function Overview() {
                               </button>
                             )}
                           />
-
-                          <Controller
-                            name="evaltype"
-                            control={control}
-                            defaultValue=""
-                            render={() => (
-                              <button
-                                type="button"
-                                className={
-                                  "btn btn-primary rounded-start-2 py-2" +
-                                  (activeButtonTag === "OR" ? " active" : "")
-                                }
-                                onClick={() => {
-                                  setValue("evaltype", 2);
-                                  setActiveButtonTag("OR");
-                                }}
-                                data-bs-toggle="button"
-                              >
-                                {intl.formatMessage({
-                                  id: "MONITORING.HOSTS.TAGS.OR",
-                                })}
-                              </button>
-                            )}
-                          />
+                          <button
+                            type="button"
+                            className={
+                              "btn btn-primary rounded-start-2 py-2" +
+                              (activeButtonTag === "OR" ? " active" : "")
+                            }
+                            onClick={() => {
+                              setValue("evaltype", "2");
+                              setActiveButtonTag("OR");
+                            }}
+                            data-bs-toggle="button"
+                          >
+                            {intl.formatMessage({
+                              id: "MONITORING.HOSTS.TAGS.OR",
+                            })}
+                          </button>
                         </div>
                       </div>
                     </div>
@@ -301,100 +261,67 @@ export function Overview() {
                       {tagsField.map((item, index) => (
                         <div className="d-flex mb-3 gap-3" key={item.id}>
                           <div style={{ width: "33%" }}>
-                            <Controller
-                              name={`tags[${index}].tag`}
-                              control={control}
-                              defaultValue=""
-                              render={({ field }) => (
-                                <input
-                                  {...field}
-                                  type="text"
-                                  className="form-control py-2"
-                                  id={`exampleInputEmail${item.id}`}
-                                  aria-describedby="emailHelp"
-                                  placeholder={intl.formatMessage({
-                                    id: "MONITORING.HOSTS.ADDTAG.VALUE",
-                                  })}
-                                  style={{ direction: "rtl" }}
-                                  dir="rtl"
-                                />
-                              )}
+                            <input
+                              {...register(`tags.${index}.tag`)}
+                              type="text"
+                              className="form-control py-2"
+                              placeholder={intl.formatMessage({
+                                id: "MONITORING.HOSTS.ADDTAG.VALUE",
+                              })}
                             />
                           </div>
-
-                          <Controller
-                            name={`tags[${index}].operator`}
-                            control={control}
-                            render={({ field }) => (
-                              <select
-                                className="form-select form-select-sm"
-                                id={`floatingSelect${item.id}`}
-                                aria-label="Floating label select example"
-                                style={{ width: "33%" }}
-                                onChange={(e) => {
-                                  const newValue = parseInt(e.target.value, 10);
-                                  field.onChange(newValue);
-                                }}
-                              >
-                                <option value={4}>
-                                  {intl.formatMessage({
-                                    id: "MONITORING.HOSTS.ADDTAG.OPTION1",
-                                  })}
-                                </option>
-                                <option value={1}>
-                                  {intl.formatMessage({
-                                    id: "MONITORING.HOSTS.ADDTAG.OPTION2",
-                                  })}
-                                </option>
-                                <option selected value={0}>
-                                  {intl.formatMessage({
-                                    id: "MONITORING.HOSTS.ADDTAG.OPTION3",
-                                  })}
-                                </option>
-                                <option value={5}>
-                                  {" "}
-                                  {intl.formatMessage({
-                                    id: "MONITORING.HOSTS.ADDTAG.OPTION4",
-                                  })}
-                                </option>
-                                <option value={3}>
-                                  {intl.formatMessage({
-                                    id: "MONITORING.HOSTS.ADDTAG.OPTION5",
-                                  })}
-                                </option>
-                                <option value={2}>
-                                  {intl.formatMessage({
-                                    id: "MONITORING.HOSTS.ADDTAG.OPTION6",
-                                  })}
-                                </option>
-                              </select>
-                            )}
-                          />
+                          <select
+                            className="form-select form-select-sm"
+                            {...register(`tags.${index}.operator`)}
+                          >
+                            <option value={4}>
+                              {intl.formatMessage({
+                                id: "MONITORING.HOSTS.ADDTAG.OPTION1",
+                              })}
+                            </option>
+                            <option value={1}>
+                              {intl.formatMessage({
+                                id: "MONITORING.HOSTS.ADDTAG.OPTION2",
+                              })}
+                            </option>
+                            <option selected value={0}>
+                              {intl.formatMessage({
+                                id: "MONITORING.HOSTS.ADDTAG.OPTION3",
+                              })}
+                            </option>
+                            <option value={5}>
+                              {" "}
+                              {intl.formatMessage({
+                                id: "MONITORING.HOSTS.ADDTAG.OPTION4",
+                              })}
+                            </option>
+                            <option value={3}>
+                              {intl.formatMessage({
+                                id: "MONITORING.HOSTS.ADDTAG.OPTION5",
+                              })}
+                            </option>
+                            <option value={2}>
+                              {intl.formatMessage({
+                                id: "MONITORING.HOSTS.ADDTAG.OPTION6",
+                              })}
+                            </option>
+                          </select>
 
                           <div style={{ width: "33%" }}>
-                            <Controller
-                              name={`tags[${index}].value`}
-                              control={control}
-                              defaultValue=""
-                              render={({ field }) => (
-                                <input
-                                  {...field}
-                                  type="text"
-                                  className="form-control py-2"
-                                  id={`exampleInputEmailValue${item.id}`}
-                                  aria-describedby="emailHelp"
-                                  placeholder={intl.formatMessage({
-                                    id: "MONITORING.HOSTS.ADDTAG.VALUE",
-                                  })}
-                                  style={{ direction: "rtl" }}
-                                  dir="rtl"
-                                />
-                              )}
+                            <input
+                              {...register(`tags.${index}.value`)}
+                              type="text"
+                              className="form-control py-2"
+                              id={`exampleInputEmailValue${item.id}`}
+                              aria-describedby="emailHelp"
+                              placeholder={intl.formatMessage({
+                                id: "MONITORING.HOSTS.ADDTAG.VALUE",
+                              })}
                             />
                           </div>
                           <BTN
                             label={intl.formatMessage({
-                              id: "MONITORING.HOSTS.ADDTAG.REMOVEBUTTON",
+                              id: "DELETE",
                             })}
                             className="btn-light-danger"
                             onClick={() => tagsRemove(index)}
@@ -406,7 +333,7 @@ export function Overview() {
                       type="button"
                       className="btn btn-success py-2"
                       onClick={() => {
-                        tagsAppend({ tag: "", operator: 0, value: "" });
+                        tagsAppend({ tag: "", operator: "0", value: "" });
                       }}
                     >
                       {intl.formatMessage({
@@ -425,7 +352,7 @@ export function Overview() {
                                 onChange={() =>
                                   setValue(
                                     "show_suppressed",
-                                    field.value == 1 ? 0 : 1
+                                    field.value == "1" ? "0" : "1"
                                   )
                                 }
                                 type="checkbox"
@@ -450,7 +377,7 @@ export function Overview() {
                                 onChange={() =>
                                   setValue(
                                     "maintenance_status",
-                                    field.value == 1 ? 0 : 1
+                                    field.value == "1" ? "0" : "1"
                                   )
                                 }
                                 type="checkbox"
@@ -482,8 +409,6 @@ export function Overview() {
                                 placeholder={intl.formatMessage({
                                   id: "NAME",
                                 })}
-                                style={{ direction: "rtl" }}
-                                dir="rtl"
                                 {...field}
                               />
                             </>
@@ -502,7 +427,7 @@ export function Overview() {
                               className="form-control py-2"
                               aria-describedby="emailHelp"
                               placeholder={intl.formatMessage({
-                                id: "MONITORING.HOSTS.IP",
+                                id: "IP",
                               })}
                               style={{ direction: "rtl" }}
                               dir="rtl"
@@ -553,19 +478,19 @@ export function Overview() {
                           )}
                         />
                       </div>
-                      {hostGroups.payload && (
-                        <MultiSelect
-                          addAll={false}
-                          title="MENU.SELECT.HOSTS.GP"
-                          options={hostGroups.payload}
-                          DataName="groupids"
-                          setData={setValue}
-                          currentData={currentGroupids}
-                          Loading={
-                            hostGroups?.meta?.requestStatus !== "fulfilled"
-                          }
-                        />
-                      )}
+                      <MultiSelect
+                        reset={false}
+                        addAll={false}
+                        title="MENU.SELECT.HOSTS.GP"
+                        options={HostGroupData.map((group) => ({
+                          value: group.groupid,
+                          label: group.name,
+                        }))}
+                        DataName="groupids"
+                        setData={setValue}
+                        currentData={currentGroupids}
+                        Loading={HostGroupLoading}
+                      />
                     </div>
                     <div className="row">
                       <p className="mt-5">
@@ -591,16 +516,12 @@ export function Overview() {
                   className="btn-light-danger"
                   onClick={resetData}
                 />
-                <BTN
-                  label="ذخیره"
-                  className="btn-light-primary"
-                  // onClick={resetData}
-                />
+                <BTN label="ذخیره" className="btn-light-primary" />
               </div>
             </div>
           </div>
         </div>
-        <TableHosts data={data} isLoaded={isLoaded} />
+        <TableHosts isError={false} data={data} isLoaded={isLoaded} />
       </form>
     </Content>
   );

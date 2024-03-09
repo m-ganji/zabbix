@@ -12,6 +12,23 @@ const BusiestTriggersTabel = () => {
             {intl.formatMessage({ id: "REPORTS.BUSIEST_TRIGGERS" })}
           </span>
         </h3>
+        <div
+          className="card-toolbar"
+          data-bs-toggle="tooltip"
+          data-bs-placement="top"
+          data-bs-trigger="hover"
+          title="Click to add a user"
+        >
+          <span className="text-muted mt-1 fw-semibold fs-7">
+            {intl.formatMessage(
+              { id: "REPORT.FIND" },
+              {
+                COUNT: 1,
+                LABEL: intl.formatMessage({ id: "REPORT.ACTION_LOG" }),
+              }
+            )}
+          </span>
+        </div>
       </div>
       {/* end::Header */}
       {/* begin::Body */}

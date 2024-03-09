@@ -1,10 +1,18 @@
-import { Controller } from "react-hook-form";
+import { Control, Controller } from "react-hook-form";
 import { useIntl } from "react-intl";
 import { KTIcon } from "../../../../../helpers";
 import { useState } from "react";
 import { getCSSVariableValue } from "../../../../../assets/ts/_utils";
 
-const Hostmacros: React.FC = ({
+interface Macro {
+  macrosField: object[];
+  control: Control;
+  macrosRemove: CallableFunction;
+  macrosAppend: CallableFunction;
+  setValue: CallableFunction;
+}
+
+const Hostmacros: React.FC<Macro> = ({
   macrosField,
   control,
   macrosRemove,
@@ -21,13 +29,16 @@ const Hostmacros: React.FC = ({
     new Array(macrosField.length).fill(null)
   );
 
-  const toggleDropdown = (index) => {
+  const toggleDropdown = (index: number) => {
     const newDropdownStates = [...dropdownStates];
     newDropdownStates[index] = !newDropdownStates[index];
     setDropdownStates(newDropdownStates);
   };
 
-  const selectOption = (option, index) => {
+  const selectOption = (
+    option: { props: { iconName: string } },
+    index: number
+  ) => {
     let typeValue;
     if (option.props.iconName === "text") {
       typeValue = 0;
@@ -42,11 +53,12 @@ const Hostmacros: React.FC = ({
     setSelectedOptions(newSelectedOptions);
     toggleDropdown(index);
   };
-
+  console.log(typeof macrosField);
+  
   return (
     <div>
       {macrosField.map((item, index) => (
-        <div className="d-flex mb-3 gap-3 m-5" key={item.id}>
+        <div className="d-flex mb-3 gap-3 m-5" key={index}>
           <div style={{ width: "33%" }}>
             <Controller
               name={`macros[${index}].macro`}
@@ -57,7 +69,6 @@ const Hostmacros: React.FC = ({
                   {...field}
                   type="text"
                   className="form-control py-2"
-                  id={`exampleInputEmail${item.id}`}
                   aria-describedby="emailHelp"
                   placeholder={intl.formatMessage({
                     id: "MONITORING.HOSTS.CREATEHOST.TAGS.MACRO",
@@ -76,14 +87,10 @@ const Hostmacros: React.FC = ({
                 <input
                   {...field}
                   type="text"
-                  className="form-control py-2 w-75"
-                  id={`exampleInputEmailValue${item.id}`}
-                  aria-describedby="emailHelp"
+                  className="form-control py-2"
                   placeholder={intl.formatMessage({
                     id: "MONITORING.HOSTS.ADDTAG.VALUE",
                   })}
-                  style={{ direction: "rtl" }}
-                  dir="rtl"
                 />
                 <div
                   className={`custom-dropdown border border-${secondaryColor} border-2 `}
@@ -170,13 +177,9 @@ const Hostmacros: React.FC = ({
                   {...field}
                   type="text"
                   className="form-control py-2"
-                  id={`exampleInputEmailValue${item.id}`}
-                  aria-describedby="emailHelp"
                   placeholder={intl.formatMessage({
                     id: "MONITORING.HOSTS.CREATEHOST.TAGS.DESC",
                   })}
-                  style={{ direction: "rtl" }}
-                  dir="rtl"
                 />
               )}
             />
@@ -187,7 +190,7 @@ const Hostmacros: React.FC = ({
             onClick={() => macrosRemove(index)}
           >
             {intl.formatMessage({
-              id: "MONITORING.HOSTS.ADDTAG.REMOVEBUTTON",
+              id: "DELETE",
             })}
           </button>
         </div>

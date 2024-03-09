@@ -694,7 +694,7 @@ export function Projects() {
                             style={{ width: "10%" }}
                           >
                             {intl.formatMessage({
-                              id: "MONITORING.HOSTS.ADDTAG.REMOVEBUTTON",
+                              id: "DELETE",
                             })}
                           </button>
                         </div>
@@ -805,7 +805,7 @@ export function Projects() {
                             onClick={() => tagsRemove(index)}
                           >
                             {intl.formatMessage({
-                              id: "MONITORING.HOSTS.ADDTAG.REMOVEBUTTON",
+                              id: "DELETE",
                             })}
                           </button>
                         </div>

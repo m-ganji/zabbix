@@ -2,44 +2,67 @@ import { useEffect, useState } from "react";
 import { MultiSelect } from "../../../../layout/components/MultiSelect/MultiSelect";
 import { useIntl } from "react-intl";
 import { instance } from "../../../../../services/axiosInstance";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchHostGroup } from "../../../../../hostGroupSlice/hostGroupReducer";
-import { Controller } from "react-hook-form";
+import { useSelector } from "react-redux";
+import { Control, useFieldArray } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import ToastFire from "../../../../layout/components/Toast";
+import { selectApiData, selectApiLoading } from "../../../../../store/store";
+
 interface HostProps {
-  control: object;
-  watch: () => void;
+  control: Control;
+  watch: CallableFunction;
+  register: CallableFunction;
+  setValue: CallableFunction;
 }
 
-const Host: React.FC<HostProps> = ({ control, watch, setValue }) => {
+interface ApiError {
+  response?: {
+    status: number;
+  };
+}
+
+const Host: React.FC<HostProps> = ({ control, watch, setValue, register }) => {
   const intl = useIntl();
-  const [templates, setTemplates] = useState<object>();
-  const [resetMultiSelect, setResetMultiSelect] = useState(false);
+  const [templates, setTemplates] = useState<[]>([]);
   const currentGroupids = watch("groupids") ? watch("groupids") : [];
   const currentTemplate = watch("template") ? watch("template") : [];
 
-  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const hostGroupData = useSelector((state) => (state as object).hostGroup);
+  const HostGroupData = useSelector(selectApiData);
+  const loading = useSelector(selectApiLoading);
+  // const error = useSelector(selectApiError);
 
-  useEffect(() => {
-    dispatch(fetchHostGroup({}));
-  }, [dispatch]);
+  // useEffect(() => {
+  //   // dispatch(fetchHostGroup({}));
+  //   dispatch(fetchHostGroup({}));
+  // }, [dispatch]);
 
   useEffect(() => {
     const handleGetTemplates = async () => {
       try {
         const response = await instance.post("/core/templates/get", {});
-        const mapped = response.data.map((e) => ({ label: e.name }));
+        const mapped = response.data.map((e: { name: string }) => ({
+          label: e.name,
+        }));
         setTemplates(mapped);
       } catch (error) {
-        console.error(error);
+        if ((error as ApiError).response?.status === 401) {
+          localStorage.removeItem("token");
+          navigate("/");
+          ToastFire("error", `توکن منقضی شده است`, "لطفا مجدد وارد شوید");
+        }
         throw error;
       }
     };
 
     handleGetTemplates();
-  }, []);
+  }, [navigate]);
 
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "interface",
+  });
 
   return (
     <div>
@@ -52,22 +75,14 @@ const Host: React.FC<HostProps> = ({ control, watch, setValue }) => {
             >
               <i className="bi bi-hdd-network" />
             </span>
-
-            <Controller
-              name={`host`}
-              control={control}
-              defaultValue=""
-              render={({ field }) => (
-                <input
-                  {...field}
-                  type="text"
-                  className="form-control rounded-start-2 rounded-end-0"
-                  placeholder="نام هاست"
-                  aria-label="نام هاست"
-                  aria-describedby="tab-hosts"
-                  required
-                />
-              )}
+            <input
+              {...register("host")}
+              type="text"
+              className="form-control rounded-start-2 rounded-end-0"
+              placeholder="نام هاست"
+              aria-label="نام هاست"
+              aria-describedby="tab-hosts"
+              required
             />
           </div>
           <div className="input-group mb-3 col">
@@ -97,15 +112,11 @@ const Host: React.FC<HostProps> = ({ control, watch, setValue }) => {
           <div className="col w-50">
             <MultiSelect
               title="MENU.SELECT.HOSTS.GP"
-              reset={resetMultiSelect}
+              reset={false}
               addAll={false}
-              options={hostGroupData ? hostGroupData.data : []}
-              Loading={
-                hostGroupData &&
-                hostGroupData.meta &&
-                hostGroupData.meta.requestStatus !== "fulfilled"
-              }
-              DataName="groups.{groupid}"
+              options={HostGroupData}
+              Loading={loading}
+              DataName="groups"
               setData={setValue}
               currentData={currentGroupids}
             />
@@ -113,7 +124,7 @@ const Host: React.FC<HostProps> = ({ control, watch, setValue }) => {
           <div className="col">
             <MultiSelect
               title="MENU.SELECT.TEMPLATES"
-              reset={resetMultiSelect}
+              reset={false}
               addAll={false}
               options={templates}
               // Loading={
@@ -124,25 +135,126 @@ const Host: React.FC<HostProps> = ({ control, watch, setValue }) => {
               DataName="template"
               setData={setValue}
               currentData={currentTemplate}
+              Loading={false}
             />
           </div>
         </div>
+        {fields.map((value, index) => (
+          <div className="d-flex mt-3" key={index}>
+            <input
+              {...register(`interface[${index}].ip`)}
+              type="text"
+              className="form-control rounded-start-2 rounded-end-0"
+              placeholder="آی‌پی"
+              aria-label="آی‌پی"
+              aria-describedby="tab-hosts"
+              required
+            />
+            <input
+              {...register(`interface[${index}].dns`)}
+              type="text"
+              className="form-control rounded-start-2 rounded-end-0"
+              placeholder="دی‌ان‌اس"
+              aria-label="دی‌ان‌اس"
+              aria-describedby="tab-hosts"
+              required
+            />
+            <input
+              {...register(`interface[${index}].port`)}
+              type="text"
+              className="form-control rounded-start-2 rounded-end-0"
+              placeholder="پورت"
+              aria-label="پورت"
+              aria-describedby="tab-hosts"
+              required
+            />
+            <input
+              {...register(`interface.${index}.ip`)}
+              type="text"
+              className="form-control rounded-start-2 rounded-end-0"
+              placeholder="آی‌پی"
+              aria-label="آی‌پی"
+              aria-describedby="tab-hosts"
+              required
+            />
+            <input
+              {...register(`interface.${index}.dns`)}
+              type="text"
+              className="form-control rounded-start-2 rounded-end-0"
+              placeholder="دی‌ان‌اس"
+              aria-label="دی‌ان‌اس"
+              aria-describedby="tab-hosts"
+              required
+            />
+            <input
+              {...register(`interface.${index}.port`)}
+              type="text"
+              className="form-control rounded-start-2 rounded-end-0"
+              placeholder="پورت"
+              aria-label="پورت"
+              aria-describedby="tab-hosts"
+              required
+            />
+            <button
+              type="button"
+              className="btn btn-danger me-2 py-2"
+              onClick={() => remove(index)}
+            >
+              {intl.formatMessage({
+                id: "DELETE",
+              })}
+            </button>
+          </div>
+        ))}
+        {/* <Dropdown onSelect={handleSelect}>
+          <Dropdown.Toggle variant="success" id="dropdown-basic">
+            {intl.formatMessage({
+              id: "ADD",
+            })}{" "}
+          </Dropdown.Toggle>
+
+          <Dropdown.Menu>
+            <Dropdown.Item eventKey="Agent" href="#/action-1">
+              Agent
+            </Dropdown.Item>
+            <Dropdown.Item eventKey="SNMP" href="#/action-2">
+              SNMP
+            </Dropdown.Item>
+            <Dropdown.Item eventKey="JMX" href="#/action-3">
+              JMX
+            </Dropdown.Item>
+            <Dropdown.Item eventKey="IPMI" href="#/action-4">
+              IPMI
+            </Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown> */}
+
+        <button
+          type="button"
+          className="btn btn-success py-2 d-flex justify-content-end mt-3 mb-3"
+          onClick={() => {
+            append({
+              label: "",
+              ip: "127.0.0.1",
+              dns: "",
+              useip: 0,
+              port: "10050",
+            });
+          }}
+        >
+          {intl.formatMessage({
+            id: "ADD",
+          })}
+        </button>
         <div className="row mt-3 position-relative" style={{ zIndex: 0 }}>
           <div className="col">
             <div dir="rtl" className="form-floating">
-              <Controller
-                name={`description`}
-                control={control}
-                defaultValue=""
-                render={({ field }) => (
-                  <textarea
-                    {...field}
-                    className="form-control"
-                    title="توضیحات را اینجا وارد کنید"
-                    id="floatingTextarea2"
-                    style={{ height: 100 }}
-                  />
-                )}
+              <textarea
+                {...register(`description`)}
+                className="form-control"
+                title="توضیحات را اینجا وارد کنید"
+                id="floatingTextarea2"
+                style={{ height: 100 }}
               />
             </div>
             <div className="d-flex justify-content-start mt-5">

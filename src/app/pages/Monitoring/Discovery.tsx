@@ -1,10 +1,10 @@
-import { useState } from "react";
+// import { useState } from "react";
 import { Content } from "../../../_metronic/layout/components/content";
 import { useForm } from "react-hook-form";
 import { useIntl } from "react-intl";
 import { PageTitle } from "../../../_metronic/layout/core";
 import { ToolbarWrapper } from "../../../_metronic/layout/components/toolbar";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { MultiSelect } from "../../../_metronic/layout/components/MultiSelect/MultiSelect";
 import { DiscoveryTable } from "../../../_metronic/partials/widgets";
 
@@ -16,18 +16,18 @@ interface FormValues {
 
 export function Discovery() {
   const intl = useIntl();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-  const [resetMultiSelect, setResetMultiSelect] = useState(false);
+  // const [resetMultiSelect, setResetMultiSelect] = useState(false);
 
-  const { control, watch, setValue, handleSubmit, reset, unregister } =
+  const {  watch, setValue, handleSubmit, reset } =
     useForm<FormValues>({
       defaultValues: {
         search: { name: "" },
       },
     });
 
-  const currentName = watch("search.name") ? watch("search.name") : [];
+  // const currentName = watch("search.name") ? watch("search.name") : [];
 
   const fetchPromsListData = async (e: object) => {
     console.log(e);
@@ -57,7 +57,7 @@ export function Discovery() {
   };
 
   const resetData = () => {
-    setResetMultiSelect(true);
+    // setResetMultiSelect(true);
     reset();
     fetchPromsListData(watch());
   };

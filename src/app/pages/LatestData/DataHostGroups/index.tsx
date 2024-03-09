@@ -1,12 +1,10 @@
-import { useState } from "react";
+// import { useState } from "react";
 import { Content } from "../../../../_metronic/layout/components/content";
 import { useForm } from "react-hook-form";
 import { useIntl } from "react-intl";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import BTN from "../../../../_metronic/layout/components/BTN";
-import { CreateTemplateGroup } from "../../../../_metronic/layout/components/CreateTemplateGroup";
 import Input from "../../../../_metronic/layout/components/Input";
-import { TemplatesGpTable } from "../../../../_metronic/partials/widgets/tables/TemplatesGpTable";
 import { CreateHostsGp } from "../../../../_metronic/layout/components/CreateHostsGp";
 import { HostsGpTable } from "../../../../_metronic/partials/widgets/tables/HostsGpTable";
 
@@ -23,11 +21,11 @@ interface FormValues {
 
 export function DataHostGroups() {
   const intl = useIntl();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-  const [resetMultiSelect, setResetMultiSelect] = useState(false);
+  // const [resetMultiSelect, setResetMultiSelect] = useState(false);
 
-  const { control, watch, setValue, handleSubmit, reset, unregister } =
+  const { watch,handleSubmit, reset } =
     useForm<FormValues>({
       defaultValues: {
         search: { name: "" },
@@ -41,7 +39,7 @@ export function DataHostGroups() {
       },
     });
 
-  const currentName = watch("search.name") ? watch("search.name") : [];
+  // const currentName = watch("search.name") ? watch("search.name") : [];
 
   const fetchPromsListData = async (e: object) => {
     console.log(e);
@@ -70,7 +68,7 @@ export function DataHostGroups() {
     // setIsLoaded(true);
   };
   const resetData = () => {
-    setResetMultiSelect(true);
+    // setResetMultiSelect(true);
     reset();
     fetchPromsListData(watch());
   };

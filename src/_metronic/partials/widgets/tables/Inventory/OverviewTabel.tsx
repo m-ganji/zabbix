@@ -1,6 +1,6 @@
 import { useIntl } from "react-intl";
 
-const AvailabilityReportTabel = () => {
+const OverviewTabel = () => {
   const intl = useIntl();
 
   return (
@@ -12,17 +12,6 @@ const AvailabilityReportTabel = () => {
             {intl.formatMessage({ id: "REPORT.AVAILABILITY_REPORT" })}
           </span>
         </h3>
-        <div
-          className="card-toolbar"
-          data-bs-toggle="tooltip"
-          data-bs-placement="top"
-          data-bs-trigger="hover"
-          title="Click to add a user"
-        >
-          <span className="text-muted mt-1 fw-semibold fs-7">
-            تعداد 1 مورد گزارش یافت شد
-          </span>
-        </div>
       </div>
       {/* end::Header */}
       {/* begin::Body */}
@@ -35,17 +24,10 @@ const AvailabilityReportTabel = () => {
             <thead>
               <tr className="fw-bold text-muted">
                 <th className="min-w-100px">
-                  {intl.formatMessage({ id: "HOST" })}
+                  {intl.formatMessage({ id: "VALUE" })}
                 </th>
-                <th className="min-w-100px">
-                  {intl.formatMessage({ id: "NAME" })}
-                </th>
-                <th className="min-w-100px">
-                  {intl.formatMessage({ id: "PROBLEM" })}
-                </th>
-                <th className="min-w-100px">OK</th>
-                <th className="min-w-100px">
-                  {intl.formatMessage({ id: "GRAPH" })}
+                <th className="min-w-200px">
+                  {intl.formatMessage({ id: "HOST_COUNT" })}
                 </th>
               </tr>
             </thead>
@@ -54,19 +36,14 @@ const AvailabilityReportTabel = () => {
             <tbody>
               <tr>
                 <td>
-                  <span className="badge badge-light-success">LINUX</span>
-                </td>
-                <td>
-                  <span className="badge badge-light-danger">
-                    LINUX CHANGED
+                  <span className="badge badge-light-success">
+                    {intl.formatMessage({ id: "VALUE" })}
                   </span>
                 </td>
-                <td className="text-end"></td>
-                <td className="text-end">
-                  <span className="badge badge-light-success">100%</span>
-                </td>
-                <td className="text-end">
-                  <span className="badge badge-light-primary">SHOW</span>
+                <td>
+                  <span className="badge badge-light-info">
+                    {intl.formatMessage({ id: "HOST_COUNT" })}
+                  </span>
                 </td>
               </tr>
             </tbody>
@@ -81,4 +58,4 @@ const AvailabilityReportTabel = () => {
   );
 };
 
-export { AvailabilityReportTabel };
+export { OverviewTabel };
