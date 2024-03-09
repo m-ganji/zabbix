@@ -159,8 +159,8 @@ export function Problems() {
 
   const [hostGroupWithParam, setHostGroupWithParam] = useState([]);
   const [hostGroupWithoutParam, setHostGroupWithoutParam] = useState<
-    HostGroupData[] | null
-  >(null);
+    HostGroupData[]
+  >([]);
   const [Triggers, setTriggers] = useState([]);
   const [IsTriggersLoading, setIsTriggersLoading] = useState<boolean>(false);
   const [ProblemsData, setProblemsData] = useState<Problem[]>([]);
@@ -207,26 +207,32 @@ export function Problems() {
     fetchPromsListData(watch());
   }, [navigate]);
 
-  const { control, watch, setValue, handleSubmit, reset, unregister } =
-    useForm<FormValues>({
-      defaultValues: {
-        selectTags: "extend",
-        selectHosts: "extend",
-        search: { name: "" },
-        tag_name_format: 0,
-        time_from: "14",
-        age_state: "0",
-        acknowledged: false,
-        suppressed: false,
-        symptom: false,
-        tag_priority: "",
-        evaltype: "0",
-        tags: [],
-        inventory: [],
-        recent: "1",
-        hostids: id ? [parseInt(id as string, 10)] : [],
-      },
-    });
+  const {
+    control,
+    watch,
+    setValue,
+    handleSubmit,
+    reset,
+    unregister,
+    register,
+  } = useForm<FormValues>({
+    defaultValues: {
+      selectTags: "extend",
+      selectHosts: "extend",
+      search: { name: "" },
+      tag_name_format: 0,
+      time_from: "14",
+      age_state: "0",
+      acknowledged: false,
+      suppressed: false,
+      symptom: false,
+      tag_priority: "",
+      evaltype: "0",
+      inventory: [],
+      recent: "1",
+      hostids: id ? [parseInt(id as string, 10)] : [],
+    },
+  });
 
   const {
     fields: inventoryField,
@@ -472,7 +478,6 @@ export function Problems() {
                           initialData={watch("recent")}
                         />
                       </div>
-                      {console.log(hostGroupWithoutParam)}
                       <MultiSelect
                         reset={resetMultiSelect}
                         addAll={false}
@@ -719,38 +724,23 @@ export function Problems() {
                       </p>
                       {inventoryField.map((item, index) => (
                         <div className="d-flex mb-3 mt-2 row" key={item.id}>
-                          <Controller
-                            control={control}
-                            name={`inventory[${index}].field`}
-                            render={({ field }) => (
-                              <select
-                                className="form-select form-select-sm col"
-                                id={`floatingSelect${item.id}`}
-                                aria-label="Floating label select example"
-                                {...field}
-                              >
-                                {InventoryList.map((item) => (
-                                  <option key={item.id} value={item.id}>
-                                    {item.title}
-                                  </option>
-                                ))}
-                              </select>
-                            )}
-                          />
+                          <select
+                            className="form-select form-select-sm col"
+                            {...register(`inventory.${index}.value`)}
+                          >
+                            {InventoryList.map((item) => (
+                              <option key={item.id} value={item.id}>
+                                {item.title}
+                              </option>
+                            ))}
+                          </select>
                           <div className="col">
-                            <Controller
-                              control={control}
-                              name={`inventory[${index}].value`}
-                              render={({ field }) => (
-                                <input
-                                  className="form-control py-2"
-                                  id={`exampleInputEmailValue${item.id}`}
-                                  placeholder={intl.formatMessage({
-                                    id: "MONITORING.HOSTS.ADDTAG.VALUE",
-                                  })}
-                                  {...field}
-                                />
-                              )}
+                            <input
+                              className="form-control py-2"
+                              placeholder={intl.formatMessage({
+                                id: "MONITORING.HOSTS.ADDTAG.VALUE",
+                              })}
+                              {...register(`inventory.${index}.value`)}
                             />
                           </div>
                           <BTN
