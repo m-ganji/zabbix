@@ -1,20 +1,16 @@
-import { Controller, useFieldArray } from "react-hook-form";
+import { Control, useFieldArray } from "react-hook-form";
 import { useIntl } from "react-intl";
 
-interface Tag {
-  tag: string;
-  value: string;
-}
-
 interface TagsProps {
-  control: object;
-  watch: () => void;
+  control: Control;
+  watch: CallableFunction;
+  register: CallableFunction;
 }
 
-const Tags: React.FC<TagsProps> = ({ control, watch }) => {
+const Tags: React.FC<TagsProps> = ({ control, register }) => {
   const intl = useIntl();
 
-  const { fields, append, remove } = useFieldArray<Tag>({
+  const { fields, append, remove } = useFieldArray({
     control,
     name: "tags",
   });
@@ -24,42 +20,24 @@ const Tags: React.FC<TagsProps> = ({ control, watch }) => {
       {fields.map((item, index) => (
         <div className="d-flex mb-3 gap-3" key={item.id}>
           <div style={{ width: "50%" }}>
-            <Controller
-              name={`tags[${index}].tag`}
-              control={control}
-              defaultValue={item.tag}
-              render={({ field }) => (
-                <input
-                  {...field}
-                  type="text"
-                  className="form-control py-2"
-                  placeholder={intl.formatMessage({
-                    id: "MONITORING.HOSTS.CREATEHOST.HOST.NAME",
-                  })}
-                  style={{ direction: "rtl" }}
-                  dir="rtl"
-                />
-              )}
+            <input
+              {...register(`tags[${index}].tag`)}
+              type="text"
+              className="form-control py-2"
+              placeholder={intl.formatMessage({
+                id: "MONITORING.HOSTS.CREATEHOST.HOST.NAME",
+              })}
             />
           </div>
 
           <div style={{ width: "50%" }}>
-            <Controller
-              name={`tags[${index}].value`}
-              control={control}
-              defaultValue={item.value}
-              render={({ field }) => (
-                <input
-                  {...field}
-                  type="text"
-                  className="form-control py-2"
-                  placeholder={intl.formatMessage({
-                    id: "MONITORING.HOSTS.ADDTAG.VALUE",
-                  })}
-                  style={{ direction: "rtl" }}
-                  dir="rtl"
-                />
-              )}
+            <input
+              {...register(`tags[${index}].value`)}
+              type="text"
+              className="form-control py-2"
+              placeholder={intl.formatMessage({
+                id: "MONITORING.HOSTS.CREATEHOST.HOST.VALUE",
+              })}
             />
           </div>
           <button
