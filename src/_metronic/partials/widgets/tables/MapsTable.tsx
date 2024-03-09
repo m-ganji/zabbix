@@ -1,8 +1,25 @@
+import React, { useState, useEffect } from "react";
 import { useIntl } from "react-intl";
+import { instance } from "../../../../services/axiosInstance";
+import Badge from "../../../layout/components/Badge";
 
-const MapsTable = () => {
+const MapsTable: React.FC = () => {
   const intl = useIntl();
 
+  const [mapsData, setMapsData] = useState<any>(); // Adjust the type according to your data structure
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await instance.post("/core/maps/get", {});
+        setMapsData(response.data);
+      } catch (error) {
+        console.error("Error fetching host data:", error);
+      }
+    }
+    fetchData();
+  }, []);
+  console.log(mapsData);
   return (
     <div className={`card mt-5`}>
       {/* begin::Header */}
@@ -28,14 +45,13 @@ const MapsTable = () => {
         {/* begin::Table container */}
         <div className="table-responsive">
           {/* begin::Table */}
-          <table className="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-4">
+          <table className="table text-center  table-row-dashed table-row-gray-300 align-middle gs-0 gy-4">
             {/* begin::Table head */}
             <thead>
-              <tr className="fw-bold text-muted">
+              <tr className="fw-bold text-muted text-center ">
                 <th className="w-25px">
                   <div className="form-check form-check-sm form-check-custom form-check-solid">
                     <input
-                      className="form-check-input"
                       type="checkbox"
                       value="1"
                       data-kt-check="true"
@@ -43,7 +59,7 @@ const MapsTable = () => {
                     />
                   </div>
                 </th>
-                <th className="min-w-150px">
+                <th className=" text-end">
                   {intl.formatMessage({ id: "MONITORING.DISCOVERY.DEVICE" })}
                 </th>
                 <th className="min-w-140px">
@@ -59,52 +75,31 @@ const MapsTable = () => {
             </thead>
             {/* end::Table head */}
             {/* begin::Table body */}
-            <tbody>
-              <tr>
-                <td>
-                  <div className="form-check form-check-sm form-check-custom form-check-solid">
-                    <input
-                      className="form-check-input widget-9-check"
-                      type="checkbox"
-                      value="1"
-                    />
-                  </div>
-                </td>
-                <td>
-                  <div className="d-flex align-items-center">
-                    <div className="d-flex justify-content-start flex-column">
-                      <a
-                        href="#"
-                        className="text-gray-900 fw-bold text-hover-primary fs-6"
-                      >
-                        ZABBIX
-                      </a>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <span className="badge badge-light-primary">
-                    linux host 2
-                  </span>
-                </td>
-                <td className="text-end">
-                  <div className="d-flex flex-column w-100 me-2">
-                    <div className="d-flex flex-stack mb-2">
-                      <span className="text-muted me-2 fs-7 fw-semibold">
-                        50%
-                      </span>
-                    </div>
-                    <div className="progress h-6px w-100">
-                      <div
-                        className="progress-bar bg-primary"
-                        role="progressbar"
-                        style={{ width: "50%" }}
-                      ></div>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
+            {mapsData &&
+              mapsData.map((value, index) => (
+                <tbody>
+                  <tr>
+                    <td className="text-center">
+                      <div className="form-check form-check-sm form-check-custom form-check-solid">
+                        <input type="checkbox" value="1" />
+                      </div>
+                    </td>
+                    <td className="text-end">
+                      <Badge bg="success" title={value.name} />
+                    </td>
+                    <td className="text-center">
+                      <Badge bg="warning" title={value.width} />
+                    </td>
+                    <td className="text-center">
+                      <Badge bg="warning" title={value.width} />
+                    </td>
+                    <td id="create-map">
+                      <a href="#">ویژگی‌ها</a>
+                    </td>
+                  </tr>
+                </tbody>
+              ))}
+
             {/* end::Table body */}
           </table>
           {/* end::Table */}
