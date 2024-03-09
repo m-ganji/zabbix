@@ -9,9 +9,10 @@ interface Tag {
 
 interface TagsProps {
   control: object;
+  watch: () => void;
 }
 
-const Tags: React.FC<TagsProps> = ({ control }) => {
+const Tags: React.FC<TagsProps> = ({ control, watch }) => {
   const intl = useIntl();
 
   const { fields, append, remove } = useFieldArray<Tag>({

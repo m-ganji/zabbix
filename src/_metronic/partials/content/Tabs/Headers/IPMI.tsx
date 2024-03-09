@@ -3,6 +3,7 @@ import { Controller } from "react-hook-form";
 interface HostProps {
   control: object;
   watch: () => void;
+  setValue: object;
 }
 
 const IPMI: React.FC<HostProps> = ({ control, watch, setValue }) => {

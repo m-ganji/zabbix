@@ -7,6 +7,7 @@ import Inheritedmacros from "./toggle macros/Inheritedmacros";
 interface HostProps {
   control: object;
   watch: () => void;
+  setValue: object;
 }
 
 const Macros: React.FC<HostProps> = ({ control, watch, setValue }) => {

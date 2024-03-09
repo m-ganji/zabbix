@@ -15,6 +15,7 @@ import { fetchHostGroup } from "../../../../../hostGroupSlice/hostGroupReducer";
 interface HostProps {
   control: object;
   watch: () => void;
+  setValue: object;
 }
 
 interface ApiError {

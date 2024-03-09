@@ -34,16 +34,19 @@ interface FormValues {
   dns: string;
   port: string;
   severities: number[];
-  groupids: string[];
+  groupids: number[];
   filter: {
     status: string;
   };
-  tags: string[];
-  inventory: { field: string; value: string }[]; 
+  tags: { tag: string; operator: string; value: string }[];
+  inventory: { field: string; value: string }[];
 }
 
-interface FormValues {
-  inventory: { field: string; value: string }[];
+interface HostGroupData {
+  payload: [];
+  meta: {
+    requestStatus: string;
+  };
 }
 
 export function Overview() {
@@ -68,13 +71,14 @@ export function Overview() {
   const intl = useIntl();
 
   const [isLoaded, setIsLoaded] = useState<boolean>(true);
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isError, setIsError] = useState<boolean>(false);
   const [data, setData] = useState([]);
   const [activeButtonTag, setActiveButtonTag] = useState<string>("");
   const [activeSituation, setActiveSituation] = useState<string>("");
   const [resetMultiSelect, setResetMultiSelect] = useState(false);
-  const [hostGroups, setHostGroups] = useState([]);
+  const [hostGroups, setHostGroups] = useState<HostGroupData | null>(null);
   const currentGroupids = watch("groupids") ? watch("groupids") : [];
   const dispatch = useDispatch();
 
@@ -87,7 +91,8 @@ export function Overview() {
     name: "tags",
   });
 
-  async function dataHost(data:object) {
+  async function dataHost(data: object) {
+    console.log(data);
     setIsLoaded(true);
     setIsError(false);
     try {
@@ -171,80 +176,59 @@ export function Overview() {
                           role="group"
                           aria-label="Basic example"
                         >
-                          <Controller
-                            name="filter.status"
-                            control={control}
-                            defaultValue=""
-                            render={() => (
-                              <button
-                                type="button"
-                                className={
-                                  "btn btn-primary rounded-end-2 py-2" +
-                                  (activeSituation === "همه" ? " active" : "")
-                                }
-                                onClick={() => {
-                                  setValue("filter.status", [0, 1]);
-                                  setActiveSituation("همه");
-                                }}
-                                data-bs-toggle="button"
-                              >
-                                {intl.formatMessage({
-                                  id: "ANY",
-                                })}
-                              </button>
-                            )}
-                          />
-                          <Controller
-                            name="filter.status"
-                            control={control}
-                            defaultValue=""
-                            render={() => (
-                              <button
-                                type="button"
-                                className={
-                                  "btn btn-primary py-2" +
-                                  (activeSituation === "فعال شده ها"
-                                    ? " active"
-                                    : "")
-                                }
-                                onClick={() => {
-                                  setValue("filter.status", 0);
-                                  setActiveSituation("فعال شده ها");
-                                }}
-                                data-bs-toggle="button"
-                              >
-                                {intl.formatMessage({
-                                  id: "MONITORING.HOSTS.STATUS.ENABLED",
-                                })}
-                              </button>
-                            )}
-                          />
+                          <button
+                            type="button"
+                            className={
+                              "btn btn-primary rounded-end-2 py-2" +
+                              (activeSituation === "همه" ? " active" : "")
+                            }
+                            onClick={() => {
+                              setValue("filter.status", ["0", "1"]);
+                              setActiveSituation("همه");
+                            }}
+                            data-bs-toggle="button"
+                          >
+                            {intl.formatMessage({
+                              id: "ANY",
+                            })}
+                          </button>
+                          <button
+                            type="button"
+                            className={
+                              "btn btn-primary py-2" +
+                              (activeSituation === "فعال شده ها"
+                                ? " active"
+                                : "")
+                            }
+                            onClick={() => {
+                              setValue("filter.status", ["0"]);
+                              setActiveSituation("فعال شده ها");
+                            }}
+                            data-bs-toggle="button"
+                          >
+                            {intl.formatMessage({
+                              id: "MONITORING.HOSTS.STATUS.ENABLED",
+                            })}
+                          </button>
 
-                          <Controller
-                            name="filter.status"
-                            control={control}
-                            defaultValue=""
-                            render={() => (
-                              <button
-                                type="button"
-                                className={
-                                  "btn btn-primary rounded-start-2 py-2" +
-                                  (activeSituation === "غیر فعال ها"
-                                    ? " active"
-                                    : "")
-                                }
-                                onClick={() => {
-                                  setValue("filter.status", 1);
-                                  setActiveSituation("غیر فعال ها");
-                                }}
-                                data-bs-toggle="button"
-                              >
-                                {intl.formatMessage({
-                                  id: "MONITORING.HOSTS.STATUS.DISABLED",
-                                })}
-                              </button>
-                            )}
-                          />
+                          <button
+                            type="button"
+                            className={
+                              "btn btn-primary rounded-start-2 py-2" +
+                              (activeSituation === "غیر فعال ها"
+                                ? " active"
+                                : "")
+                            }
+                            onClick={() => {
+                              setValue("filter.status", ["1"]);
+                              setActiveSituation("غیر فعال ها");
+                            }}
+                            data-bs-toggle="button"
+                          >
+                            {intl.formatMessage({
+                              id: "MONITORING.HOSTS.STATUS.DISABLED",
+                            })}
+                          </button>
                         </div>
                       </div>
                     </div>
@@ -276,7 +260,7 @@ export function Overview() {
                                     : "")
                                 }
                                 onClick={() => {
-                                  setValue("evaltype", 0);
+                                  setValue("evaltype", "0");
                                   setActiveButtonTag("and/or");
                                 }}
                                 data-bs-toggle="button"
@@ -287,30 +271,22 @@ export function Overview() {
                               </button>
                             )}
                           />
-
-                          <Controller
-                            name="evaltype"
-                            control={control}
-                            defaultValue=""
-                            render={() => (
-                              <button
-                                type="button"
-                                className={
-                                  "btn btn-primary rounded-start-2 py-2" +
-                                  (activeButtonTag === "OR" ? " active" : "")
-                                }
-                                onClick={() => {
-                                  setValue("evaltype", 2);
-                                  setActiveButtonTag("OR");
-                                }}
-                                data-bs-toggle="button"
-                              >
-                                {intl.formatMessage({
-                                  id: "MONITORING.HOSTS.TAGS.OR",
-                                })}
-                              </button>
-                            )}
-                          />
+                          <button
+                            type="button"
+                            className={
+                              "btn btn-primary rounded-start-2 py-2" +
+                              (activeButtonTag === "OR" ? " active" : "")
+                            }
+                            onClick={() => {
+                              setValue("evaltype", "2");
+                              setActiveButtonTag("OR");
+                            }}
+                            data-bs-toggle="button"
+                          >
+                            {intl.formatMessage({
+                              id: "MONITORING.HOSTS.TAGS.OR",
+                            })}
+                          </button>
                         </div>
                       </div>
                     </div>
@@ -423,7 +399,7 @@ export function Overview() {
                       type="button"
                       className="btn btn-success py-2"
                       onClick={() => {
-                        tagsAppend({ tag: "", operator: 0, value: "" });
+                        tagsAppend({ tag: "", operator: "0", value: "" });
                       }}
                     >
                       {intl.formatMessage({
@@ -442,7 +418,7 @@ export function Overview() {
                                 onChange={() =>
                                   setValue(
                                     "show_suppressed",
-                                    field.value == 1 ? 0 : 1
+                                    field.value == "1" ? "0" : "1"
                                   )
                                 }
                                 type="checkbox"
@@ -467,7 +443,7 @@ export function Overview() {
                                 onChange={() =>
                                   setValue(
                                     "maintenance_status",
-                                    field.value == 1 ? 0 : 1
+                                    field.value == "1" ? "0" : "1"
                                   )
                                 }
                                 type="checkbox"
@@ -499,8 +475,6 @@ export function Overview() {
                                 placeholder={intl.formatMessage({
                                   id: "NAME",
                                 })}
-                                style={{ direction: "rtl" }}
-                                dir="rtl"
                                 {...field}
                               />
                             </>
@@ -571,14 +545,17 @@ export function Overview() {
                         />
                       </div>
                       <MultiSelect
+                        reset={false}
                         addAll={false}
                         title="MENU.SELECT.HOSTS.GP"
-                        options={hostGroups.payload}
+                        options={hostGroups ? hostGroups.payload : []}
                         DataName="groupids"
                         setData={setValue}
                         currentData={currentGroupids}
                         Loading={
-                          hostGroups?.meta?.requestStatus !== "fulfilled"
+                          hostGroups &&
+                          hostGroups.meta &&
+                          hostGroups.meta.requestStatus !== "fulfilled"
                         }
                       />
                     </div>
@@ -615,7 +592,7 @@ export function Overview() {
             </div>
           </div>
         </div>
-        <TableHosts data={data} isLoaded={isLoaded} />
+        <TableHosts isError={false} data={data} isLoaded={isLoaded} />
       </form>
     </Content>
   );
