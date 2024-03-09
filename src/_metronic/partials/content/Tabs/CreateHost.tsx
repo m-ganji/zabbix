@@ -121,7 +121,7 @@ const CreateHost: FC = () => {
       <div className="card-body pt-0">
         <div className="tab-content">
           <div className="tab-pane active show" id="tab-hosts">
-            <Host control={control} watch={watch} setValue={setValue} />
+            <Host control={control} watch={watch} setValue={setValue} register={register} />
           </div>
           <div className="tab-pane container" id="tab-ipmi">
             <IPMI control={control} watch={watch} setValue={setValue} />

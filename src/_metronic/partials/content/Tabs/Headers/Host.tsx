@@ -3,15 +3,16 @@ import { MultiSelect } from "../../../../layout/components/MultiSelect/MultiSele
 import { useIntl } from "react-intl";
 import { instance } from "../../../../../services/axiosInstance";
 import { useDispatch, useSelector } from "react-redux";
-import { Controller, useFieldArray } from "react-hook-form";
+import { Control, useFieldArray } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import ToastFire from "../../../../layout/components/Toast";
 import { selectApiData, selectApiLoading } from "../../../../../store/store";
 import Dropdown from "react-bootstrap/Dropdown";
 
 interface HostProps {
-  control: object;
-  watch: () => void;
+  control: Control;
+  watch: CallableFunction;
+  register: CallableFunction;
   setValue: object;
 }
 
@@ -21,7 +22,7 @@ interface ApiError {
   };
 }
 
-const Host: React.FC<HostProps> = ({ control, watch, setValue }) => {
+const Host: React.FC<HostProps> = ({ control, watch, setValue, register }) => {
   const intl = useIntl();
   const [templates, setTemplates] = useState<object>();
   const [resetMultiSelect, setResetMultiSelect] = useState(false);
@@ -85,22 +86,14 @@ const Host: React.FC<HostProps> = ({ control, watch, setValue }) => {
             >
               <i className="bi bi-hdd-network" />
             </span>
-
-            <Controller
-              name={`host`}
-              control={control}
-              defaultValue=""
-              render={({ field }) => (
-                <input
-                  {...field}
-                  type="text"
-                  className="form-control rounded-start-2 rounded-end-0"
-                  placeholder="نام هاست"
-                  aria-label="نام هاست"
-                  aria-describedby="tab-hosts"
-                  required
-                />
-              )}
+            <input
+              {...register(`host`)}
+              type="text"
+              className="form-control rounded-start-2 rounded-end-0"
+              placeholder="نام هاست"
+              aria-label="نام هاست"
+              aria-describedby="tab-hosts"
+              required
             />
           </div>
           <div className="input-group mb-3 col">
@@ -158,51 +151,32 @@ const Host: React.FC<HostProps> = ({ control, watch, setValue }) => {
         </div>
         {fields.map((value, index) => (
           <div className="d-flex mt-3" key={index}>
-            <Controller
-              name={`interface[${index}].ip`}
-              control={control}
-              render={({ field }) => (
-                <input
-                  {...field}
-                  type="text"
-                  className="form-control rounded-start-2 rounded-end-0"
-                  placeholder="آی‌پی"
-                  aria-label="آی‌پی"
-                  aria-describedby="tab-hosts"
-                  required
-                />
-              )}
+            <input
+              {...register(`interface[${index}].ip`)}
+              type="text"
+              className="form-control rounded-start-2 rounded-end-0"
+              placeholder="آی‌پی"
+              aria-label="آی‌پی"
+              aria-describedby="tab-hosts"
+              required
             />
-            <Controller
-              name={`interface[${index}].dns`}
-              control={control}
-              render={({ field }) => (
-                <input
-                  {...field}
-                  type="text"
-                  className="form-control rounded-start-2 rounded-end-0"
-                  placeholder="دی‌ان‌اس"
-                  aria-label="دی‌ان‌اس"
-                  aria-describedby="tab-hosts"
-                  required
-                />
-              )}
+            <input
+              {...register(`interface[${index}].dns`)}
+              type="text"
+              className="form-control rounded-start-2 rounded-end-0"
+              placeholder="دی‌ان‌اس"
+              aria-label="دی‌ان‌اس"
+              aria-describedby="tab-hosts"
+              required
             />
-
-            <Controller
-              name={`interface[${index}].port`}
-              control={control}
-              render={({ field }) => (
-                <input
-                  {...field}
-                  type="text"
-                  className="form-control rounded-start-2 rounded-end-0"
-                  placeholder="پورت"
-                  aria-label="پورت"
-                  aria-describedby="tab-hosts"
-                  required
-                />
-              )}
+            <input
+              {...register(`interface[${index}].port`)}
+              type="text"
+              className="form-control rounded-start-2 rounded-end-0"
+              placeholder="پورت"
+              aria-label="پورت"
+              aria-describedby="tab-hosts"
+              required
             />
             <button
               type="button"
@@ -258,19 +232,12 @@ const Host: React.FC<HostProps> = ({ control, watch, setValue }) => {
         <div className="row mt-3 position-relative" style={{ zIndex: 0 }}>
           <div className="col">
             <div dir="rtl" className="form-floating">
-              <Controller
-                name={`description`}
-                control={control}
-                defaultValue=""
-                render={({ field }) => (
-                  <textarea
-                    {...field}
-                    className="form-control"
-                    title="توضیحات را اینجا وارد کنید"
-                    id="floatingTextarea2"
-                    style={{ height: 100 }}
-                  />
-                )}
+              <textarea
+                {...register(`description`)}
+                className="form-control"
+                title="توضیحات را اینجا وارد کنید"
+                id="floatingTextarea2"
+                style={{ height: 100 }}
               />
             </div>
             <div className="d-flex justify-content-start mt-5">
