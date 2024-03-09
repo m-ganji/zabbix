@@ -7,17 +7,18 @@ import { Control, useFieldArray } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import ToastFire from "../../../../layout/components/Toast";
 import {
-  AppDispatch,
   selectApiData,
+  selectApiError,
   selectApiLoading,
 } from "../../../../../store/store";
 import { fetchHostGroup } from "../../../../../hostGroupSlice/hostGroupReducer";
+import Dropdown from "react-bootstrap/Dropdown";
 
 interface HostProps {
   control: Control;
   watch: CallableFunction;
-  setValue: CallableFunction;
   register: CallableFunction;
+  setValue: object;
 }
 
 interface ApiError {
@@ -37,11 +38,12 @@ const Host: React.FC<HostProps> = ({ control, watch, setValue, register }) => {
 
   const HostGroupData = useSelector(selectApiData);
   const loading = useSelector(selectApiLoading);
+  // const error = useSelector(selectApiError);
 
-  useEffect(() => {
-    // dispatch(fetchHostGroup({}));
-    dispatch(fetchHostGroup());
-  }, [dispatch]);
+  // useEffect(() => {
+  //   // dispatch(fetchHostGroup({}));
+  //   dispatch(fetchHostGroup({}));
+  // }, [dispatch]);
 
   useEffect(() => {
     const handleGetTemplates = async () => {
@@ -147,6 +149,33 @@ const Host: React.FC<HostProps> = ({ control, watch, setValue, register }) => {
         {fields.map((value, index) => (
           <div className="d-flex mt-3" key={index}>
             <input
+              {...register(`interface[${index}].ip`)}
+              type="text"
+              className="form-control rounded-start-2 rounded-end-0"
+              placeholder="آی‌پی"
+              aria-label="آی‌پی"
+              aria-describedby="tab-hosts"
+              required
+            />
+            <input
+              {...register(`interface[${index}].dns`)}
+              type="text"
+              className="form-control rounded-start-2 rounded-end-0"
+              placeholder="دی‌ان‌اس"
+              aria-label="دی‌ان‌اس"
+              aria-describedby="tab-hosts"
+              required
+            />
+            <input
+              {...register(`interface[${index}].port`)}
+              type="text"
+              className="form-control rounded-start-2 rounded-end-0"
+              placeholder="پورت"
+              aria-label="پورت"
+              aria-describedby="tab-hosts"
+              required
+              />
+            <input
               {...register(`interface.${index}.ip`)}
               type="text"
               className="form-control rounded-start-2 rounded-end-0"
@@ -228,7 +257,7 @@ const Host: React.FC<HostProps> = ({ control, watch, setValue, register }) => {
           <div className="col">
             <div dir="rtl" className="form-floating">
               <textarea
-                {...register("description")}
+                {...register(`description`)}
                 className="form-control"
                 title="توضیحات را اینجا وارد کنید"
                 id="floatingTextarea2"
