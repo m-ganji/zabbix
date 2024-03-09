@@ -133,7 +133,7 @@ const CreateHost: FC = () => {
             <Macros control={control} watch={watch} setValue={setValue} />
           </div>
           <div className="tab-pane" id="tab-inventory">
-            <Inventory control={control} watch={watch} />
+            <Inventory register={register} />
           </div>
           <div className="tab-pane" id="tab-Encryption">
             <Encryption control={control} watch={watch} register={register} />
