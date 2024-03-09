@@ -3,21 +3,21 @@ import { MultiSelect } from "../../../../layout/components/MultiSelect/MultiSele
 import { useIntl } from "react-intl";
 import { instance } from "../../../../../services/axiosInstance";
 import { useDispatch, useSelector } from "react-redux";
-import { Controller, useFieldArray } from "react-hook-form";
+import { Control, useFieldArray } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import ToastFire from "../../../../layout/components/Toast";
 import {
+  AppDispatch,
   selectApiData,
-  selectApiError,
   selectApiLoading,
 } from "../../../../../store/store";
 import { fetchHostGroup } from "../../../../../hostGroupSlice/hostGroupReducer";
-import Dropdown from "react-bootstrap/Dropdown";
 
 interface HostProps {
-  control: object;
-  watch: () => void;
-  setValue: object;
+  control: Control;
+  watch: CallableFunction;
+  setValue: CallableFunction;
+  register: CallableFunction;
 }
 
 interface ApiError {
@@ -26,30 +26,30 @@ interface ApiError {
   };
 }
 
-const Host: React.FC<HostProps> = ({ control, watch, setValue }) => {
+const Host: React.FC<HostProps> = ({ control, watch, setValue, register }) => {
   const intl = useIntl();
-  const [templates, setTemplates] = useState<object>();
-  const [resetMultiSelect, setResetMultiSelect] = useState(false);
+  const [templates, setTemplates] = useState<[]>([]);
   const currentGroupids = watch("groupids") ? watch("groupids") : [];
   const currentTemplate = watch("template") ? watch("template") : [];
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
   const HostGroupData = useSelector(selectApiData);
   const loading = useSelector(selectApiLoading);
-  const error = useSelector(selectApiError);
 
   useEffect(() => {
     // dispatch(fetchHostGroup({}));
-    dispatch(fetchHostGroup({}));
+    dispatch(fetchHostGroup());
   }, [dispatch]);
 
   useEffect(() => {
     const handleGetTemplates = async () => {
       try {
         const response = await instance.post("/core/templates/get", {});
-        const mapped = response.data.map((e) => ({ label: e.name }));
+        const mapped = response.data.map((e: { name: string }) => ({
+          label: e.name,
+        }));
         setTemplates(mapped);
       } catch (error) {
         if ((error as ApiError).response?.status === 401) {
@@ -64,20 +64,10 @@ const Host: React.FC<HostProps> = ({ control, watch, setValue }) => {
     handleGetTemplates();
   }, [navigate]);
 
-  const { fields, append, remove } = useFieldArray<{
-    ip: string;
-    dns: string;
-    port: string;
-  }>({
+  const { fields, append, remove } = useFieldArray({
     control,
     name: "interface",
   });
-
-  const [selectedValue, setSelectedValue] = useState(null);
-
-  const handleSelect = (eventKey: string) => {
-    setSelectedValue(eventKey);
-  };
 
   return (
     <div>
@@ -90,22 +80,14 @@ const Host: React.FC<HostProps> = ({ control, watch, setValue }) => {
             >
               <i className="bi bi-hdd-network" />
             </span>
-
-            <Controller
-              name={`host`}
-              control={control}
-              defaultValue=""
-              render={({ field }) => (
-                <input
-                  {...field}
-                  type="text"
-                  className="form-control rounded-start-2 rounded-end-0"
-                  placeholder="نام هاست"
-                  aria-label="نام هاست"
-                  aria-describedby="tab-hosts"
-                  required
-                />
-              )}
+            <input
+              {...register("host")}
+              type="text"
+              className="form-control rounded-start-2 rounded-end-0"
+              placeholder="نام هاست"
+              aria-label="نام هاست"
+              aria-describedby="tab-hosts"
+              required
             />
           </div>
           <div className="input-group mb-3 col">
@@ -135,7 +117,7 @@ const Host: React.FC<HostProps> = ({ control, watch, setValue }) => {
           <div className="col w-50">
             <MultiSelect
               title="MENU.SELECT.HOSTS.GP"
-              reset={resetMultiSelect}
+              reset={false}
               addAll={false}
               options={HostGroupData}
               Loading={loading}
@@ -147,7 +129,7 @@ const Host: React.FC<HostProps> = ({ control, watch, setValue }) => {
           <div className="col">
             <MultiSelect
               title="MENU.SELECT.TEMPLATES"
-              reset={resetMultiSelect}
+              reset={false}
               addAll={false}
               options={templates}
               // Loading={
@@ -158,56 +140,38 @@ const Host: React.FC<HostProps> = ({ control, watch, setValue }) => {
               DataName="template"
               setData={setValue}
               currentData={currentTemplate}
+              Loading={false}
             />
           </div>
         </div>
         {fields.map((value, index) => (
           <div className="d-flex mt-3" key={index}>
-            <Controller
-              name={`interface[${index}].ip`}
-              control={control}
-              render={({ field }) => (
-                <input
-                  {...field}
-                  type="text"
-                  className="form-control rounded-start-2 rounded-end-0"
-                  placeholder="آی‌پی"
-                  aria-label="آی‌پی"
-                  aria-describedby="tab-hosts"
-                  required
-                />
-              )}
+            <input
+              {...register(`interface.${index}.ip`)}
+              type="text"
+              className="form-control rounded-start-2 rounded-end-0"
+              placeholder="آی‌پی"
+              aria-label="آی‌پی"
+              aria-describedby="tab-hosts"
+              required
             />
-            <Controller
-              name={`interface[${index}].dns`}
-              control={control}
-              render={({ field }) => (
-                <input
-                  {...field}
-                  type="text"
-                  className="form-control rounded-start-2 rounded-end-0"
-                  placeholder="دی‌ان‌اس"
-                  aria-label="دی‌ان‌اس"
-                  aria-describedby="tab-hosts"
-                  required
-                />
-              )}
+            <input
+              {...register(`interface.${index}.dns`)}
+              type="text"
+              className="form-control rounded-start-2 rounded-end-0"
+              placeholder="دی‌ان‌اس"
+              aria-label="دی‌ان‌اس"
+              aria-describedby="tab-hosts"
+              required
             />
-
-            <Controller
-              name={`interface[${index}].port`}
-              control={control}
-              render={({ field }) => (
-                <input
-                  {...field}
-                  type="text"
-                  className="form-control rounded-start-2 rounded-end-0"
-                  placeholder="پورت"
-                  aria-label="پورت"
-                  aria-describedby="tab-hosts"
-                  required
-                />
-              )}
+            <input
+              {...register(`interface.${index}.port`)}
+              type="text"
+              className="form-control rounded-start-2 rounded-end-0"
+              placeholder="پورت"
+              aria-label="پورت"
+              aria-describedby="tab-hosts"
+              required
             />
             <button
               type="button"
@@ -263,19 +227,12 @@ const Host: React.FC<HostProps> = ({ control, watch, setValue }) => {
         <div className="row mt-3 position-relative" style={{ zIndex: 0 }}>
           <div className="col">
             <div dir="rtl" className="form-floating">
-              <Controller
-                name={`description`}
-                control={control}
-                defaultValue=""
-                render={({ field }) => (
-                  <textarea
-                    {...field}
-                    className="form-control"
-                    title="توضیحات را اینجا وارد کنید"
-                    id="floatingTextarea2"
-                    style={{ height: 100 }}
-                  />
-                )}
+              <textarea
+                {...register("description")}
+                className="form-control"
+                title="توضیحات را اینجا وارد کنید"
+                id="floatingTextarea2"
+                style={{ height: 100 }}
               />
             </div>
             <div className="d-flex justify-content-start mt-5">

@@ -2,7 +2,7 @@ import { useIntl } from "react-intl";
 import { instance } from "../../../../../../services/axiosInstance";
 import { useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
-import { useForm } from "react-hook-form";
+import { Control, useForm } from "react-hook-form";
 import { Loader } from "../../../../../layout/components/loader/Loader";
 import { getCSSVariableValue } from "../../../../../assets/ts/_utils";
 import { KTIcon } from "../../../../../helpers";
@@ -10,8 +10,9 @@ import { KTIcon } from "../../../../../helpers";
 interface ItemType {
   description: string;
   globalmacroid: string;
-  macro: string;
+  macro: [];
   type: string;
+  value: string;
 }
 
 type Inputs = {
@@ -20,8 +21,14 @@ type Inputs = {
   type: string;
   description: string;
 };
-
-const Inheritedmacros: React.FC = ({
+interface Macro {
+  macrosField: object[];
+  control: Control;
+  macrosRemove: CallableFunction;
+  macrosAppend: CallableFunction;
+  setValue: CallableFunction;
+}
+const Inheritedmacros: React.FC<Macro> = ({
   macrosField,
   // control,
   // macrosRemove,
@@ -63,7 +70,7 @@ const Inheritedmacros: React.FC = ({
     defaultValues: {},
   });
 
-  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+  const onSubmit = async (data: ItemType) => {
     console.log(data);
     try {
       const response = await instance.post(
@@ -94,7 +101,10 @@ const Inheritedmacros: React.FC = ({
     setDropdownStates(newDropdownStates);
   };
 
-  const selectOption = (option, index) => {
+  const selectOption = (
+    option: { props: { iconName: string } },
+    index: number
+  ) => {
     let typeValue;
     if (option.props.iconName === "text") {
       typeValue = 0;
@@ -110,7 +120,6 @@ const Inheritedmacros: React.FC = ({
     toggleDropdown(index);
   };
 
-  const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isOpenAdd, setIsOpenAdd] = useState<boolean>(false);
   const [selectedOption, setSelectedOption] = useState<JSX.Element>(
     <KTIcon iconName="text" className="fs-2" />
@@ -160,7 +169,6 @@ const Inheritedmacros: React.FC = ({
       {isLoaded && (
         <p
           className="d-flex justify-content-center align-content-center btn btn-light-primary w-25"
-          type="button"
           style={{ marginRight: "70%" }}
           onClick={() => setisInheritedModalOpen(true)}
         >
@@ -339,7 +347,6 @@ const Inheritedmacros: React.FC = ({
                 <input
                   {...register("value", {
                     pattern: /^\{\$test\}$/i,
-                    message: "Input should be in the format '{$test}'",
                   })}
                   type="text"
                   className="form-control py-2"
@@ -353,16 +360,12 @@ const Inheritedmacros: React.FC = ({
                 <div
                   {...register("type")}
                   className={`custom-dropdown border border-${secondaryColor} border-2 `}
-                  onClick={(option, index) => {
-                    setIsOpenAdd((prevIsOpen) => !prevIsOpen);
-                    setValue(`type`, 1);
-                  }}
                 >
                   <div className="selected-option mt-2">{selectedOption}</div>
                   {isOpenAdd && (
                     <div
                       className="options position-absolute"
-                      onClick={(e) => {
+                      onClick={(e: { target: { innerHTML: string } }) => {
                         const innerHTML = e.target.innerHTML;
                         console.log(innerHTML);
                         if (innerHTML.includes("text")) {
@@ -415,7 +418,7 @@ const Inheritedmacros: React.FC = ({
               type="text"
               className="form-control "
               defaultValue={e.macro}
-              key={index}   
+              key={index}
               dir="rtl"
               style={{ width: "33%", direction: "rtl" }}
             />

@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { Controller } from "react-hook-form";
 interface HostProps {
   control: object;
   watch: () => void;
-  setValue: object;
+  setValue: CallableFunction;
+  register: CallableFunction;
 }
 
-const IPMI: React.FC<HostProps> = ({ control, watch, setValue }) => {
+const IPMI: React.FC<HostProps> = ({ register, setValue }) => {
   const [authAlgorithm, setAuthAlgorithm] = useState("-1");
   const [accessLevel, setAccessLevel] = useState("-1");
 
@@ -69,20 +69,12 @@ const IPMI: React.FC<HostProps> = ({ control, watch, setValue }) => {
       <div className="mb-3 row">
         <div className="col">
           <label className="form-label">نام کاربری</label>
-
-          <Controller
-            name={`ipmi_username`}
-            control={control}
-            defaultValue=""
-            render={({ field }) => (
-              <input
-                {...field}
-                type="text"
-                className="form-control"
-                autoComplete="off"
-                placeholder="نام کاربری را اینجا وارد نمایید"
-              />
-            )}
+          <input
+            {...register("ipmi_username")}
+            type="text"
+            className="form-control"
+            autoComplete="off"
+            placeholder="نام کاربری را اینجا وارد نمایید"
           />
         </div>
         <form className="col">
@@ -90,19 +82,12 @@ const IPMI: React.FC<HostProps> = ({ control, watch, setValue }) => {
             رمز عبور
           </label>
           <div className="input-group">
-            <Controller
-              name={`ipmi_password`}
-              control={control}
-              defaultValue=""
-              render={({ field }) => (
-                <input
-                  {...field}
-                  className="form-control rounded-end-2 rounded-start-0 "
-                  id="password"
-                  placeholder="رمز عبور را اینجا وارد نمایید"
-                  autoComplete="off"
-                />
-              )}
+            <input
+              {...register("ipmi_password")}
+              className="form-control rounded-end-2 rounded-start-0 "
+              id="password"
+              placeholder="رمز عبور را اینجا وارد نمایید"
+              autoComplete="off"
             />
 
             {/* <button

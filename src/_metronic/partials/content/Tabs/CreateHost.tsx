@@ -1,10 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { FC, useEffect, useState } from "react";
-import { MultiSelect } from "../../../layout/components/MultiSelect/MultiSelect";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchHostGroup } from "../../../../hostGroupSlice/hostGroupReducer";
 import { instance } from "../../../../services/axiosInstance";
-import { useIntl } from "react-intl";
 import Tags from "./Headers/Tags";
 import IPMI from "./Headers/IPMI";
 import Host from "./Headers/Host";
@@ -21,18 +17,21 @@ interface ApiError {
   };
 }
 
+interface FormValues {
+  host: string;
+}
+
 const CreateHost: FC = () => {
   const navigate = useNavigate();
 
-  const { control, handleSubmit, reset, watch, setValue } = useForm<FormValues>(
-    {
+  const { control, handleSubmit, register, watch, setValue } =
+    useForm<FormValues>({
       defaultValues: {
         host: "",
       },
-    }
-  );
+    });
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data: FormValues) => {
     console.log(data);
 
     try {
@@ -122,13 +121,18 @@ const CreateHost: FC = () => {
       <div className="card-body pt-0">
         <div className="tab-content">
           <div className="tab-pane active show" id="tab-hosts">
-            <Host control={control} watch={watch} setValue={setValue} />
+            <Host
+              control={control}
+              watch={watch}
+              setValue={setValue}
+              register={register}
+            />
           </div>
           <div className="tab-pane container" id="tab-ipmi">
-            <IPMI control={control} watch={watch} setValue={setValue} />
+            <IPMI control={control} watch={watch} setValue={setValue} register={register} />
           </div>
           <div className="tab-pane" id="tab-tags">
-            <Tags control={control} watch={watch} />
+            <Tags control={control} watch={watch} register={register}/>
           </div>
           <div className="tab-pane" id="tab-macro">
             <Macros control={control} watch={watch} setValue={setValue} />

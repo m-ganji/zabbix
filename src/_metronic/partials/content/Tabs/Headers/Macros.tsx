@@ -1,16 +1,15 @@
 import { useState } from "react";
-import { Controller, useFieldArray, useForm } from "react-hook-form";
+import { Control, useFieldArray } from "react-hook-form";
 import { useIntl } from "react-intl";
-import { KTIcon } from "../../../../helpers";
 import Hostmacros from "./toggle macros/Hostmacros";
 import Inheritedmacros from "./toggle macros/Inheritedmacros";
 interface HostProps {
-  control: object;
-  watch: () => void;
-  setValue: object;
+  control: Control;
+  watch: CallableFunction;
+  setValue: CallableFunction;
 }
 
-const Macros: React.FC<HostProps> = ({ control, watch, setValue }) => {
+const Macros: React.FC<HostProps> = ({ control, setValue }) => {
   const intl = useIntl();
 
   const [activeMacro, setActiveMacro] = useState<string>("HOSTMACROS");
