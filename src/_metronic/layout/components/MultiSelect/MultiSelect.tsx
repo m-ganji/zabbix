@@ -1,14 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Dropdown, Spinner } from "react-bootstrap";
 import { useIntl } from "react-intl";
-
-interface Option {
-  value: string | number;
-  label: string;
-}
+import { hostGroupItems } from "../../../../hostGroupSlice/hostGroupReducer";
 
 const MultiSelect: React.FC<{
-  options: Option[];
+  options: hostGroupItems[];
   Loading: null | boolean | string;
   title: string;
   addAll: boolean;
@@ -16,7 +12,7 @@ const MultiSelect: React.FC<{
   setData: CallableFunction;
   currentData: number[];
   reset: boolean;
-  selectedValue?: Option[];
+  selectedValue?: hostGroupItems[];
 }> = ({
   title,
   options,
@@ -28,19 +24,18 @@ const MultiSelect: React.FC<{
   reset,
   selectedValue,
 }) => {
-  const [selectedOptions, setSelectedOptions] = useState<Option[]>([]);
-  const [isOpen, setIsOpen] = useState(false);  
+  const [selectedOptions, setSelectedOptions] = useState<hostGroupItems[]>([]);
+  const [isOpen, setIsOpen] = useState(false);
 
   const intl = useIntl();
 
   useEffect(() => {
-
     addAll && setSelectedOptions(options);
 
     selectedValue?.[0]?.value && setSelectedOptions(selectedValue);
   }, [addAll, options, reset]);
 
-  const toggleOption = (option: Option) => {
+  const toggleOption = (option: hostGroupItems) => {
     const isSelected = selectedOptions.some(
       (selectedOption) => selectedOption.value === option.value
     );
@@ -113,7 +108,7 @@ const MultiSelect: React.FC<{
     setData(DataName, []);
   };
 
-  const deleteOption = (option: Option) => {
+  const deleteOption = (option: hostGroupItems) => {
     const filteredOptions = selectedOptions.filter(
       (selectedOption) => selectedOption.value !== option.value
     );
@@ -147,34 +142,30 @@ const MultiSelect: React.FC<{
       >
         {selectedOptions?.length > 0 ? (
           <div className="d-flex flex-wrap gap-2">
-            {selectedOptions.map(
-              (option, index) => (
-                (
-                  <div
-                    dir="ltr"
-                    className="d-flex gap-1"
-                    style={{
-                      maxWidth: "130px",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                    }}
-                    key={index}
-                  >
-                    <p
-                      style={{ textOverflow: "ellipsis" }}
-                      className="m-0  overflow-hidden"
-                    >
-                      {option.label}
-                    </p>
-                    <img
-                      src="/media/icons/duotune/general/close-circle.svg"
-                      onClick={() => deleteOption(option)}
-                      alt="Close"
-                    />
-                  </div>
-                )
-              )
-            )}
+            {selectedOptions.map((option, index) => (
+              <div
+                dir="ltr"
+                className="d-flex gap-1"
+                style={{
+                  maxWidth: "130px",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                }}
+                key={index}
+              >
+                <p
+                  style={{ textOverflow: "ellipsis" }}
+                  className="m-0  overflow-hidden"
+                >
+                  {option.label}
+                </p>
+                <img
+                  src="/media/icons/duotune/general/close-circle.svg"
+                  onClick={() => deleteOption(option)}
+                  alt="Close"
+                />
+              </div>
+            ))}
           </div>
         ) : (
           intl.formatMessage({ id: title })

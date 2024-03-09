@@ -8,6 +8,7 @@ export interface hostGroupItems {
   groupid?: number;
   name?: string;
   groups?: { groupid: number; name: string }[];
+  options?: { value: string }[];
 }
 // apiSlice.ts
 
