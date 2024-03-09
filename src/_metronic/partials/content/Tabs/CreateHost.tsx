@@ -24,7 +24,7 @@ interface FormValues {
 const CreateHost: FC = () => {
   const navigate = useNavigate();
 
-  const { control, handleSubmit, reset, watch, setValue, register } =
+  const { control, handleSubmit, watch, setValue, register } =
     useForm<FormValues>({
       defaultValues: {
         host: "",
@@ -121,10 +121,20 @@ const CreateHost: FC = () => {
       <div className="card-body pt-0">
         <div className="tab-content">
           <div className="tab-pane active show" id="tab-hosts">
-            <Host control={control} watch={watch} setValue={setValue} register={register} />
+            <Host
+              control={control}
+              watch={watch}
+              setValue={setValue}
+              register={register}
+            />
           </div>
           <div className="tab-pane container" id="tab-ipmi">
-            <IPMI control={control} watch={watch} setValue={setValue} register={register} />
+            <IPMI
+              control={control}
+              watch={watch}
+              setValue={setValue}
+              register={register}
+            />
           </div>
           <div className="tab-pane" id="tab-tags">
             <Tags control={control} watch={watch} register={register} />
