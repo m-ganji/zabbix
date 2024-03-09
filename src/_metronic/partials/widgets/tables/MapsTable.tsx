@@ -91,7 +91,7 @@ const MapsTable: React.FC = () => {
                       <Badge bg="warning" title={value.width} />
                     </td>
                     <td className="text-center">
-                      <Badge bg="warning" title={value.width} />
+                      <Badge bg="warning" title={value.height} />
                     </td>
                     <td id="create-map">
                       <a href="#">ویژگی‌ها</a>
@@ -99,7 +99,6 @@ const MapsTable: React.FC = () => {
                   </tr>
                 </tbody>
               ))}
-
             {/* end::Table body */}
           </table>
           {/* end::Table */}

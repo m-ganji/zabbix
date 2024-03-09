@@ -1,8 +1,8 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { PayloadAction } from '@reduxjs/toolkit';
-import { instance } from '../services/axiosInstance';
-import { AppThunk } from '../store/store';
-import { AxiosError } from 'axios';
+import { createSlice } from "@reduxjs/toolkit";
+import { PayloadAction } from "@reduxjs/toolkit";
+import { instance } from "../services/axiosInstance";
+import { AppThunk } from "../store/store";
+import { AxiosError } from "axios";
 interface hostGroupItems {
   name: string;
   value: string;
@@ -29,7 +29,7 @@ interface ApiResponse {
 
 // Create slice
 const apiSlice = createSlice({
-  name: 'hostGroup',
+  name: "hostGroup",
   initialState,
   reducers: {
     fetchDataStart(state) {
@@ -38,7 +38,7 @@ const apiSlice = createSlice({
     },
     fetchDataSuccess(state, action: PayloadAction<ApiResponse>) {
       state.loading = false;
-      state.data = [action.payload]; 
+      state.data = [action.payload];
     },
     fetchDataFailure(state, action: PayloadAction<string>) {
       state.loading = false;
@@ -48,29 +48,28 @@ const apiSlice = createSlice({
 });
 
 // Export action creators
-export const { fetchDataStart, fetchDataSuccess, fetchDataFailure } = apiSlice.actions;
+export const { fetchDataStart, fetchDataSuccess, fetchDataFailure } =
+  apiSlice.actions;
 
 // Export reducer
 export default apiSlice.reducer;
 
-interface fetchData {
-
-}
-
+interface fetchData {}
 
 // Define async action creator
-export const fetchHostGroup = (props: fetchData): AppThunk => async (dispatch) => {
-  try {
-    dispatch(fetchDataStart());
-    const response = await instance.post('/core/hostgroup/get', props);
-    dispatch(fetchDataSuccess(response.data));
-  } catch (error) {
-    if ((error as AxiosError).isAxiosError) {
-      const axiosError = error as AxiosError;
-      dispatch(fetchDataFailure(axiosError.message));
-    } else {
-      dispatch(fetchDataFailure('An error occurred.'));
+export const fetchHostGroup =
+  (props: fetchData): AppThunk =>
+  async (dispatch) => {
+    try {
+      dispatch(fetchDataStart());
+      const response = await instance.post("/core/hostgroup/get", props);
+      dispatch(fetchDataSuccess(response.data));
+    } catch (error) {
+      if ((error as AxiosError).isAxiosError) {
+        const axiosError = error as AxiosError;
+        dispatch(fetchDataFailure(axiosError.message));
+      } else {
+        dispatch(fetchDataFailure("An error occurred."));
+      }
     }
-  }
-};  
-
+  };

@@ -118,9 +118,11 @@ export function Overview() {
     dataHost(watch());
   }, []);
 
-  useEffect(() => {
-    dispatch(fetchHostGroup({})).then((response) => setHostGroups(response));
-  }, []);
+  // useEffect(() => {
+  //   return dispatch(fetchHostGroup({})).then((response) =>
+  //     setHostGroups(response)
+  //   );
+  // }, [dispatch]);
 
   return (
     <Content>
@@ -189,7 +191,7 @@ export function Overview() {
                             data-bs-toggle="button"
                           >
                             {intl.formatMessage({
-                              id: "ANY",
+                              id: "ALL",
                             })}
                           </button>
                           <button
@@ -583,11 +585,7 @@ export function Overview() {
                   className="btn-light-danger"
                   onClick={resetData}
                 />
-                <BTN
-                  label="ذخیره"
-                  className="btn-light-primary"
-                  // onClick={resetData}
-                />
+                <BTN label="ذخیره" className="btn-light-primary" />
               </div>
             </div>
           </div>
