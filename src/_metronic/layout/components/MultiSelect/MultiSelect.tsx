@@ -29,14 +29,12 @@ const MultiSelect: React.FC<{
   selectedValue,
 }) => {
   const [selectedOptions, setSelectedOptions] = useState<Option[]>([]);
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);  
 
   const intl = useIntl();
 
   useEffect(() => {
-    console.log(selectedValue?.length);
 
-    setSelectedOptions([]);
     addAll && setSelectedOptions(options);
 
     selectedValue?.[0]?.value && setSelectedOptions(selectedValue);
@@ -151,7 +149,6 @@ const MultiSelect: React.FC<{
           <div className="d-flex flex-wrap gap-2">
             {selectedOptions.map(
               (option, index) => (
-                console.log(selectedOptions),
                 (
                   <div
                     dir="ltr"

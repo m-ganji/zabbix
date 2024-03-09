@@ -461,23 +461,23 @@ export function LatestData() {
                   </div>
                 </div>
               </div>
-            </div>
-            <div className="d-flex justify-content-center mb-5 gap-5 ">
-              <BTN
-                label={intl.formatMessage({ id: "SUBMIT" })}
-                className="btn-light-success"
-                // onClick={submit}
-              />
-              <BTN
-                label="باز نشانی"
-                className="btn-light-danger"
-                onClick={resetData}
-              />
-              <BTN
-                label="ذخیره"
-                className="btn-light-primary"
-                // onClick={resetData}
-              />
+              <div className="d-flex justify-content-center mb-5 gap-5 ">
+                <BTN
+                  label={intl.formatMessage({ id: "SUBMIT" })}
+                  className="btn-light-success"
+                  // onClick={submit}
+                />
+                <BTN
+                  label="باز نشانی"
+                  className="btn-light-danger"
+                  onClick={resetData}
+                />
+                <BTN
+                  label="ذخیره"
+                  className="btn-light-primary"
+                  // onClick={resetData}
+                />
+              </div>
             </div>
           </div>
         </div>
