@@ -8,18 +8,18 @@ import { getCSSVariableValue } from "../../../../../assets/ts/_utils";
 import { KTIcon } from "../../../../../helpers";
 
 interface ItemType {
-  description: string;
-  globalmacroid: string;
-  macro: [];
-  type: string;
-  value: string;
+  description?: string;
+  globalmacroid?: string;
+  macro?: string;
+  type?: string;
+  value?: string;
 }
 
 type Inputs = {
   macro: string;
-  value: string;
-  type: string;
-  description: string;
+  value?: string;
+  type?: string;
+  description?: string;
 };
 interface Macro {
   macrosField: object[];
@@ -53,7 +53,6 @@ const Inheritedmacros: React.FC<Macro> = ({
           output: "extend",
           globalmacro: true,
         });
-        globalUserMacro.map((e) => setGlobalUserMacro(e.macro));
 
         setGlobalUserMacro(response.data || []);
         setIsLoaded(true);
@@ -70,7 +69,7 @@ const Inheritedmacros: React.FC<Macro> = ({
     defaultValues: {},
   });
 
-  const onSubmit = async (data: ItemType) => {
+  const onSubmit = async (data: Inputs) => {
     console.log(data);
     try {
       const response = await instance.post(
@@ -189,9 +188,7 @@ const Inheritedmacros: React.FC<Macro> = ({
               <input
                 type="text"
                 className="form-control "
-                defaultValue={e.macro}
-                dir="rtl"
-                style={{ width: "33%", direction: "rtl" }}
+                style={{ width: "33%" }}
                 key={index}
               />
               <div className="d-flex" style={{ width: "33%" }}>
@@ -201,9 +198,7 @@ const Inheritedmacros: React.FC<Macro> = ({
                   placeholder={intl.formatMessage({
                     id: "MONITORING.HOSTS.ADDTAG.VALUE",
                   })}
-                  style={{ direction: "rtl" }}
                   defaultValue={e.value}
-                  dir="rtl"
                   key={index}
                 />
                 <div
@@ -307,7 +302,6 @@ const Inheritedmacros: React.FC<Macro> = ({
                   id: "MONITORING.HOSTS.ADDTAG.VALUE",
                 })}
                 style={{ width: "33%" }}
-                dir="rtl"
               />
             </div>
           ))}
@@ -340,8 +334,7 @@ const Inheritedmacros: React.FC<Macro> = ({
                 {...register("macro")}
                 type="text"
                 className="form-control"
-                dir="rtl"
-                style={{ width: "33%", direction: "rtl" }}
+                style={{ width: "33%" }}
               />
               <div className="d-flex" style={{ width: "33%" }}>
                 <input
@@ -354,8 +347,6 @@ const Inheritedmacros: React.FC<Macro> = ({
                   placeholder={intl.formatMessage({
                     id: "MONITORING.HOSTS.ADDTAG.VALUE",
                   })}
-                  style={{ direction: "rtl" }}
-                  dir="rtl"
                 />
                 <div
                   {...register("type")}
@@ -365,8 +356,10 @@ const Inheritedmacros: React.FC<Macro> = ({
                   {isOpenAdd && (
                     <div
                       className="options position-absolute"
-                      onClick={(e: { target: { innerHTML: string } }) => {
-                        const innerHTML = e.target.innerHTML;
+                      onClick={(
+                        e: React.MouseEvent<HTMLDivElement, MouseEvent>
+                      ) => {
+                        const innerHTML = (e.target as HTMLElement).innerHTML;
                         console.log(innerHTML);
                         if (innerHTML.includes("text")) {
                           setSelectedOption(
@@ -394,11 +387,10 @@ const Inheritedmacros: React.FC<Macro> = ({
                 {...register("description")}
                 type="text"
                 className="form-control py-2"
-                dir="rtl"
                 placeholder={intl.formatMessage({
                   id: "MONITORING.HOSTS.ADDTAG.VALUE",
                 })}
-                style={{ width: "33%", direction: "rtl" }}
+                style={{ width: "33%" }}
               />
             </div>
             <button type="submit" className="btn btn-success py-2 d-block mt-5">
@@ -419,8 +411,7 @@ const Inheritedmacros: React.FC<Macro> = ({
               className="form-control "
               defaultValue={e.macro}
               key={index}
-              dir="rtl"
-              style={{ width: "33%", direction: "rtl" }}
+              style={{ width: "33%" }}
             />
             <div className="d-flex" style={{ width: "33%" }}>
               <input
@@ -431,8 +422,6 @@ const Inheritedmacros: React.FC<Macro> = ({
                   id: "MONITORING.HOSTS.ADDTAG.VALUE",
                 })}
                 defaultValue={e.value}
-                style={{ direction: "rtl" }}
-                dir="rtl"
               />
               <div
                 className={`custom-dropdown border border-${secondaryColor} border-2`}
@@ -476,7 +465,6 @@ const Inheritedmacros: React.FC<Macro> = ({
                 id: "MONITORING.HOSTS.ADDTAG.VALUE",
               })}
               style={{ width: "33%" }}
-              dir="rtl"
             />
           </div>
         ))}
