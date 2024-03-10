@@ -215,6 +215,7 @@ const InventoryHost = () => {
                       </div>
                       <div className="d-flex gap-3 w-75">
                         <Select
+                          onChange={(e) => console.log(e)}
                           value="-1"
                           defaultLabel={intl.formatMessage({
                             id: "VALUE",
@@ -222,6 +223,7 @@ const InventoryHost = () => {
                           options={[]}
                         />
                         <Select
+                          onChange={(e) => console.log(e)}
                           value="-1"
                           defaultLabel={intl.formatMessage({
                             id: "MONITORING.HOSTS.ADDTAG.OPTION3",

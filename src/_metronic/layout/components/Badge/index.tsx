@@ -1,7 +1,7 @@
 import React from "react";
 
 interface BadgeProps {
-  title: string;
+  title: string | number;
   bg: string;
   className?: string;
 }

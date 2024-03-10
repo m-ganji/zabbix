@@ -15,7 +15,7 @@ interface HostProps {
   setValue: CallableFunction;
 }
 
-interface ApiError {
+export interface ApiError {
   response?: {
     status: number;
   };

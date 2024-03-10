@@ -66,14 +66,17 @@ const ReportsNotificationsTable = () => {
         </h3>
         <div className=" w-50 gap-5 d-flex">
           <Select
+            onChange={(e) => console.log(e)}
             defaultLabel={intl.formatMessage({ id: "REPORTS.MEDIA_TYPE" })}
             options={MediaTypes}
           />
           <Select
+            onChange={(e) => console.log(e)}
             defaultLabel={intl.formatMessage({ id: "PERIOD" })}
             options={periodOptions}
           />
           <Select
+            onChange={(e) => console.log(e)}
             defaultLabel={intl.formatMessage({ id: "YEAR" })}
             options={[{ value: "1402", label: "1402" }]}
           />

@@ -15,9 +15,11 @@ interface Host {
   status: number;
   statusColor?: string;
   issuesColor?: string;
-  problems: [];
-  graphs?: [];
-  dashboards?: [];
+  problems: [[]];
+  graphs: [];
+  dashboards: [];
+  hostid:string
+  host:string
 }
 
 interface TableHostsProps {

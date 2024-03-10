@@ -121,44 +121,39 @@ const AvailabilityReport = () => {
     }
     setIsHostsDataLoading(false);
   };
-  const handleCheckboxChange = (host) => {
-    if (currentHostids.includes(host.hostid)) {
-      const newData = selectedHosts.filter((id) => id.value != host.hostid);
-      setSelectedHosts(newData);
-      setValue(
-        "hostids",
-        newData.map((i) => i.value)
-      );
-      console.log(newData);
-    } else {
-      setSelectedHosts([
-        ...selectedHosts,
-        { label: host.host, value: host.hostid },
-      ]);
-      setValue("hostids", [...currentHostids, host.hostid]);
-    }
-  };
+  // const handleCheckboxChange = (host) => {
+  //   if (currentHostids.includes(host.hostid)) {
+  //     const newData = selectedHosts.filter((id) => id.value != host.hostid);
+  //     setSelectedHosts(newData);
+  //     setValue(
+  //       "hostids",
+  //       newData.map((i) => i.value)
+  //     );
+  //     console.log(newData);
+  //   } else {
+  //     setSelectedHosts([
+  //       ...selectedHosts,
+  //       { label: host.host, value: host.hostid },
+  //     ]);
+  //     setValue("hostids", [...currentHostids, host.hostid]);
+  //   }
+  // };
 
   const resetData = () => {
-    setResetMultiSelect(true);
+    setresetMultiSelect(true);
     reset();
     setSelectedHosts([]);
-    resetMultiSelect && setResetMultiSelect(false);
+    resetMultiSelect && setresetMultiSelect(false);
   };
 
   const submit = () => {
     currentHostids.length === 0 && unregister("hostids");
     currentGroupids.length === 0 && unregister("groupids");
-    handleSubmit(fetchPromsListData)();
+    // handleSubmit(fetchPromsListData)();
   };
 
-  const handleDateChange = (e) => {
-    console.log(e);
+  const handleDateChange = () => {
     // Your logic here
-  };
-
-  const handleMood = (e) => {
-    setMood(e);
   };
 
   return (
@@ -177,7 +172,7 @@ const AvailabilityReport = () => {
                 ]}
                 defaultLabel="حالت :"
                 value={Mood}
-                onChange={handleMood}
+                onChange={(e) => console.log(e)}
               />
             </div>
             <ul className="nav d-flex gap-3 align-items-center">
@@ -321,8 +316,6 @@ const AvailabilityReport = () => {
                                 <input
                                   type="checkbox"
                                   id={`host-${host.hostid}`}
-                                  checked={currentHostids.includes(host.hostid)}
-                                  onChange={() => handleCheckboxChange(host)}
                                 />
                               </div>
                             ))

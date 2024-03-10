@@ -6,10 +6,13 @@ const Toast = Swal.mixin({
   showConfirmButton: false,
   timer: 2000,
   timerProgressBar: true,
-  
 });
 
- const ToastFire = (icon,title,text) => {
+type ToastIcon = "success" | "error" | "warning" | "info" | "question";
+
+type Toast = (icon: ToastIcon, title: string, text: string) => void;
+
+const ToastFire: Toast = (icon, title, text) => {
   Toast.fire({
     icon: icon,
     title: title,
@@ -17,6 +20,6 @@ const Toast = Swal.mixin({
     position: "bottom-start",
     background: "rgb(16 79 153 / 90%)",
   });
-}
+};
 
 export default ToastFire;
