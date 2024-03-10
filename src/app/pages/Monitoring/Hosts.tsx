@@ -53,22 +53,29 @@ interface FormValues {
 }
 
 export function Overview() {
-  const { control, watch, setValue, handleSubmit, reset, register } =
-    useForm<FormValues>({
-      defaultValues: {
-        selectProblems: "extend",
-        selectGraphs: "extend",
-        selectTags: "extend",
-        selectDashboards: "extend",
-        selectInterfaces: "extend",
-        evaltype: "",
-        maintenance_status: "",
-        show_suppressed: "",
-        search: { name: "", ip: "", dns: "", port: "" },
-        filter: { status: ["0", "1"] },
-        tags: [],
-      },
-    });
+  const {
+    control,
+    watch,
+    setValue,
+    handleSubmit,
+    reset,
+    register,
+    unregister,
+  } = useForm<FormValues>({
+    defaultValues: {
+      selectProblems: "extend",
+      selectGraphs: "extend",
+      selectTags: "extend",
+      selectDashboards: "extend",
+      selectInterfaces: "extend",
+      evaltype: "",
+      maintenance_status: "",
+      show_suppressed: "",
+      search: { name: "", ip: "", dns: "", port: "" },
+      filter: { status: ["0", "1"] },
+      tags: [],
+    },
+  });
 
   const intl = useIntl();
 
@@ -86,6 +93,12 @@ export function Overview() {
 
   const dispatch = useDispatch<AppDispatch>();
 
+  useEffect(() => {
+    dataHost(watch());
+    dispatch(fetchHostGroup());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch]);
+
   const {
     fields: tagsField,
     append: tagsAppend,
@@ -99,6 +112,7 @@ export function Overview() {
     console.log(data);
     setIsLoaded(true);
     setIsError(false);
+
     try {
       const response = await instance.post("/core/hosts/get", data);
       setData(response.data);
@@ -112,16 +126,18 @@ export function Overview() {
   }
 
   const resetData = () => {
-    dataHost(watch());
     setResetMultiSelect(true);
     resetMultiSelect && setResetMultiSelect(false);
     reset();
+    unregister("groupids");
+    dataHost(watch());
   };
 
-  useEffect(() => {
-    dataHost(watch());
-    dispatch(fetchHostGroup());
-  }, [dispatch]);
+  const submit = () => {
+    watch("severities")?.length === 0 && unregister("severities");
+    currentGroupids.length === 0 && unregister("groupids");
+    handleSubmit(dataHost)();
+  };
 
   return (
     <Content>
@@ -501,9 +517,7 @@ export function Overview() {
                 <BTN
                   label={intl.formatMessage({ id: "SUBMIT" })}
                   className="btn-light-success"
-                  onClick={handleSubmit((data) => {
-                    dataHost(data);
-                  })}
+                  onClick={submit}
                 />
                 <BTN
                   label="باز نشانی"
