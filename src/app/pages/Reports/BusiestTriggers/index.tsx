@@ -121,23 +121,23 @@ const BusiestTriggers = () => {
     }
     setIsHostsDataLoading(false);
   };
-  const handleCheckboxChange = (host) => {
-    if (currentHostids.includes(host.hostid)) {
-      const newData = selectedHosts.filter((id) => id.value != host.hostid);
-      setSelectedHosts(newData);
-      setValue(
-        "hostids",
-        newData.map((i) => i.value)
-      );
-      console.log(newData);
-    } else {
-      setSelectedHosts([
-        ...selectedHosts,
-        { label: host.host, value: host.hostid },
-      ]);
-      setValue("hostids", [...currentHostids, host.hostid]);
-    }
-  };
+  // const handleCheckboxChange = (host) => {
+  //   if (currentHostids.includes(host.hostid)) {
+  //     const newData = selectedHosts.filter((id) => id.value != host.hostid);
+  //     setSelectedHosts(newData);
+  //     setValue(
+  //       "hostids",
+  //       newData.map((i) => i.value)
+  //     );
+  //     console.log(newData);
+  //   } else {
+  //     setSelectedHosts([
+  //       ...selectedHosts,
+  //       { label: host.host, value: host.hostid },
+  //     ]);
+  //     setValue("hostids", [...currentHostids, host.hostid]);
+  //   }
+  // };
 
   const resetData = () => {
     setresetMultiSelect(true);
@@ -149,11 +149,10 @@ const BusiestTriggers = () => {
   const submit = () => {
     currentHostids.length === 0 && unregister("hostids");
     currentGroupids.length === 0 && unregister("groupids");
-    handleSubmit(fetchPromsListData)();
+    // handleSubmit(fetchPromsListData)();
   };
 
-  const handleDateChange = (e) => {
-    console.log(e);
+  const handleDateChange = () => {
     // Your logic here
   };
 
@@ -305,8 +304,6 @@ const BusiestTriggers = () => {
                                 <input
                                   type="checkbox"
                                   id={`host-${host.hostid}`}
-                                  checked={currentHostids.includes(host.hostid)}
-                                  onChange={() => handleCheckboxChange(host)}
                                 />
                               </div>
                             ))

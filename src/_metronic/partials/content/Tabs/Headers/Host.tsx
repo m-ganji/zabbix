@@ -2,17 +2,11 @@ import { useEffect, useState } from "react";
 import { MultiSelect } from "../../../../layout/components/MultiSelect/MultiSelect";
 import { useIntl } from "react-intl";
 import { instance } from "../../../../../services/axiosInstance";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Control, useFieldArray } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import ToastFire from "../../../../layout/components/Toast";
-import {
-  selectApiData,
-  selectApiError,
-  selectApiLoading,
-} from "../../../../../store/store";
-import { fetchHostGroup } from "../../../../../hostGroupSlice/hostGroupReducer";
-import Dropdown from "react-bootstrap/Dropdown";
+import { selectApiData, selectApiLoading } from "../../../../../store/store";
 import ToggleBtns from "../../../../layout/components/ToggleBtn/ToggleBtn";
 
 interface HostProps {
@@ -22,7 +16,7 @@ interface HostProps {
   setValue: CallableFunction;
 }
 
-interface ApiError {
+export interface ApiError {
   response?: {
     status: number;
   };
@@ -34,7 +28,6 @@ const Host: React.FC<HostProps> = ({ control, watch, setValue, register }) => {
   const currentGroupids = watch("groupids") ? watch("groupids") : [];
   const currentTemplate = watch("template") ? watch("template") : [];
 
-  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
   const HostGroupData = useSelector(selectApiData);

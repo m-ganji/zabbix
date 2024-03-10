@@ -1,13 +1,28 @@
 import React from "react";
-import { Problem } from "../../../../app/pages/Monitoring/Problems";
 import moment from "jalali-moment";
 
 interface ProblemTableProps {
-  ProblemsData: Problem[];
+  ProblemsData: {
+    eventid: string;
+    clock: string;
+    name: string;
+    severity: string;
+    acknowledged: string;
+    hosts: { host: string }[];
+    tags: {
+      tag: string;
+      operator: number | string;
+      value: string;
+    }[];
+  }[];
   isLoaded: boolean;
   isError: boolean;
   showTags: number;
   tagNameVisible: number;
+}
+
+interface SeverityColor {
+  [key: string]: { title: string; color: string };
 }
 
 const ProblemTable: React.FC<ProblemTableProps> = ({
@@ -23,12 +38,13 @@ const ProblemTable: React.FC<ProblemTableProps> = ({
     return jnow;
   }
 
-  function formatTime(seconds: string) {
-    const now = new Date();
-    const targetDate = new Date(Number(seconds) * 1000);
-    // const s = moment(targetDate).format('jYYYY/jMM/jDD HH:mm:ss');
-    let diffMilliseconds = Math.abs(now - targetDate);
-    const days = Math.floor(diffMilliseconds / (1000 * 60 * 60 * 24));
+  function formatTime(seconds: string | number): string {
+    const now: Date = new Date();
+    const targetDate: Date = new Date(Number(seconds) * 1000);
+    let diffMilliseconds: number = Math.abs(
+      now.getTime() - targetDate.getTime()
+    );
+    const days: number = Math.floor(diffMilliseconds / (1000 * 60 * 60 * 24));
     diffMilliseconds %= 24 * 60 * 60;
 
     // const hours = Math.floor(diffMilliseconds / (1000 * 60 * 60));
@@ -38,7 +54,7 @@ const ProblemTable: React.FC<ProblemTableProps> = ({
     return `${days} روز پیش`;
   }
 
-  const severityToColor = {
+  const severityToColor: SeverityColor = {
     5: { title: "بسیار بالا", color: "danger" },
     4: { title: "بالا", color: "red/80" },
     3: { title: "عادی", color: "info" },

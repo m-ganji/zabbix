@@ -7,7 +7,7 @@ interface SelectOption {
 
 interface SelectProps {
   options: SelectOption[];
-  onChange?: (selectedValue: string | number) => void;
+  onChange: (selectedValue: string | number) => void;
   defaultLabel?: string;
   value?: string | number;
 }

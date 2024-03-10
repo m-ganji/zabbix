@@ -3,8 +3,8 @@ import { SidebarMenuItemWithSub } from "./SidebarMenuItemWithSub";
 import { SidebarMenuItem } from "./SidebarMenuItem";
 import Swal from "sweetalert2";
 import { instance } from "../../../../../services/axiosInstance";
-import Toast from "../../Toast";
 import { useNavigate } from "react-router-dom";
+import ToastFire from "../../Toast";
 
 const SidebarMenuMain = () => {
   const intl = useIntl();
@@ -29,22 +29,10 @@ const SidebarMenuMain = () => {
             `token=${localStorage.getItem("token")}`
           );
           localStorage.removeItem("token");
-          Toast.fire({
-            icon: "success",
-            title: "با موفقیت خارج شدید",
-            position: "bottom-start",
-            background: "rgb(16 79 153 / 90%)",
-          });
+          ToastFire("success", `موفق`, "با موفقیت خارج شدید");
           navigate("/");
         } catch (error) {
-          console.error(error);
-          Toast.fire({
-            icon: "error",
-            title: `خطا ${error?.code}`,
-            text: "لطفا لحظاتی بعد مجدد تلاش کنید",
-            position: "bottom-start",
-            background: "rgb(16 79 153 / 90%)",
-          });
+          ToastFire("error", `خطا`, "لطفا لحظاتی بعد مجدد تلاش کنید");
         }
       }
     });

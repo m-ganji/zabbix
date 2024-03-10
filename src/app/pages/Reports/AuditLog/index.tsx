@@ -70,9 +70,7 @@ const AuditLog = () => {
   const [hostsData, setHostsData] = useState<HostsData[]>([]);
   const [hostGroupWithoutParam, setHostGroupWithoutParam] =
     useState<HostGroupData | null>(null);
-  const [selectedHosts, setSelectedHosts] = useState<hostGroupItems[]>([]);
   const [resetMultiSelect, setresetMultiSelect] = useState(false);
-  const [isHostsModalOpen, setisHostsModalOpen] = useState<boolean>(false);
   const [isHostsDataLoading, setIsHostsDataLoading] = useState<boolean>(false);
   const [Mood, setMood] = useState<string>("0");
 
@@ -143,7 +141,6 @@ const AuditLog = () => {
       },
     });
 
-  const currentHostids = watch("hostids") ? watch("hostids") : [];
   const currentGroupids = watch("groupids") ? watch("groupids") : [];
 
   const fetchHostsData = async (params: string, with_triggers: boolean) => {
@@ -168,45 +165,38 @@ const AuditLog = () => {
     }
     setIsHostsDataLoading(false);
   };
-  const handleCheckboxChange = (host) => {
-    if (currentHostids.includes(host.hostid)) {
-      const newData = selectedHosts.filter((id) => id.value != host.hostid);
-      setSelectedHosts(newData);
-      setValue(
-        "hostids",
-        newData.map((i) => i.value)
-      );
-      console.log(newData);
-    } else {
-      setSelectedHosts([
-        ...selectedHosts,
-        { label: host.host, value: host.hostid },
-      ]);
-      setValue("hostids", [...currentHostids, host.hostid]);
-    }
-  };
+  // const handleCheckboxChange = (host) => {
+  //   if (currentHostids.includes(host.hostid)) {
+  //     const newData = selectedHosts.filter((id) => id.value != host.hostid);
+  //     setSelectedHosts(newData);
+  // setValue(
+  //   "hostids",
+  //   newData.map((i) => i.value)
+  // );
+  //     console.log(newData);
+  //   } else {
+  //     setSelectedHosts([
+  //       ...selectedHosts,
+  //       { label: host.host, value: host.hostid },
+  //     ]);
+  //     setValue("hostids", [...currentHostids, host.hostid]);
+  //   }
+  // };
 
-  const resetData = () => {
-    setResetMultiSelect(true);
-    reset();
-    setSelectedHosts([]);
-    resetMultiSelect && setResetMultiSelect(false);
-  };
+  // const resetData = () => {
+  //   reset();
+  //   setSelectedHosts([]);
+  // };
 
-  const submit = () => {
-    currentHostids.length === 0 && unregister("hostids");
-    currentGroupids.length === 0 && unregister("groupids");
-    handleSubmit(fetchPromsListData)();
-  };
+  // const submit = () => {
+  //   currentHostids.length === 0 && unregister("hostids");
+  //   currentGroupids.length === 0 && unregister("groupids");
+  // };
 
-  const handleDateChange = (e) => {
-    console.log(e);
-    // Your logic here
-  };
-
-  const handleMood = (e) => {
-    setMood(e);
-  };
+  // const handleDateChange = (e) => {
+  //   console.log(e);
+  //   // Your logic here
+  // };
 
   return (
     <>
@@ -296,6 +286,7 @@ const AuditLog = () => {
                           <div className="d-flex  gap-3">
                             <div className="d-flex flex-column gap-3">
                               <CheckBox
+                                checked={false}
                                 dir="rtl"
                                 className=" justify-content-between"
                                 label={intl.formatMessage({
@@ -303,6 +294,7 @@ const AuditLog = () => {
                                 })}
                               />
                               <CheckBox
+                                checked={false}
                                 dir="rtl"
                                 className=" justify-content-between"
                                 label={intl.formatMessage({
@@ -310,6 +302,7 @@ const AuditLog = () => {
                                 })}
                               />
                               <CheckBox
+                                checked={false}
                                 dir="rtl"
                                 className=" justify-content-between"
                                 label={intl.formatMessage({
@@ -319,6 +312,7 @@ const AuditLog = () => {
                             </div>
                             <div className="d-flex flex-column gap-3">
                               <CheckBox
+                                checked={false}
                                 dir="rtl"
                                 className=" justify-content-between"
                                 label={intl.formatMessage({
@@ -326,6 +320,7 @@ const AuditLog = () => {
                                 })}
                               />
                               <CheckBox
+                                checked={false}
                                 dir="rtl"
                                 className=" justify-content-between"
                                 label={intl.formatMessage({
@@ -333,6 +328,7 @@ const AuditLog = () => {
                                 })}
                               />
                               <CheckBox
+                                checked={false}
                                 dir="rtl"
                                 className=" justify-content-between"
                                 label={intl.formatMessage({
@@ -342,6 +338,7 @@ const AuditLog = () => {
                             </div>
                             <div className="d-flex flex-column gap-3">
                               <CheckBox
+                                checked={false}
                                 dir="rtl"
                                 className=" justify-content-between"
                                 label={intl.formatMessage({
@@ -349,6 +346,7 @@ const AuditLog = () => {
                                 })}
                               />
                               <CheckBox
+                                checked={false}
                                 dir="rtl"
                                 className=" justify-content-between"
                                 label={intl.formatMessage({
@@ -356,6 +354,7 @@ const AuditLog = () => {
                                 })}
                               />
                               <CheckBox
+                                checked={false}
                                 dir="rtl"
                                 className=" justify-content-between"
                                 label={intl.formatMessage({
@@ -368,6 +367,7 @@ const AuditLog = () => {
                       </div>
                       <div className="d-flex flex-column align-items-center gap-3 w-50">
                         <Select
+                          onChange={(e) => console.log(e)}
                           value="-1"
                           defaultLabel={intl.formatMessage({
                             id: "RESOURCE",
@@ -394,7 +394,7 @@ const AuditLog = () => {
                       <DatePickerSelect
                         range={true}
                         defaultValue={new Date()}
-                        onChange={handleDateChange}
+                        onChange={(e) => console.log(e)}
                       />
                     </div>
                   </div>
@@ -402,13 +402,8 @@ const AuditLog = () => {
                     <BTN
                       label={intl.formatMessage({ id: "SUBMIT" })}
                       className="btn-light-success"
-                      onClick={submit}
                     />
-                    <BTN
-                      label="باز نشانی"
-                      className="btn-light-danger"
-                      onClick={resetData}
-                    />
+                    <BTN label="باز نشانی" className="btn-light-danger" />
                   </div>
                 </div>
               </div>

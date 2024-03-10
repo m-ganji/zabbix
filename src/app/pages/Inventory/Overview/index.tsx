@@ -214,6 +214,7 @@ const InventoryOverview = () => {
                       </div>
                       <div className="w-50">
                         <Select
+                          onChange={(e) => console.log(e)}
                           value="-1"
                           defaultLabel={intl.formatMessage({
                             id: "INVENTORY.GP_BY",
