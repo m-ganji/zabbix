@@ -34,10 +34,7 @@ interface Triggers {
   triggerid: number;
   description: string;
 }
-interface TriggersGp {
-  value: number;
-  label: string;
-}
+
 type HostGroupData = {
   value: number;
   label: string;
@@ -95,28 +92,24 @@ export function Problems() {
 
   const { id, value } = useParams<ProblemParams>();
 
-  const [hostGroupWithoutParam, setHostGroupWithoutParam] = useState<
-    HostGroupData[]
-  >([]);
-  const [Triggers, setTriggers] = useState([]);
-  const [IsTriggersLoading, setIsTriggersLoading] = useState<boolean>(false);
-  const [ProblemsData, setProblemsData] = useState([]);
-  const [showTags, setShowTags] = useState<number>(3);
-  const [hostsData, setHostsData] = useState<HostsData[]>([]);
-  const [selectedHosts, setSelectedHosts] = useState<hostGroupItems[]>([]);
-  const [SelectedTriggers, setSelectedTriggers] = useState<TriggersGp[]>([]);
-  const [SelectedHostGpTriggers, setSelectedHostGpTriggers] = useState<
-    string | number
-  >(-1);
-  const [isLoaded, setIsLoaded] = useState<boolean>(false);
-  const [isError, setIsError] = useState<boolean>(false);
-  const [isHostsModalOpen, setisHostsModalOpen] = useState<boolean>(false);
-  const [isHostsDataLoading, setIsHostsDataLoading] = useState<boolean>(false);
-  const [resetMultiSelect, setResetMultiSelect] = useState(false);
-  const [isTriggersModalOpen, setIsTriggersModalOpen] =
-    useState<boolean>(false);
-  const [tagNameVisible, setTagNameVisible] = useState<number>(0);
   const [age, setAge] = useState(0);
+  const [Triggers, setTriggers] = useState([]);
+  const [showTags, setShowTags] = useState<number>(3);
+  const [ProblemsData, setProblemsData] = useState([]);
+  const [isError, setIsError] = useState<boolean>(false);
+  const [isLoaded, setIsLoaded] = useState<boolean>(false);
+  const [hostsData, setHostsData] = useState<HostsData[]>([]);
+  const [resetMultiSelect, setResetMultiSelect] = useState(false);
+  const [tagNameVisible, setTagNameVisible] = useState<number>(0);
+  const [IsHostGpsLoading, setIsHostGpsLoading] = useState<boolean>(false);
+  const [isTrgsModalOpen, setIsTrgsModalOpen] = useState<boolean>(false);
+  const [TrgsHostGroup, setTrgsHostGroup] = useState<HostGroupData[]>([]);
+  const [selectedHosts, setSelectedHosts] = useState<hostGroupItems[]>([]);
+  const [isHostsModalOpen, setisHostsModalOpen] = useState<boolean>(false);
+  const [IsTriggersLoading, setIsTriggersLoading] = useState<boolean>(false);
+  const [isHostsDataLoading, setIsHostsDataLoading] = useState<boolean>(false);
+  const [SelectHostGpTrgs, setSelectHostGpTrgs] = useState<string | number>(-1);
+  const [SelectedTriggers, setSelectedTriggers] = useState<HostGroupData[]>([]);
 
   const HostGroupData: hostGroupItems[] = useSelector(selectApiData);
   const HostGroupLoading = useSelector(selectApiLoading);
@@ -171,7 +164,10 @@ export function Problems() {
   const currentGroupids: number[] = watch("groupids") ?? [];
 
   useEffect(() => {
-    id && value && setSelectedHosts([{ value: id, label: value }]);
+    isTrgsModalOpen &&
+      id &&
+      value &&
+      setSelectedHosts([{ value: id, label: value }]);
 
     dispatch(fetchHostGroup());
 
@@ -180,20 +176,27 @@ export function Problems() {
   }, [navigate, dispatch]);
 
   useEffect(() => {
-    isTriggersModalOpen && fetchTriggerHostGps();
-  }, [isTriggersModalOpen]);
+    fetchHostGps();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isTrgsModalOpen]);
 
-  const fetchTriggerHostGps = async () => {
-    const response = await instance.post("/core/hostgroup/get", {
-      with_triggers: true,
-    });
-
-    setHostGroupWithoutParam(
-      response?.data.map((group: hostGroupItems) => ({
-        value: group.groupid,
-        label: group.name,
-      }))
-    );
+  const fetchHostGps = async () => {
+    setIsHostGpsLoading(true);
+    try {
+      const response = await instance.post("/core/hostgroup/get", {
+        with_triggers: true,
+        with_hosts: true,
+      });
+      isTrgsModalOpen && setTrgsHostGroup(response.data);
+    } catch (error) {
+      console.log("error", error);
+      if ((error as ApiError).response?.status === 401) {
+        localStorage.removeItem("token");
+        navigate("/");
+      }
+      console.log(error);
+    }
+    setIsHostGpsLoading(false);
   };
 
   const handleCheckboxChange = (host: HostsData) => {
@@ -239,8 +242,6 @@ export function Problems() {
   };
 
   const fetchHostsData = async (params: string, with_triggers: boolean) => {
-    console.log(with_triggers);
-
     setIsHostsDataLoading(true);
     const param =
       Number(params) === -1
@@ -272,7 +273,7 @@ export function Problems() {
 
     try {
       const response = await instance.post("/core/trigger/get", {
-        groupids: [SelectedHostGpTriggers],
+        groupids: [SelectHostGpTrgs],
         hostids: [params],
         selectHosts: "extend",
         sortfield: "priority",
@@ -280,6 +281,10 @@ export function Problems() {
       setTriggers(response.data);
       console.log(response);
     } catch (error) {
+      if ((error as ApiError).response?.status === 401) {
+        localStorage.removeItem("token");
+        navigate("/");
+      }
       console.error(error);
     }
     setIsTriggersLoading(false);
@@ -314,7 +319,7 @@ export function Problems() {
     setResetMultiSelect(true);
     setShowTags(0);
     setSelectedHosts([]);
-    setSelectedHostGpTriggers(-1);
+    setSelectHostGpTrgs(-1);
     setSelectedTriggers([]);
     resetMultiSelect && setResetMultiSelect(false);
     fetchPromsListData(watch());
@@ -464,6 +469,27 @@ export function Problems() {
                         title={intl.formatMessage({ id: "MENU.SELECT.HOSTS" })}
                       >
                         <div className=" h-350px overflow-y-scroll mt-2">
+                          <Form.Select
+                            defaultValue={-1}
+                            onChange={(e) =>
+                              fetchHostsData(e.currentTarget.value, false)
+                            }
+                          >
+                            <option value={-1}>
+                              {intl.formatMessage({
+                                id: "MENU.SELECT.ALL",
+                              })}
+                            </option>
+                            {HostGroupData.map(
+                              (item: hostGroupItems, index: number) => {
+                                return (
+                                  <option value={item.groupid} key={index}>
+                                    {item.name}
+                                  </option>
+                                );
+                              }
+                            )}
+                          </Form.Select>
                           {!isHostsDataLoading ? (
                             hostsData.map((host) => (
                               <div
@@ -471,6 +497,7 @@ export function Problems() {
                                 className="w-100 justify-content-end my-3 gap-2 d-flex"
                               >
                                 <CheckBox
+                                  dir="ltr"
                                   label={host.host}
                                   checked={currentHostids.includes(host.hostid)}
                                   onchange={() => handleCheckboxChange(host)}
@@ -487,7 +514,7 @@ export function Problems() {
                           <BTN
                             className="btn-light-danger"
                             onClick={() => setisHostsModalOpen(false)}
-                            label={intl.formatMessage({ id: "CANCEL" })}
+                            label={intl.formatMessage({ id: "CLOSE" })}
                           />
                         </div>
                       </ModalContainer>
@@ -509,34 +536,46 @@ export function Problems() {
                             id: "MENU.SELECT",
                           })}
                           className="btn h-25 py-3 btn-light-primary px-0 col-2"
-                          onClick={() => setIsTriggersModalOpen(true)}
+                          onClick={() => setIsTrgsModalOpen(true)}
                         />
                       </div>
                       <ModalContainer
-                        show={isTriggersModalOpen}
-                        setHide={setIsTriggersModalOpen}
-                        title="عامل های شروع"
+                        show={isTrgsModalOpen}
+                        setHide={setIsTrgsModalOpen}
+                        title={intl.formatMessage({
+                          id: "MENU.SELECT.TRIGGERS",
+                        })}
                       >
                         <Form.Select
                           onChange={(e) => {
                             fetchHostsData(e.currentTarget.value, true);
-                            setSelectedHostGpTriggers(e.currentTarget.value);
+                            setSelectHostGpTrgs(e.currentTarget.value);
                           }}
                           defaultValue={-1}
                         >
-                          <option value={-1}>
-                            {intl.formatMessage({
-                              id: "MENU.SELECT.HOSTS.GP",
-                            })}
-                          </option>
-                          {hostGroupWithoutParam?.map(
-                            (item: hostGroupItems, index: number) => {
-                              return (
-                                <option value={item.value} key={index}>
-                                  {item.label}
-                                </option>
-                              );
-                            }
+                          {IsHostGpsLoading ? (
+                            <option value={-2}>
+                              {intl.formatMessage({
+                                id: "MENU.LOAD",
+                              })}
+                            </option>
+                          ) : (
+                            <>
+                              <option value={-1}>
+                                {intl.formatMessage({
+                                  id: "MENU.SELECT.HOSTS.GP",
+                                })}
+                              </option>
+                              {TrgsHostGroup?.map(
+                                (item: hostGroupItems, index: number) => {
+                                  return (
+                                    <option value={item.groupid} key={index}>
+                                      {item.name}
+                                    </option>
+                                  );
+                                }
+                              )}
+                            </>
                           )}
                         </Form.Select>
                         <Form.Select
@@ -544,16 +583,30 @@ export function Problems() {
                           className="mt-3"
                           onChange={(e) => fetchTriggers(e.currentTarget.value)}
                         >
-                          <option value={-1}>
-                            {intl.formatMessage({ id: "MENU.SELECT.HOSTS" })}
-                          </option>
-                          {hostsData?.map((host: HostsData, index: number) => {
-                            return (
-                              <option value={host.hostid} key={index}>
-                                {host.host}
+                          {isHostsDataLoading ? (
+                            <option value={-2}>
+                              {intl.formatMessage({
+                                id: "MENU.LOAD",
+                              })}
+                            </option>
+                          ) : (
+                            <>
+                              <option value={-1}>
+                                {intl.formatMessage({
+                                  id: "MENU.SELECT.HOSTS",
+                                })}
                               </option>
-                            );
-                          })}
+                              {hostsData.map(
+                                (item: HostsData, index: number) => {
+                                  return (
+                                    <option value={item.hostid} key={index}>
+                                      {item.host}
+                                    </option>
+                                  );
+                                }
+                              )}
+                            </>
+                          )}
                         </Form.Select>
                         <p className="mt-2">راهنمای رنگ ها :</p>
                         <div className="d-flex flex-wrap gap-2">
@@ -577,9 +630,11 @@ export function Problems() {
                                   onchange={() =>
                                     handleCheckboxTriggersChange(item)
                                   }
-                                  checked={currentTriggersIds.includes(
-                                    Number(item.triggerid)
-                                  )}
+                                  checked={
+                                    currentTriggersIds.includes(item.triggerid)
+                                      ? true
+                                      : false
+                                  }
                                 />
                               </div>
                             ))
@@ -590,13 +645,11 @@ export function Problems() {
                           )}
                         </div>
                         <div className="d-flex justify-content-center mt-2">
-                          <button
-                            type="button"
-                            onClick={() => setIsTriggersModalOpen(false)}
-                            className="btn py-2 btn-light-danger"
-                          >
-                            بستن
-                          </button>
+                          <BTN
+                            className="btn-light-danger"
+                            onClick={() => setIsTrgsModalOpen(false)}
+                            label={intl.formatMessage({ id: "CLOSE" })}
+                          />
                         </div>
                       </ModalContainer>
                       <Controller

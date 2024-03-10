@@ -1,6 +1,6 @@
 // import { useState } from "react";
 import { Content } from "../../../_metronic/layout/components/content";
-import { useForm } from "react-hook-form";
+import { Control, useForm } from "react-hook-form";
 import { useIntl } from "react-intl";
 // import { useNavigate } from "react-router-dom";
 import { MultiSelect } from "../../../_metronic/layout/components/MultiSelect/MultiSelect";
@@ -9,7 +9,7 @@ import BTN from "../../../_metronic/layout/components/BTN";
 import { CreateMap } from "../../../_metronic/layout/components/Maps/Create";
 import { ImportMap } from "../../../_metronic/layout/components/Maps/Import";
 
-interface FormValues {
+export interface FormValues {
   search: {
     name: string;
   };
@@ -26,7 +26,7 @@ export function Maps() {
 
   // const [resetMultiSelect, setResetMultiSelect] = useState(false);
 
-  const { control, watch, setValue, handleSubmit, reset } =
+  const { control, watch, setValue, handleSubmit, register, reset } =
     useForm<FormValues>({
       defaultValues: {
         search: { name: "" },
@@ -95,7 +95,11 @@ export function Maps() {
             label={intl.formatMessage({ id: "IMPORT" })}
             className="btn-light-warning"
           />
-          <CreateMap control={control} setValue={setValue} />
+          <CreateMap
+            register={register}
+            control={control as Control<FormValues>}
+            setValue={setValue}
+          />
           <ImportMap />
         </div>
       </div>

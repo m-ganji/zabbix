@@ -72,9 +72,10 @@ const ProblemTable: React.FC<ProblemTableProps> = ({
         </h3>
         <div className="card-toolbar">
           <span className="text-muted mt-1 fw-semibold fs-7">
-            {ProblemsData?.length === 0
-              ? `مشکلی یافت نشد`
-              : `مجموع ${ProblemsData?.length} عدد مشکل یافت شد.`}
+            {isLoaded &&
+              (ProblemsData?.length === 0
+                ? `مشکلی یافت نشد`
+                : `مجموع ${ProblemsData?.length} عدد مشکل یافت شد.`)}
           </span>
         </div>
       </div>

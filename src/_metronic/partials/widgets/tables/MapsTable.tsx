@@ -3,10 +3,16 @@ import { useIntl } from "react-intl";
 import { instance } from "../../../../services/axiosInstance";
 import Badge from "../../../layout/components/Badge";
 
+interface Map {
+  name: string;
+  width: string;
+  height: string;
+}
+
 const MapsTable: React.FC = () => {
   const intl = useIntl();
 
-  const [mapsData, setMapsData] = useState<any>(); // Adjust the type according to your data structure
+  const [mapsData, setMapsData] = useState<Map[]>(); // Adjust the type according to your data structure
 
   useEffect(() => {
     async function fetchData() {
@@ -77,7 +83,7 @@ const MapsTable: React.FC = () => {
             {/* begin::Table body */}
             {mapsData &&
               mapsData.map((value, index) => (
-                <tbody>
+                <tbody key={index}>
                   <tr>
                     <td className="text-center">
                       <div className="form-check form-check-sm form-check-custom form-check-solid">
