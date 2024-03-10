@@ -155,7 +155,7 @@ const Host: React.FC<HostProps> = ({ control, watch, setValue, register }) => {
             <input
               {...register(`interface[${index}].dns`)}
               type="text"
-              className="form-control rounded-start-2 rounded-end-0"
+              className="form-control rounded-start-2 rounded-end-0 me-2"
               placeholder={intl.formatMessage({
                 id: "MONITORING.HOSTS.HOST.DNS",
               })}
@@ -163,21 +163,23 @@ const Host: React.FC<HostProps> = ({ control, watch, setValue, register }) => {
               aria-describedby="tab-hosts"
               required
             />
-            <ToggleBtns
-              options={[
-                {
-                  value: 0,
-                  label: "DNS",
-                },
-                {
-                  value: 1,
-                  label: "IP",
-                },
-              ]}
-              data={`interface.${index}.useip`}
-              setData={setValue}
-              initialData={watch(`interface.${index}.useip`)}
-            />
+            <div className="mt-2 me-0 ms-2">
+              <ToggleBtns
+                options={[
+                  {
+                    value: 0,
+                    label: "MONITORING.HOSTS.HOST.DNS",
+                  },
+                  {
+                    value: 1,
+                    label: "MONITORING.HOSTS.HOST.IP",
+                  },
+                ]}
+                data={`interface.${index}.useip`}
+                setData={setValue}
+                initialData={watch(`interface.${index}.useip`)}
+              />
+            </div>
             <input
               {...register(`interface[${index}].port`)}
               type="text"
