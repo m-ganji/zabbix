@@ -5,7 +5,7 @@ import { useIntl } from "react-intl";
 import { KTIcon } from "../../../helpers";
 import { UsersTable } from "../../../partials/widgets";
 import ToggleBtns from "../ToggleBtn/ToggleBtn";
-import { Controller, useFieldArray } from "react-hook-form";
+import { Control, Controller, useFieldArray } from "react-hook-form";
 import { MultiSelect } from "../MultiSelect/MultiSelect";
 import { GroupSharesTabel } from "../../../partials/widgets/tables/GroupSharesTabel";
 import BTN from "../BTN";
@@ -15,7 +15,7 @@ import Input from "../Input";
 import { Select } from "../Select";
 
 interface CreateMapProps {
-  control: object;
+  control: Control;
   setValue: CallableFunction;
 }
 
@@ -237,7 +237,7 @@ export const CreateMap: React.FC<CreateMapProps> = ({ control, setValue }) => {
                                 },
                               ]}
                               data=""
-                              // setData={setShowTags}
+                              setData={setIsAdvancedTags}
                               // initialData={showTags}
                             />
                           </div>
@@ -258,6 +258,7 @@ export const CreateMap: React.FC<CreateMapProps> = ({ control, setValue }) => {
                         <div className="row">
                           <div className="col">
                             <Select
+                              onChange={(e) => console.log(e)}
                               value="-1"
                               defaultLabel={intl.formatMessage({
                                 id: "HOST_GROUP_LABEL_TYPE",
@@ -274,6 +275,7 @@ export const CreateMap: React.FC<CreateMapProps> = ({ control, setValue }) => {
                           </div>
                           <div className="col">
                             <Select
+                              onChange={(e) => console.log(e)}
                               value="-1"
                               defaultLabel={intl.formatMessage({
                                 id: "HOST_LABEL_TYPE",
@@ -290,6 +292,7 @@ export const CreateMap: React.FC<CreateMapProps> = ({ control, setValue }) => {
                           </div>
                           <div className="col">
                             <Select
+                              onChange={(e) => console.log(e)}
                               value="-1"
                               defaultLabel={intl.formatMessage({
                                 id: "TRIGGER_LABEL_TYPE",
@@ -306,6 +309,7 @@ export const CreateMap: React.FC<CreateMapProps> = ({ control, setValue }) => {
                           </div>
                           <div className="col">
                             <Select
+                              onChange={(e) => console.log(e)}
                               value="-1"
                               defaultLabel={intl.formatMessage({
                                 id: "MAP_LABEL_TYPE",
@@ -322,6 +326,7 @@ export const CreateMap: React.FC<CreateMapProps> = ({ control, setValue }) => {
                           </div>
                           <div className="col">
                             <Select
+                              onChange={(e) => console.log(e)}
                               value="-1"
                               defaultLabel={intl.formatMessage({
                                 id: "IMAGE_LABEL_TYPE",
@@ -341,6 +346,7 @@ export const CreateMap: React.FC<CreateMapProps> = ({ control, setValue }) => {
                         <div className="row">
                           <div className="col">
                             <Select
+                              onChange={(e) => console.log(e)}
                               value="-1"
                               defaultLabel={intl.formatMessage({
                                 id: "Map_LABEL_TYPE",
@@ -394,7 +400,7 @@ export const CreateMap: React.FC<CreateMapProps> = ({ control, setValue }) => {
                                 },
                               ]}
                               data=""
-                              // setData={setShowTags}
+                              setData={setIsAdvancedTags}
                               // initialData={showTags}
                             />
                           </div>
@@ -483,7 +489,7 @@ export const CreateMap: React.FC<CreateMapProps> = ({ control, setValue }) => {
                               },
                             ]}
                             data=""
-                            // setData={setShowTags}
+                            setData={setIsAdvancedTags}
                             // initialData={showTags}
                           />
                         </div>
@@ -529,7 +535,7 @@ export const CreateMap: React.FC<CreateMapProps> = ({ control, setValue }) => {
                                         },
                                       ]}
                                       data=""
-                                      // setData={setShowTags}
+                                      setData={setIsAdvancedTags}
                                       // initialData={showTags}
                                     />
                                   </td>
@@ -611,7 +617,7 @@ export const CreateMap: React.FC<CreateMapProps> = ({ control, setValue }) => {
                                         },
                                       ]}
                                       data=""
-                                      // setData={setShowTags}
+                                      setData={setIsAdvancedTags}
                                       // initialData={showTags}
                                     />
                                   </td>

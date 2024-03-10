@@ -59,7 +59,6 @@ const Inheritedmacros: React.FC<Macro> = ({
       } catch (error) {
         console.error("Error during Zabbix request:", error);
       }
-      // setIsLoaded(true);
     };
 
     fetchData();

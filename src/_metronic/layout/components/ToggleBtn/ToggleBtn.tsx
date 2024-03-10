@@ -10,17 +10,19 @@ interface Props {
   options: Option[];
   initialData?: string | number | string[];
   data?: string;
-  setData: CallableFunction;
+  setData?: CallableFunction;
 }
 
 const ToggleBtns: FC<Props> = ({ options, setData, initialData, data }) => {
   const intl = useIntl();
 
   const handleClick = (newState: Option) => {
-    if (data != "") {
-      setData(data, newState.value);
-    } else {
-      setData(newState.value);
+    if (setData) {
+      if (data != "") {
+        setData(data, newState.value);
+      } else {
+        setData(newState.value);
+      }
     }
   };
 

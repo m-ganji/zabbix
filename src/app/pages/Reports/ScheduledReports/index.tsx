@@ -142,7 +142,7 @@ export function ScheduledReports() {
                         },
                       ]}
                       data=""
-                      // setData={setShowTags}
+                      setData={setResetMultiSelect}
                       // initialData={showTags}
                     />
                   </div>
@@ -173,7 +173,7 @@ export function ScheduledReports() {
                         },
                       ]}
                       data=""
-                      // setData={setShowTags}
+                      setData={setResetMultiSelect}
                       // initialData={showTags}
                     />
                   </div>

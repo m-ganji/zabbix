@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, MouseEventHandler } from "react";
 import clsx from "clsx";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router";
@@ -10,7 +10,7 @@ type Props = {
   title: string;
   icon?: string;
   hasBullet?: boolean;
-  onClick?:CallableFunction
+  onClick?: MouseEventHandler<HTMLDivElement>;
 };
 
 const SidebarMenuItem: FC<Props & WithChildren> = ({
@@ -19,10 +19,10 @@ const SidebarMenuItem: FC<Props & WithChildren> = ({
   title,
   icon,
   hasBullet = false,
-  onClick
+  onClick,
 }) => {
   const { pathname } = useLocation();
-  const isActive = checkIsActive(pathname, to);
+  const isActive = checkIsActive(pathname, to ? to : "");
   const { config } = useLayout();
   const { app } = config;
 

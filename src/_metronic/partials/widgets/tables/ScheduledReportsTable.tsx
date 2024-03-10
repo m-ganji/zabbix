@@ -34,7 +34,7 @@ const ScheduledReportsTabel = () => {
             <thead>
               <tr className="fw-bold text-muted">
                 <th className="w-25px">
-                  <CheckBox />
+                  <CheckBox checked={false} />
                 </th>
                 <th className="min-w-150px">
                   {intl.formatMessage({ id: "NAME" })}
@@ -64,7 +64,7 @@ const ScheduledReportsTabel = () => {
             <tbody>
               <tr>
                 <td>
-                  <CheckBox />
+                  <CheckBox checked={false}/>
                 </td>
                 <td>
                   <span className="badge badge-light-primary fs-6">linux</span>

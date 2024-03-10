@@ -141,6 +141,9 @@
 
   "MONITORING.HOSTS.MAINTENANCE": "نمایش هاست ها در تعمیر و نگهداری",
   "MONITORING.HOSTS.SUPPRESSED": "نمایش مشکلات سرکوب شده",
+  "MONITORING.HOSTS.HOST.DNS": "دی‌ان‌اس",
+  "MONITORING.HOSTS.HOST.IP": "آی‌پی",
+  "MONITORING.HOSTS.HOST.PORT": "پورت",
   "MONITORING.HOSTS.DNS": "دی‌ان‌اس",
   "MONITORING.HOSTS.PORT": "پورت",
   "MONITORING.HOSTS.MONITORED": "هاست تحت نظارت",

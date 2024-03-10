@@ -2,8 +2,6 @@
 import { useForm } from "react-hook-form";
 import { MultiSelect } from "../../../../_metronic/layout/components/MultiSelect/MultiSelect";
 import { useIntl } from "react-intl";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import { instance } from "../../../../services/axiosInstance";
 import BTN from "../../../../_metronic/layout/components/BTN";
 import { Content } from "../../../../_metronic/layout/components/content";
@@ -52,7 +50,7 @@ interface HostsData {
   hostid: string;
 }
 interface hostGroupItems {
-  value: string;
+  value: string | number;
   label: string;
 }
 interface HostGroupData {
@@ -63,18 +61,14 @@ interface HostGroupData {
 }
 const ActionLog = () => {
   const intl = useIntl();
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   const [hostsData, setHostsData] = useState<HostsData[]>([]);
   const [hostGroupWithoutParam, setHostGroupWithoutParam] =
     useState<HostGroupData | null>(null);
   const [selectedHosts, setSelectedHosts] = useState<hostGroupItems[]>([]);
-  const [resetMultiSelect, setresetMultiSelect] = useState(false);
-  const [isHostsModalOpen, setisHostsModalOpen] = useState<boolean>(false);
   const [isHostsDataLoading, setIsHostsDataLoading] = useState<boolean>(false);
-  const [Mood, setMood] = useState<string>("0");
-  const { control, watch, setValue, handleSubmit, reset, unregister } =
+
+  const {watch, setValue, reset, unregister } =
     useForm<FormValues>({
       defaultValues: {
         selectTags: "extend",
@@ -120,45 +114,42 @@ const ActionLog = () => {
     }
     setIsHostsDataLoading(false);
   };
-  const handleCheckboxChange = (host) => {
-    if (currentHostids.includes(host.hostid)) {
-      const newData = selectedHosts.filter((id) => id.value != host.hostid);
-      setSelectedHosts(newData);
-      setValue(
-        "hostids",
-        newData.map((i) => i.value)
-      );
-      console.log(newData);
-    } else {
-      setSelectedHosts([
-        ...selectedHosts,
-        { label: host.host, value: host.hostid },
-      ]);
-      setValue("hostids", [...currentHostids, host.hostid]);
-    }
-  };
+  // const handleCheckboxChange = (host) => {
+  //   if (currentHostids.includes(host.hostid)) {
+  //     const newData = selectedHosts.filter((id) => id.value != host.hostid);
+  //     setSelectedHosts(newData);
+  //     // setValue(
+  //     //   "hostids",
+  //     //   newData.map((i) => i.value)
+  //     // );
+  //     console.log(newData);
+  //   } else {
+  //     setSelectedHosts([
+  //       ...selectedHosts,
+  //       { label: host.host, value: host.hostid },
+  //     ]);
+  //     setValue("hostids", [...currentHostids, host.hostid]);
+  //   }
+  // };
 
   const resetData = () => {
-    setResetMultiSelect(true);
+    // setResetMultiSelect(true);
     reset();
     setSelectedHosts([]);
-    resetMultiSelect && setResetMultiSelect(false);
+    // resetMultiSelect && setResetMultiSelect(false);
   };
 
   const submit = () => {
     currentHostids.length === 0 && unregister("hostids");
     currentGroupids.length === 0 && unregister("groupids");
-    handleSubmit(fetchPromsListData)();
+    // handleSubmit(fetchPromsListData)();
   };
 
-  const handleDateChange = (e) => {
-    console.log(e);
+  const handleDateChange = () => {
+    // console.log(e);
     // Your logic here
   };
 
-  const handleMood = (e) => {
-    setMood(e);
-  };
 
   return (
     <>
@@ -228,7 +219,7 @@ const ActionLog = () => {
                       <div className="d-flex flex-column align-items-center gap-3 w-50">
                         <div className="w-100">
                           <MultiSelect
-                            reset={resetMultiSelect}
+                            reset={false}
                             addAll={false}
                             title="RECIPIENTS"
                             options={
@@ -249,7 +240,7 @@ const ActionLog = () => {
                         </div>
                         <div className="w-100">
                           <MultiSelect
-                            reset={resetMultiSelect}
+                            reset={false}
                             addAll={false}
                             title="MENU.ACTIONS"
                             options={
@@ -270,7 +261,7 @@ const ActionLog = () => {
                         </div>
                         <div className="w-100">
                           <MultiSelect
-                            reset={resetMultiSelect}
+                            reset={false}
                             addAll={false}
                             title="REPORTS.MEDIA_TYPE"
                             options={

@@ -27,11 +27,7 @@ export const CreateReport: React.FC<CreateMapProps> = ({
   // Remove this after saving data
   const [FakeData, setFakeData] = useState(false);
 
-  const handleDateChange = (e) => {
-    console.log(FakeData);
-    console.log(e);
-    // Your logic here
-  };
+  const handleDateChange = () => {};
 
   return (
     <div
