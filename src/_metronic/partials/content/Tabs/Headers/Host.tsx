@@ -7,6 +7,7 @@ import { Control, useFieldArray } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import ToastFire from "../../../../layout/components/Toast";
 import { selectApiData, selectApiLoading } from "../../../../../store/store";
+import ToggleBtns from "../../../../layout/components/ToggleBtn/ToggleBtn";
 
 interface HostProps {
   control: Control;
@@ -107,7 +108,6 @@ const Host: React.FC<HostProps> = ({ control, watch, setValue, register }) => {
             />
           </div>
         </div>
-
         <div className="row">
           <div className="col w-50">
             <MultiSelect
@@ -145,7 +145,9 @@ const Host: React.FC<HostProps> = ({ control, watch, setValue, register }) => {
               {...register(`interface[${index}].ip`)}
               type="text"
               className="form-control rounded-start-2 rounded-end-0"
-              placeholder="آی‌پی"
+              placeholder={intl.formatMessage({
+                id: "MONITORING.HOSTS.HOST.IP",
+              })}
               aria-label="آی‌پی"
               aria-describedby="tab-hosts"
               required
@@ -154,47 +156,40 @@ const Host: React.FC<HostProps> = ({ control, watch, setValue, register }) => {
               {...register(`interface[${index}].dns`)}
               type="text"
               className="form-control rounded-start-2 rounded-end-0"
-              placeholder="دی‌ان‌اس"
+              placeholder={intl.formatMessage({
+                id: "MONITORING.HOSTS.HOST.DNS",
+              })}
               aria-label="دی‌ان‌اس"
               aria-describedby="tab-hosts"
               required
+            />
+            <ToggleBtns
+              options={[
+                {
+                  value: 0,
+                  label: "DNS",
+                },
+                {
+                  value: 1,
+                  label: "IP",
+                },
+              ]}
+              data={`interface.${index}.useip`}
+              setData={setValue}
+              initialData={watch(`interface.${index}.useip`)}
             />
             <input
               {...register(`interface[${index}].port`)}
               type="text"
               className="form-control rounded-start-2 rounded-end-0"
-              placeholder="پورت"
+              placeholder={intl.formatMessage({
+                id: "MONITORING.HOSTS.HOST.PORT",
+              })}
               aria-label="پورت"
               aria-describedby="tab-hosts"
               required
             />
-            <input
-              {...register(`interface.${index}.ip`)}
-              type="text"
-              className="form-control rounded-start-2 rounded-end-0"
-              placeholder="آی‌پی"
-              aria-label="آی‌پی"
-              aria-describedby="tab-hosts"
-              required
-            />
-            <input
-              {...register(`interface.${index}.dns`)}
-              type="text"
-              className="form-control rounded-start-2 rounded-end-0"
-              placeholder="دی‌ان‌اس"
-              aria-label="دی‌ان‌اس"
-              aria-describedby="tab-hosts"
-              required
-            />
-            <input
-              {...register(`interface.${index}.port`)}
-              type="text"
-              className="form-control rounded-start-2 rounded-end-0"
-              placeholder="پورت"
-              aria-label="پورت"
-              aria-describedby="tab-hosts"
-              required
-            />
+
             <button
               type="button"
               className="btn btn-danger me-2 py-2"
@@ -206,6 +201,7 @@ const Host: React.FC<HostProps> = ({ control, watch, setValue, register }) => {
             </button>
           </div>
         ))}
+
         {/* <Dropdown onSelect={handleSelect}>
           <Dropdown.Toggle variant="success" id="dropdown-basic">
             {intl.formatMessage({
