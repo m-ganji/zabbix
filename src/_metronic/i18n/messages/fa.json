@@ -89,6 +89,10 @@
   "ID":"آیدی",
   "HOST_COUNT":"تعداد هاست",
   "CLOSE":"بستن",
+  "PROXY":"پروکسی",
+  "INTERVAL":"فاصله",
+  "CHECKS":"بررسی ها",
+  "CONDITIONS":"شرایط",
 
   "DATE.START_END": "تاریخ شروع تا پایان",
   "DATE.FROM": "از تاریخ",
@@ -242,6 +246,11 @@
   "DATA.TEMPLATE.GP": "گروه قالب",
   "DATA.TEMPLATE.GP.NEW": "گروه قالب جدید",
   "DATA.TEMPLATE.CREATE": "ساخت گروه قالب",
+  "DATA.CORRECTION":"همبستگی رویداد",
+  "DATA.CORRECTION.CREATE":"ساخت همبستگی",
+  "DATA.DISCOVERY.RULES":"قوانین کشف",
+  "DATA.DISCOVERY.CREATE":"ساخت قانون کشف",
+  
 
   "MARK_ELEMENTS_ON_TRIGGER_STATUS_CHANGE": "علامت‌ گذاری عناصر در تغییر وضعیت تریگر",
   "DISPLAY_PROBLEMS": "نمایش مشکلات",

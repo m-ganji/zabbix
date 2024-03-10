@@ -26,6 +26,8 @@ const ToggleBtns: FC<Props> = ({ options, setData, initialData, data }) => {
     }
   };
 
+  console.log(options, initialData);
+
   return (
     <div className="btn-group pb-2" role="group" aria-label="Basic example">
       {options.map((option, index) => (

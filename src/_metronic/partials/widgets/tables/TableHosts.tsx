@@ -63,7 +63,7 @@ const TableHosts: React.FC<TableHostsProps> = ({ data, isLoaded, isError }) => {
       </div>
       <div className="card-body py-3">
         <div className="table-responsive text-center">
-          {!isLoaded ? (
+          {isLoaded ? (
             data.length === 0 ? (
               <p>هاستی یافت نشد</p>
             ) : (
