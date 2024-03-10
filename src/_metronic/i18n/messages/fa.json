@@ -104,6 +104,8 @@
   "UPDATE.CREATE": "بروز رسانی موردی که از قبل موجود است",
   "UPDATE.EXIST_CREATE": "بروز رسانی مورد جدیدی که از قبل موجود است",
 
+  "DASH.PROBLEMS.SEVERITY":"مشکلات بر اساس شدت بحران",
+  
   "MENU.NEW": "جدید",
   "MENU.SELECT": "انتخاب",
   "MENU.LATESTDATA": "آخرین داده ها",
