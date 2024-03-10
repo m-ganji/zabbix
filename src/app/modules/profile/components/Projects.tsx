@@ -371,7 +371,7 @@ export function Projects() {
                             id: "MONITORING.PROBLEMS.SHOWBASEDON",
                           })}
                         </p>
-                        <div
+                        {/* <div
                           className="btn-group pb-2"
                           role="group"
                           aria-label="Basic example"
@@ -421,7 +421,7 @@ export function Projects() {
                               id: "MONITORING.PROBLEMS.SHOWBASEDON.HISTORY",
                             })}
                           </button>
-                        </div>
+                        </div> */}
                       </div>
 
                       <MultiSelect

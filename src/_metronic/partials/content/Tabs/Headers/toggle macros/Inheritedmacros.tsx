@@ -53,14 +53,12 @@ const Inheritedmacros: React.FC<Macro> = ({
           output: "extend",
           globalmacro: true,
         });
-        globalUserMacro.map((e) => setGlobalUserMacro(e.macro));
 
         setGlobalUserMacro(response.data || []);
         setIsLoaded(true);
       } catch (error) {
         console.error("Error during Zabbix request:", error);
       }
-      // setIsLoaded(true);
     };
 
     fetchData();
