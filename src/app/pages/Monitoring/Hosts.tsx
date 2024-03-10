@@ -176,21 +176,15 @@ export function Overview() {
                           options={[
                             {
                               value: ["0", "1"],
-                              label: intl.formatMessage({
-                                id: "ALL",
-                              }),
+                              label: "ALL",
                             },
                             {
                               value: "0",
-                              label: intl.formatMessage({
-                                id: "MONITORING.HOSTS.STATUS.ENABLED",
-                              }),
+                              label: "MONITORING.HOSTS.STATUS.ENABLED",
                             },
                             {
                               value: "1",
-                              label: intl.formatMessage({
-                                id: "MONITORING.HOSTS.STATUS.DISABLED",
-                              }),
+                              label: "MONITORING.HOSTS.STATUS.DISABLED",
                             },
                           ]}
                           data="filter.status"
