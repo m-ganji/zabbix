@@ -5,7 +5,9 @@ import { useIntl } from "react-intl";
 import { KTIcon } from "../../../helpers";
 import { UsersTable } from "../../../partials/widgets";
 import ToggleBtns from "../ToggleBtn/ToggleBtn";
-import { Control, Controller, useFieldArray } from "react-hook-form";
+import { useFieldArray } from "react-hook-form";
+import { Control } from "react-hook-form";
+
 import { MultiSelect } from "../MultiSelect/MultiSelect";
 import { GroupSharesTabel } from "../../../partials/widgets/tables/GroupSharesTabel";
 import BTN from "../BTN";
@@ -13,13 +15,19 @@ import { UserSharesTabel } from "../../../partials/widgets/tables/UserSharesTabe
 import { SwitchBTN } from "./SwitchBTN";
 import Input from "../Input";
 import { Select } from "../Select";
+import { FormValues } from "../../../../app/pages/Monitoring/Maps";
 
 interface CreateMapProps {
-  control: Control;
+  control: Control<FormValues>;
   setValue: CallableFunction;
+  register: CallableFunction;
 }
 
-export const CreateMap: React.FC<CreateMapProps> = ({ control, setValue }) => {
+export const CreateMap: React.FC<CreateMapProps> = ({
+  control,
+  setValue,
+  register,
+}) => {
   const intl = useIntl();
   const [IsOwnerModalOpen, setIsOwnerModalOpen] = useState(false);
   const [IsAdvancedTags, setIsAdvancedTags] = useState(true);
@@ -411,34 +419,32 @@ export const CreateMap: React.FC<CreateMapProps> = ({ control, setValue }) => {
                         {URLsField.map((item, index) => (
                           <div key={item.id} className="row gap-3">
                             <div className="col p-0">
-                              <Controller
-                                control={control}
-                                name={`URLs[${index}].name`}
-                                render={({ field }) => (
-                                  <Input
-                                    iconName="feather"
-                                    placeholder={intl.formatMessage({
-                                      id: "NAME",
-                                    })}
-                                    value={field.value.toString()}
-                                    onChange={field.onChange}
-                                  />
-                                )}
-                              />
+                              <div className={`input-group`}>
+                                <span className="input-group-text rounded-start-0 rounded-end-2 p-3">
+                                  <KTIcon iconName="fasten" className="fs-3" />
+                                </span>
+                                <input
+                                  type="text"
+                                  className="form-control py-0 rounded-start-2 rounded-end-0"
+                                  placeholder={intl.formatMessage({
+                                    id: "NAME",
+                                  })}
+                                  {...register(`URLs[${index}].name`)}
+                                />
+                              </div>
                             </div>
                             <div className="col p-0">
-                              <Controller
-                                control={control}
-                                name={`URLs[${index}].URL`}
-                                render={({ field }) => (
-                                  <Input
-                                    iconName="fasten"
-                                    placeholder="URL"
-                                    value={field.value.toString()}
-                                    onChange={field.onChange}
-                                  />
-                                )}
-                              />
+                              <div className={`input-group`}>
+                                <span className="input-group-text rounded-start-0 rounded-end-2 p-3">
+                                  <KTIcon iconName="fasten" className="fs-3" />
+                                </span>
+                                <input
+                                  type="text"
+                                  className="form-control py-0 rounded-start-2 rounded-end-0"
+                                  placeholder="URL"
+                                  {...register(`URLs[${index}].URL`)}
+                                />
+                              </div>
                             </div>
                             <BTN
                               label={intl.formatMessage({
