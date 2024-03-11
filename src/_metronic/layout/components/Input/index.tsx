@@ -6,13 +6,9 @@ interface Props {
   iconName: string;
   placeholder?: string;
   value?: string;
+  required?: boolean;
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
-}
-
-interface Field {
-  field: {
-    value: string;
-  };
+  register?: CallableFunction;
 }
 
 const Input: React.FC<Props> = ({
@@ -20,10 +16,30 @@ const Input: React.FC<Props> = ({
   iconName,
   placeholder,
   value,
+  required,
   onChange,
+  register,
 }) => {
-  return (
+  return register ? (
     <div className={`input-group ${className}`}>
+      {required && (
+        <span className="text-danger position-absolute top-0 me-1 fs-3">*</span>
+      )}
+      <span className="input-group-text rounded-start-0 rounded-end-2 p-3">
+        <KTIcon iconName={iconName} className="fs-3" />
+      </span>
+      <input
+        type="text"
+        className="form-control py-0 rounded-start-2 rounded-end-0"
+        placeholder={placeholder}
+        {...register}
+      />
+    </div>
+  ) : (
+    <div className={`input-group ${className}`}>
+      {required && (
+        <span className="text-danger position-absolute top-0 me-1 fs-3">*</span>
+      )}
       <span className="input-group-text rounded-start-0 rounded-end-2 p-3">
         <KTIcon iconName={iconName} className="fs-3" />
       </span>

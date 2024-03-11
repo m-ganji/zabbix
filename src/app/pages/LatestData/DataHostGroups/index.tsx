@@ -4,14 +4,19 @@ import { useForm } from "react-hook-form";
 import { useIntl } from "react-intl";
 // import { useNavigate } from "react-router-dom";
 import BTN from "../../../../_metronic/layout/components/BTN";
-import Input from "../../../../_metronic/layout/components/Input";
 import { CreateHostsGp } from "../../../../_metronic/layout/components/CreateHostsGp";
 import { HostsGpTable } from "../../../../_metronic/partials/widgets/tables/HostsGpTable";
+import { useEffect, useState } from "react";
+import { instance } from "../../../../services/axiosInstance";
+import { useNavigate } from "react-router-dom";
+import { ApiError } from "../../../../_metronic/partials/content/Tabs/Headers/Host";
+import { KTIcon } from "../../../../_metronic/helpers";
 
 interface FormValues {
   search: {
     name: string;
   };
+  selectHosts: string;
   URLs: {
     name: string;
     URL: string;
@@ -21,60 +26,50 @@ interface FormValues {
 
 export function DataHostGroups() {
   const intl = useIntl();
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   // const [resetMultiSelect, setResetMultiSelect] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [HostGps, setHostGps] = useState([]);
 
-  const { watch,handleSubmit, reset } =
-    useForm<FormValues>({
-      defaultValues: {
-        search: { name: "" },
-        URLs: [
-          {
-            name: "",
-            URL: "",
-            Element: "",
-          },
-        ],
-      },
-    });
+  const { watch, handleSubmit, reset, register } = useForm<FormValues>({
+    defaultValues: {
+      search: { name: "" },
+      selectHosts: "extend",
+    },
+  });
 
-  // const currentName = watch("search.name") ? watch("search.name") : [];
+  useEffect(() => {
+    fetchData(watch());
+  }, []);
 
-  const fetchPromsListData = async (e: object) => {
+  async function fetchData(e: object) {
     console.log(e);
+    isLoaded && setIsLoaded(false);
+    const params = e ? e : watch();
 
-    // const params = e ? e : watch();
-    // setIsError(false);
-    // setIsLoaded(false);
-    // try {
-    //   const response = await instance.post("core/problems/get", params);
-    //   setProblemsData(response.data || []);
-    //   console.log(response.data);
-    // } catch (error) {
-    //   interface ApiError {
-    //     response?: {
-    //       status: number;
-    //     };
-    //   }
-    //   console.error(error);
+    try {
+      const response = await instance.post("/core/hostgroup/get", params);
+      setHostGps(response.data);
+      console.log(response.data);
+    } catch (error) {
+      if ((error as ApiError).response?.status === 401) {
+        localStorage.removeItem("token");
+        navigate("/");
+      }
+      console.error(error);
+    }
+    setIsLoaded(true);
+  }
 
-    //   if ((error as ApiError).response?.status === 401) {
-    //     localStorage.removeItem("token");
-    //     navigate("/");
-    //   }
-    //   setIsError(true);
-    // }
-    // setIsLoaded(true);
-  };
   const resetData = () => {
     // setResetMultiSelect(true);
     reset();
-    fetchPromsListData(watch());
+    fetchData(watch());
   };
 
   const submit = () => {
-    handleSubmit(fetchPromsListData)();
+    handleSubmit(fetchData)();
   };
 
   return (
@@ -89,7 +84,6 @@ export function DataHostGroups() {
             label={intl.formatMessage({ id: "DATA.HOSTS.CREATE" })}
             className="btn-light-primary"
           />
-
           <CreateHostsGp />
         </div>
       </div>
@@ -116,12 +110,18 @@ export function DataHostGroups() {
               data-bs-parent="#monitoring-hosts"
             >
               <div className="accordion-body">
-                <Input
-                  className=""
-                  iconName="user"
-                  placeholder={intl.formatMessage({ id: "NAME" })}
-                  value=""
-                />
+                <div className={`input-group`}>
+                  <span className="input-group-text rounded-start-0 rounded-end-2 p-3">
+                    <KTIcon iconName="user" className="fs-3" />
+                  </span>
+                  <input
+                    type="text"
+                    className="form-control py-0 rounded-start-2 rounded-end-0"
+                    placeholder={intl.formatMessage({ id: "NAME" })}
+                    {...register("search.name")}
+                  />
+                </div>
+
                 <div className="d-flex w-100 justify-content-center mt-10 column-gap-5">
                   <BTN
                     label={intl.formatMessage({ id: "SUBMIT" })}
@@ -140,7 +140,7 @@ export function DataHostGroups() {
         </div>
       </div>
       {/* Table */}
-      <HostsGpTable />
+      <HostsGpTable HostGps={HostGps} isLoaded={isLoaded} />
     </Content>
   );
 }

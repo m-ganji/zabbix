@@ -5,6 +5,7 @@ type SwitchBTNProps = {
   onChange?: React.ChangeEventHandler<HTMLInputElement>;
   state?: boolean;
   className?: string;
+  value?: string | number;
 };
 
 export const SwitchBTN: React.FC<SwitchBTNProps> = ({
@@ -12,6 +13,7 @@ export const SwitchBTN: React.FC<SwitchBTNProps> = ({
   onChange,
   state,
   className,
+  value,
 }) => {
   return (
     <div
@@ -23,7 +25,7 @@ export const SwitchBTN: React.FC<SwitchBTNProps> = ({
         type="checkbox"
         name="notifications"
         onChange={onChange}
-        checked={state || false}
+        checked={state === value ? true : false}
       />
     </div>
   );

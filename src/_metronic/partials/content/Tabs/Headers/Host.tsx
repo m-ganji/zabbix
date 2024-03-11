@@ -19,6 +19,12 @@ interface HostProps {
 export interface ApiError {
   response?: {
     status: number;
+    data?: {
+      detail?: {
+        data: string;
+        includes: (e: string) => boolean;
+      };
+    };
   };
 }
 
@@ -146,7 +152,7 @@ const Host: React.FC<HostProps> = ({ control, watch, setValue, register }) => {
               type="text"
               className="form-control rounded-start-2 rounded-end-0"
               placeholder={intl.formatMessage({
-                id: "MONITORING.HOSTS.HOST.IP",
+                id: "IP",
               })}
               aria-label="آی‌پی"
               aria-describedby="tab-hosts"
@@ -157,7 +163,7 @@ const Host: React.FC<HostProps> = ({ control, watch, setValue, register }) => {
               type="text"
               className="form-control rounded-start-2 rounded-end-0 me-2"
               placeholder={intl.formatMessage({
-                id: "MONITORING.HOSTS.HOST.DNS",
+                id: "MONITORING.HOSTS.DNS",
               })}
               aria-label="دی‌ان‌اس"
               aria-describedby="tab-hosts"
@@ -168,11 +174,11 @@ const Host: React.FC<HostProps> = ({ control, watch, setValue, register }) => {
                 options={[
                   {
                     value: 0,
-                    label: "MONITORING.HOSTS.HOST.DNS",
+                    label: "MONITORING.HOSTS.DNS",
                   },
                   {
                     value: 1,
-                    label: "MONITORING.HOSTS.HOST.IP",
+                    label: "IP",
                   },
                 ]}
                 data={`interface.${index}.useip`}

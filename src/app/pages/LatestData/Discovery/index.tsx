@@ -11,6 +11,7 @@ import { instance } from "../../../../services/axiosInstance";
 import { ApiError } from "../../../../_metronic/partials/content/Tabs/Headers/Host";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { DiscoveryCreate } from "../../../../_metronic/layout/components/DiscoveryData/Create";
 
 export interface DiscoveryRullData {
   name: string;
@@ -19,11 +20,15 @@ export interface DiscoveryRullData {
   proxy_hostid: string;
   delay: string;
 
-  dchecks: { type: number }[];
+  dchecks: { type: number; ports: string }[];
   search: {
     name: string;
   };
   filter: { status: string };
+  uniq: string;
+  host_source: string;
+  name_source: string;
+  status: string;
 }
 
 export function DiscoveryData() {
@@ -38,7 +43,10 @@ export function DiscoveryData() {
       defaultValues: {
         selectDChecks: "extend",
         search: { name: "" },
-        filter: { status: "0" },
+        filter: { status: "" },
+        uniq: "1",
+        host_source: "2",
+        name_source: "0",
       },
     });
 
@@ -84,9 +92,17 @@ export function DiscoveryData() {
         </h3>
         <div className="d-flex gap-5 align-items-center">
           <BTN
-            id="create-discovery-rule"
+            id="create-drull"
             label={intl.formatMessage({ id: "DATA.DISCOVERY.CREATE" })}
             className="btn-light-primary"
+          />
+          <DiscoveryCreate
+            control={control}
+            watch={watch}
+            register={register}
+            handleSubmit={handleSubmit}
+            fetchData={fetchData}
+            setValue={setValue}
           />
         </div>
       </div>
@@ -146,7 +162,7 @@ export function DiscoveryData() {
                       <ToggleBtns
                         options={[
                           {
-                            value: ["0", "1"],
+                            value: "",
                             label: "ALL",
                           },
                           {

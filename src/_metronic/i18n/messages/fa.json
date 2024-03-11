@@ -3,6 +3,7 @@
   "NAME": "اسم",
   "LASTNAME": "نام خانوادگی",
   "USERNAME": "نام کاربری",
+  "VISIBLE.NAME": "نام نمایشی",
   "WIDTH": "عرض",
   "HEIGHT": "ارتفاع",
   "TOP": "بالا",
@@ -85,14 +86,20 @@
   "RESOURCE": "منبع",
   "RESOURCE_ID": "شناسه منبع",
   "RECORDSET_ID": "شناسه مجموعه رکورد",
-  "IP": "آی‌‌پی",
+  "IP": "آی‌ ‌پی",
+  "IP.ADDRESS": "آدرس آی پی",
   "ID":"آیدی",
   "HOST_COUNT":"تعداد هاست",
   "CLOSE":"بستن",
   "PROXY":"پروکسی",
   "INTERVAL":"فاصله",
+  "INTERVAL.UPDATE":"فاصله به روز رسانی",
   "CHECKS":"بررسی ها",
+  "CHECKS.TYPE":"نوع بررسی ها",
+  "CHECKS.DISCOVERY":"بررسی های کشف",
   "CONDITIONS":"شرایط",
+  "EDIT":"ویرایش",
+  "PORT.RANGE":"محدوده پورت",
 
   "DATE.START_END": "تاریخ شروع تا پایان",
   "DATE.FROM": "از تاریخ",
@@ -100,6 +107,9 @@
 
   "READ.ONLY": "فقط برای خواندن",
   "READ-WRITE": "خواندن و نوشتن",
+  "HOST": "هاست",
+  "HOST.NAME": "نام هاست",
+  "DNS.NAME":"نام دی ان اس",
 
   "GP.NAME": "نام گروه",
 
@@ -132,6 +142,7 @@
   "MENU.DASHBOARD": "داشبورد",
   "MENU.LOGIN.USERNAME": "نام کاربری",
   "MENU.LOGIN.PASSWORD": "رمزعبور",
+
   "MONITORING.HOSTS.STATUS.ENABLED": "فعال شده ها",
   "MONITORING.HOSTS.STATUS.DISABLED": "غیر فعال ها",
   "MONITORING.HOSTS.TAGS": "تگ ها",
@@ -145,11 +156,8 @@
   "MONITORING.HOSTS.ADDTAG.OPTION5": "برابر نیست",
   "MONITORING.HOSTS.ADDTAG.OPTION6": "شامل نیست",
   "MONITORING.HOSTS.ADDTAG.VALUE": "مقدار",
-
   "MONITORING.HOSTS.MAINTENANCE": "نمایش هاست ها در تعمیر و نگهداری",
   "MONITORING.HOSTS.SUPPRESSED": "نمایش مشکلات سرکوب شده",
-  "MONITORING.HOSTS.HOST.DNS": "دی‌ان‌اس",
-  "MONITORING.HOSTS.HOST.IP": "آی‌پی",
   "MONITORING.HOSTS.HOST.PORT": "پورت",
   "MONITORING.HOSTS.DNS": "دی‌ان‌اس",
   "MONITORING.HOSTS.PORT": "پورت",
@@ -160,14 +168,10 @@
   "MONITORING.HOSTS.SEVERITY.OPTION3": "بالا",
   "MONITORING.HOSTS.SEVERITY.OPTION5": "عادی",
   "MONITORING.HOSTS.SEVERITY.OPTION6": "بسیار بالا",
-
-  "HOST": "هاست",
   "MONITORING.HOSTS.CREATEHOST.HOST.NAME": "نام",
-
   "MONITORING.HOSTS.CREATEHOST.IPMI": "IPMI",
   "MONITORING.HOSTS.CREATEHOST.MACROS.HOSTMACROS": "هاست ماکرو",
   "MONITORING.HOSTS.CREATEHOST.MACROS.INHERITED": "هاست ماکرو و میزبان",
-
   "MONITORING.HOSTS.CREATEHOST.INVENTORY.MANUAL": "دستی",
   "MONITORING.HOSTS.CREATEHOST.INVENTORY.AUTOMATIC": "اتوماتیک",
   "MONITORING.HOSTS.CREATEHOST.ENCRYPTION.TO": "متصل به هاست",
@@ -180,7 +184,6 @@
   "MONITORING.HOSTS.CREATEHOST.MACROS.INHERITED.MACRO": "ماکرو",
   "MONITORING.HOSTS.CREATEHOST.MACROS.INHERITED.EFFECTIVE": "مقدار موثر",
   "MONITORING.HOSTS.CREATEHOST.MACROS.INHERITED.DESC": "توضیح",
-
   "MONITORING.PROBLEMS.SHOWBASEDON": "نمایش بر اساس :",
   "MONITORING.PROBLEMS.SHOWBASEDON.RECENTPROBLEMS": "آخرین مشکلات",
   "MONITORING.PROBLEMS.SHOWBASEDON.PROBLEMS": "مشکل ها",
@@ -206,16 +209,12 @@
   "MONITORING.PROBLEMS.TAGS.NAME.COMPLETE": "کامل",
   "MONITORING.PROBLEMS.TAGS.NAME.SUMMARY": "خلاصه",
   "MONITORING.PROBLEMS.TAGS.NAME.NONE": "هیچکدام",
-
   "MONITORING.ERROR.404.TITLE": "صفحه موردنظر یافت نشد!",
   "MONITORING.ERROR.404.RETURN": "برگشت",
-
   "MONITORING.ERROR.500.TITLE": "مشکلی پیش آمده است! لطقا دوباره تلاش کنید",
-
   "MONITORING.DISCOVERY": "اکتشاف",
   "MONITORING.DISCOVERY.SELECT": "انتخاب اکتشاف",
   "MONITORING.DISCOVERY.DEVICE": "دستگاه کشف شده",
-
   "MONITORING.MAPS": "نقشه ها",
   "MONITORING.MAPS.CREATE": "ساخت نقشه",
   "MONITORING.MAPS.AUTO.ICON": "نقشه برداری خودکار آیکون",
@@ -249,6 +248,9 @@
   "DATA.CORRECTION.CREATE":"ساخت همبستگی",
   "DATA.DISCOVERY.RULES":"قوانین کشف",
   "DATA.DISCOVERY.CREATE":"ساخت قانون کشف",
+  "DATA.DISCOVERY.PROXY":"کشف توسط پروکسی",
+  "DATA.DEVIVE.UNIC.CI":"معیارهای منحصر به فرد بودن دستگاه",
+
   
 
   "MARK_ELEMENTS_ON_TRIGGER_STATUS_CHANGE": "علامت‌ گذاری عناصر در تغییر وضعیت تریگر",

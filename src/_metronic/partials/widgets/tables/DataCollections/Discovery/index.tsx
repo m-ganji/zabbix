@@ -61,7 +61,7 @@ const DataDiscoveryTable: React.FC<data> = ({ data, isLoaded }) => {
           {/* begin::Table */}
           {isLoaded ? (
             data?.length === 0 ? (
-              <p>مشکلی یافت نشد</p>
+              <p>کشفی یافت نشد</p>
             ) : (
               <table className="table text-center  table-row-dashed table-row-gray-300 align-middle gs-0 gy-4">
                 {/* begin::Table head */}
