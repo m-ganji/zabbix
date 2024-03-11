@@ -8,7 +8,7 @@ interface Option {
 
 interface Props {
   options: Option[];
-  initialData?: string | number;
+  initialData?: string | number | string[];
   data?: string;
   setData?: CallableFunction;
 }
