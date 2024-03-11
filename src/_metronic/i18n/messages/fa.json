@@ -81,7 +81,6 @@
   "HISTORY_CLEAR": "پاک کردن تاریخچه",
   "LOGIN": "ورود",
   "LOGOUT": "خروج",
-  "UPDATE": "به‌روزرسانی",
   "DELETE": "حذف",
   "RESOURCE": "منبع",
   "RESOURCE_ID": "شناسه منبع",
@@ -119,8 +118,8 @@
   "UPDATE.CREATE": "بروز رسانی موردی که از قبل موجود است",
   "UPDATE.EXIST_CREATE": "بروز رسانی مورد جدیدی که از قبل موجود است",
 
-  "DASH.PROBLEMS.SEVERITY":"مشکلات بر اساس شدت بحران",
-  
+  "DASH.PROBLEMS.SEVERITY": "مشکلات بر اساس شدت بحران",
+
   "MENU.NEW": "جدید",
   "MENU.SELECT": "انتخاب",
   "MENU.LATESTDATA": "آخرین داده ها",
@@ -184,6 +183,9 @@
   "MONITORING.HOSTS.CREATEHOST.MACROS.INHERITED.MACRO": "ماکرو",
   "MONITORING.HOSTS.CREATEHOST.MACROS.INHERITED.EFFECTIVE": "مقدار موثر",
   "MONITORING.HOSTS.CREATEHOST.MACROS.INHERITED.DESC": "توضیح",
+  "MONITORING.HOSTS.CREATEHOST.MACROS.INHERITED.UPDATE": "ویرایش",
+  "MONITORING.HOSTS.CREATEHOST.MACROS.INHERITED.DELETE": "حذف",
+
   "MONITORING.PROBLEMS.SHOWBASEDON": "نمایش بر اساس :",
   "MONITORING.PROBLEMS.SHOWBASEDON.RECENTPROBLEMS": "آخرین مشکلات",
   "MONITORING.PROBLEMS.SHOWBASEDON.PROBLEMS": "مشکل ها",

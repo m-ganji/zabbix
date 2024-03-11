@@ -36,7 +36,7 @@ const Tags: React.FC<TagsProps> = ({ control, register }) => {
               type="text"
               className="form-control py-2"
               placeholder={intl.formatMessage({
-                id: "MONITORING.HOSTS.CREATEHOST.HOST.VALUE",
+                id: "VALUE",
               })}
             />
           </div>
