@@ -45,6 +45,7 @@ const Host: React.FC<HostProps> = ({ control, watch, setValue, register }) => {
         const response = await instance.post("/core/templates/get", {});
         const mapped = response.data.map((e: { name: string }) => ({
           label: e.name,
+          value:e.templateid
         }));
         setTemplates(mapped);
       } catch (error) {
@@ -114,7 +115,10 @@ const Host: React.FC<HostProps> = ({ control, watch, setValue, register }) => {
               title="MENU.SELECT.HOSTS.GP"
               reset={false}
               addAll={false}
-              options={HostGroupData}
+              options={HostGroupData?.map((gp) => ({
+                value: gp.groupid,
+                label: gp.name,
+              }))}
               Loading={loading}
               DataName="groups"
               setData={setValue}

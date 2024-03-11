@@ -3,6 +3,8 @@ import { Modal } from "react-bootstrap";
 import { useIntl } from "react-intl";
 import { getCSSVariableValue } from "../../../../../../assets/ts/_utils";
 import { useForm } from "react-hook-form";
+import ToastFire from "../../../../../../layout/components/Toast";
+import { instance } from "../../../../../../../services/axiosInstance";
 
 interface ItemType {
   description?: string;
@@ -32,17 +34,17 @@ const AddInheritedMacros: React.FC<AddInheritedMacrosProps> = ({
 
   const onSubmit = async (formData: ItemType) => {
     console.log(formData);
-    // try {
-    //   const response = await instance.post(
-    //     "/core/usermacro/create_global",
-    //     data
-    //   );
-    //   console.log("Response:", response);
-    //   ToastFire("success", `موفق`, "با موفقیت ساخته شد");
-    // } catch (error) {
-    //   console.error("Error during Zabbix request:", error);
-    //   ToastFire("error", `لطفا با فرمت مناسب مقادیر را وارد کنید`, "");
-    // }
+    try {
+      const response = await instance.post(
+        "/core/usermacro/create_global",
+        formData
+      );
+      console.log("Response:", response);
+      ToastFire("success", `موفق`, "با موفقیت ساخته شد");
+    } catch (error) {
+      console.error("Error during Zabbix request:", error);
+      ToastFire("error", `لطفا با فرمت مناسب مقادیر را وارد کنید`, "");
+    }
   };
 
   return (
@@ -109,7 +111,7 @@ const AddInheritedMacros: React.FC<AddInheritedMacrosProps> = ({
             </button>
             <button type="submit" className="btn btn-light-success">
               {intl.formatMessage({
-                id: "UPDATE",
+                id: "ADD",
               })}
             </button>
           </Modal.Footer>
