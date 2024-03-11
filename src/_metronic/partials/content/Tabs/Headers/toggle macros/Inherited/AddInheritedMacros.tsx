@@ -12,26 +12,20 @@ interface ItemType {
   value?: string;
 }
 
-interface UpdateInheritedMacrosProps {
+interface AddInheritedMacrosProps {
   show: boolean;
   item: ItemType | null;
   onHide: () => void;
-  onUpdate: (updatedItem: ItemType) => void;
 }
 
 // Modal component for editing an item
-const UpdateInheritedMacros: React.FC<UpdateInheritedMacrosProps> = ({
+const AddInheritedMacros: React.FC<AddInheritedMacrosProps> = ({
   show,
-  item,
   onHide,
-  // onUpdate,
 }) => {
-  // Ensure item is not null before using its properties
-  const itemDescription = item?.description || "";
-  const itemMacro = item?.macro || "";
-  const itemValue = item?.value || "";
   const intl = useIntl();
-  // const secondaryColor = getCSSVariableValue("--bs-gray-300");
+  const secondaryColor = getCSSVariableValue("--bs-gray-300");
+
   const { handleSubmit, register } = useForm<Macro>({
     defaultValues: {},
   });
@@ -40,7 +34,7 @@ const UpdateInheritedMacros: React.FC<UpdateInheritedMacrosProps> = ({
     console.log(formData);
     // try {
     //   const response = await instance.post(
-    //     "/core/usermacro/update_global",
+    //     "/core/usermacro/create_global",
     //     data
     //   );
     //   console.log("Response:", response);
@@ -70,12 +64,11 @@ const UpdateInheritedMacros: React.FC<UpdateInheritedMacrosProps> = ({
               <input
                 {...register("value")}
                 type="text"
-                className="form-control "
+                className="form-control py-2"
                 aria-describedby="emailHelp"
                 placeholder={intl.formatMessage({
                   id: "MONITORING.HOSTS.CREATEHOST.MACROS.INHERITED.EFFECTIVE",
                 })}
-                defaultValue={itemValue}
               />
             </div>
             <div className="col">
@@ -84,10 +77,10 @@ const UpdateInheritedMacros: React.FC<UpdateInheritedMacrosProps> = ({
                   {...register("macro")}
                   type="text"
                   className="form-control"
-                  defaultValue={itemMacro}
                   placeholder={intl.formatMessage({
                     id: "MONITORING.HOSTS.CREATEHOST.MACROS.INHERITED.MACRO",
                   })}
+                  defaultValue="{$Macro}"
                 />
               </div>
             </div>
@@ -97,9 +90,7 @@ const UpdateInheritedMacros: React.FC<UpdateInheritedMacrosProps> = ({
               <input
                 {...register("description")}
                 type="text"
-                className="form-control "
-                aria-describedby="emailHelp"
-                defaultValue={itemDescription}
+                className="form-control py-2"
                 placeholder={intl.formatMessage({
                   id: "MONITORING.HOSTS.CREATEHOST.MACROS.INHERITED.DESC",
                 })}
@@ -116,7 +107,6 @@ const UpdateInheritedMacros: React.FC<UpdateInheritedMacrosProps> = ({
                 id: "CLOSE",
               })}
             </button>
-
             <button type="submit" className="btn btn-light-success">
               {intl.formatMessage({
                 id: "UPDATE",
@@ -129,8 +119,4 @@ const UpdateInheritedMacros: React.FC<UpdateInheritedMacrosProps> = ({
   );
 };
 
-export default UpdateInheritedMacros;
-
-// todo
-// 1 request
-// 2 toast
+export default AddInheritedMacros;

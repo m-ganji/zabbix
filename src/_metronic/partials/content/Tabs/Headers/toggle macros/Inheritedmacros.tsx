@@ -1,12 +1,14 @@
 import { useIntl } from "react-intl";
 import { instance } from "../../../../../../services/axiosInstance";
 import { useEffect, useState } from "react";
-import { Control } from "react-hook-form";
+import { Control, useForm } from "react-hook-form";
 import { Loader } from "../../../../../layout/components/loader/Loader";
 import { getCSSVariableValue } from "../../../../../assets/ts/_utils";
 import { KTIcon } from "../../../../../helpers";
 import { useNavigate } from "react-router-dom";
 import UpdateInheritedMacros from "./Inherited/UpdateInheritedMacros";
+import AddInheritedMacros from "./Inherited/AddInheritedMacros";
+import { useFieldArray } from "react-hook-form";
 
 interface ItemType {
   description?: string;
@@ -22,13 +24,25 @@ interface Macro {
   macrosRemove: CallableFunction;
   macrosAppend: CallableFunction;
   setValue: CallableFunction;
+  macroids?: string | string[];
 }
+
 const Inheritedmacros: React.FC<Macro> = () => {
   const intl = useIntl();
   const [globalUserMacro, setGlobalUserMacro] = useState<ItemType[]>([]);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const secondaryColor = getCSSVariableValue("--bs-gray-300");
   const navigate = useNavigate();
+
+  const { control, handleSubmit, watch, setValue, register } = useForm<Macro>({
+    defaultValues: {
+      macroids: "",
+    },
+  });
+
+  const { fields } = useFieldArray({
+    control,
+  });
 
   useEffect(() => {
     setIsLoaded(false);
@@ -50,7 +64,9 @@ const Inheritedmacros: React.FC<Macro> = () => {
   }, []);
 
   const [editedItem, setEditedItem] = useState<ItemType | null>(null);
+  const [editedAddItem, setAddEditedItem] = useState<ItemType | null>(null);
   const [isInheritedModalOpen, setIsInheritedModalOpen] = useState(false);
+  const [isAddInheritedModalOpen, setIsAddInheritedModalOpen] = useState(false);
 
   const openModalForEdit = (index: number) => {
     const itemToEdit = globalUserMacro[index];
@@ -59,40 +75,38 @@ const Inheritedmacros: React.FC<Macro> = () => {
     console.log(itemToEdit);
   };
 
+  const openModalForAdd = (index: number) => {
+    const itemToEdit = globalUserMacro[index];
+    setAddEditedItem(itemToEdit);
+    setIsAddInheritedModalOpen(true);
+    console.log(itemToEdit);
+  };
+
   const closeModal = () => {
     setIsInheritedModalOpen(false);
     setEditedItem(null);
   };
 
+  const closeAddModal = () => {
+    setIsAddInheritedModalOpen(false);
+    setAddEditedItem(null);
+  };
+
   const handleUpdate = (updatedItem: ItemType) => {
     console.log("Updated item:", updatedItem);
   };
-  console.log(globalUserMacro);
 
   const handleDeleteUi = (item: ItemType) => {
     const updatedMacroList = globalUserMacro.filter(
       (macro) => macro.macro !== item.macro
     );
-    console.log(item.globalmacroid);
-
+    setValue("macroids", [...watch("macroids"), item.globalmacroid]);
     setGlobalUserMacro(updatedMacroList);
   };
 
-  // const handleDeleteRequest = (item: ItemType) => {
-  //   console.log(item);
-
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await instance.post(
-  //         "/core/usermacro/update_global",
-  //         {}
-  //       );
-  //     } catch (error) {
-  //       console.error("Error during Zabbix request:", error);
-  //     }
-  //   };
-  //   fetchData();
-  // };
+  const handleDeleteRequest = (item: ItemType) => {
+    console.log(item);
+  };
 
   return (
     <div className="d-flex flex-column">
@@ -198,24 +212,50 @@ const Inheritedmacros: React.FC<Macro> = () => {
             </div>
           </div>
         ))}
-
+      {fields.map(() => (
+        <div className="col">
+          <input
+            {...register(`inherited`)}
+            type="text"
+            className="form-control "
+            aria-describedby="emailHelp"
+            placeholder={intl.formatMessage({
+              id: "MONITORING.HOSTS.CREATEHOST.MACROS.INHERITED.DESC",
+            })}
+          />
+        </div>
+      ))}
       <UpdateInheritedMacros
         show={isInheritedModalOpen}
         item={editedItem}
         onHide={closeModal}
         onUpdate={handleUpdate}
       />
-      <button
-        type="button"
-        className="btn btn-light-primary w-50"
-        // onClick={() => {
-        //   handleDelete;
-        // }}
-      >
-        {intl.formatMessage({
-          id: "SUBMIT",
-        })}
-      </button>
+      <div className="d-flex">
+        <button
+          type="button"
+          className="btn btn-light-primary w-50"
+          onClick={handleSubmit(handleDeleteRequest)}
+        >
+          {intl.formatMessage({
+            id: "SUBMIT",
+          })}
+        </button>
+        <button
+          type="button"
+          className="btn btn-success w-50"
+          onClick={() => openModalForAdd()}
+        >
+          {intl.formatMessage({
+            id: "ADD",
+          })}
+        </button>
+      </div>
+      <AddInheritedMacros
+        show={isAddInheritedModalOpen}
+        item={editedAddItem}
+        onHide={closeAddModal}
+      />
     </div>
   );
 };
