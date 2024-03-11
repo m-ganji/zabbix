@@ -6,7 +6,7 @@ import { Loader } from "../../../../../layout/components/loader/Loader";
 import { getCSSVariableValue } from "../../../../../assets/ts/_utils";
 import { KTIcon } from "../../../../../helpers";
 import { useNavigate } from "react-router-dom";
-import Update from "./Inherited/Update";
+import UpdateInheritedMacros from "./Inherited/UpdateInheritedMacros";
 
 interface ItemType {
   description?: string;
@@ -26,8 +26,6 @@ interface Macro {
 const Inheritedmacros: React.FC<Macro> = () => {
   const intl = useIntl();
   const [globalUserMacro, setGlobalUserMacro] = useState<ItemType[]>([]);
-  const [isInheritedModalOpen, setisInheritedModalOpen] =
-    useState<boolean>(false);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const secondaryColor = getCSSVariableValue("--bs-gray-300");
   const navigate = useNavigate();
@@ -48,21 +46,56 @@ const Inheritedmacros: React.FC<Macro> = () => {
         navigate("/");
       }
     };
-
     fetchData();
   }, []);
 
+  const [editedItem, setEditedItem] = useState<ItemType | null>(null);
+  const [isInheritedModalOpen, setIsInheritedModalOpen] = useState(false);
+
+  const openModalForEdit = (index: number) => {
+    const itemToEdit = globalUserMacro[index];
+    setEditedItem(itemToEdit);
+    setIsInheritedModalOpen(true);
+    console.log(itemToEdit);
+  };
+
+  const closeModal = () => {
+    setIsInheritedModalOpen(false);
+    setEditedItem(null);
+  };
+
+  const handleUpdate = (updatedItem: ItemType) => {
+    console.log("Updated item:", updatedItem);
+  };
+  console.log(globalUserMacro);
+
+  const handleDeleteUi = (item: ItemType) => {
+    const updatedMacroList = globalUserMacro.filter(
+      (macro) => macro.macro !== item.macro
+    );
+    console.log(item.globalmacroid);
+
+    setGlobalUserMacro(updatedMacroList);
+  };
+
+  // const handleDeleteRequest = (item: ItemType) => {
+  //   console.log(item);
+
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await instance.post(
+  //         "/core/usermacro/update_global",
+  //         {}
+  //       );
+  //     } catch (error) {
+  //       console.error("Error during Zabbix request:", error);
+  //     }
+  //   };
+  //   fetchData();
+  // };
+
   return (
     <div className="d-flex flex-column">
-      {isLoaded && (
-        <p
-          className="d-flex justify-content-center align-content-center btn btn-light-primary w-25"
-          style={{ marginRight: "70%" }}
-          // onClick={() => setisInheritedModalOpen(true)}
-        >
-          پیکربندی مقدار
-        </p>
-      )}
       {(!isLoaded && (
         <div className="d-flex pt-7 w-100 justify-content-center">
           <Loader />
@@ -75,12 +108,12 @@ const Inheritedmacros: React.FC<Macro> = () => {
                 <input
                   type="text"
                   className="form-control"
-                  defaultValue={e.macro}
+                  value={e.macro}
                   placeholder={intl.formatMessage({
                     id: "MONITORING.HOSTS.CREATEHOST.MACROS.INHERITED.MACRO",
                   })}
                   key={index}
-                  style={{ cursor: "not-allowed" }}
+                  // readonly
                 />
               </div>
               <div className="col">
@@ -92,16 +125,11 @@ const Inheritedmacros: React.FC<Macro> = () => {
                     placeholder={intl.formatMessage({
                       id: "MONITORING.HOSTS.CREATEHOST.MACROS.INHERITED.EFFECTIVE",
                     })}
-                    defaultValue={e.value}
-                    style={{
-                      cursor: "not-allowed",
-                    }}
+                    value={e.value}
+                    // readonly
                   />
                   <div
-                    className={`custom-dropdown border border-${secondaryColor} border-2`}
-                    style={{
-                      cursor: "not-allowed",
-                    }}
+                    className={`custom-dropdown border border-${secondaryColor} border-2 `}
                   >
                     <div className="selected-option mt-2">
                       {e.type == "0" && (
@@ -133,7 +161,7 @@ const Inheritedmacros: React.FC<Macro> = () => {
                 </div>
               </div>
             </div>
-            <div className="row">
+            <div className="row mt-5 mb-5">
               <div className="col">
                 <input
                   type="text"
@@ -142,28 +170,52 @@ const Inheritedmacros: React.FC<Macro> = () => {
                   placeholder={intl.formatMessage({
                     id: "MONITORING.HOSTS.CREATEHOST.MACROS.INHERITED.DESC",
                   })}
+                  // readonly
                 />
               </div>
-              <div className="col">
+              <div className="col d-flex gap-5">
                 <button
                   type="button"
-                  onClick={() => setisInheritedModalOpen(true)}
-                  className="btn btn-light-warning w-100"
+                  onClick={() => openModalForEdit(index)}
+                  className="btn btn-light-warning w-50"
                 >
                   {intl.formatMessage({
                     id: "MONITORING.HOSTS.CREATEHOST.MACROS.INHERITED.UPDATE",
+                  })}
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-light-danger w-50"
+                  onClick={() => {
+                    handleDeleteUi(e);
+                  }}
+                >
+                  {intl.formatMessage({
+                    id: "MONITORING.HOSTS.CREATEHOST.MACROS.INHERITED.DELETE",
                   })}
                 </button>
               </div>
             </div>
           </div>
         ))}
-      {isInheritedModalOpen && (
-        <Update
-          isInheritedModalOpen={isInheritedModalOpen}
-          setisInheritedModalOpen={setisInheritedModalOpen}
-        />
-      )}
+
+      <UpdateInheritedMacros
+        show={isInheritedModalOpen}
+        item={editedItem}
+        onHide={closeModal}
+        onUpdate={handleUpdate}
+      />
+      <button
+        type="button"
+        className="btn btn-light-primary w-50"
+        // onClick={() => {
+        //   handleDelete;
+        // }}
+      >
+        {intl.formatMessage({
+          id: "SUBMIT",
+        })}
+      </button>
     </div>
   );
 };
