@@ -84,14 +84,16 @@ const UpdateInheritedMacros: React.FC<UpdateInheritedMacrosProps> = ({
                 })}
                 defaultValue={itemValue}
               />
+            </div>
+            <div className="col">
               <Select
-                onChange={(e) => setValue("type", e)}
                 // defaultLabel={intl.formatMessage({ id: "YEAR" })}
                 options={[
                   { label: "text", value: "0" },
                   { label: "secret text", value: "1" },
                   { label: "vault text", value: "2" },
                 ]}
+                {...register("type")}
               />
             </div>
             <div className="col">
