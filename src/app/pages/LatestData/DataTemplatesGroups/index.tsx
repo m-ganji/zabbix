@@ -81,7 +81,7 @@ export default function DataTemplatesGroups() {
     <Content>
       <div className="d-flex flex-wrap flex-stack my-4">
         <h3 className="fw-bolder ">
-          {intl.formatMessage({ id: "DATA.TEMPLATE" })}
+          {intl.formatMessage({ id: "DATA.TEMPLATE.GP" })}
         </h3>
         <div className="d-flex gap-5 align-items-center">
           <BTN
