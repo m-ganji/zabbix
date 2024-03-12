@@ -7,7 +7,6 @@ import Host, { ApiError } from "./Headers/Host";
 import Macros from "./Headers/Macros";
 import Inventory from "./Headers/Inventory";
 import Encryption from "./Headers/Encryption";
-import Setvalue from "./Headers/Setvalue";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import ToastFire from "../../../layout/components/Toast";
@@ -30,30 +29,39 @@ const CreateHost: FC = () => {
       },
     });
 
+  function include(error: ApiError, params: string) {
+    return error.response?.data?.detail?.includes(params);
+  }
+
   const onSubmit = async (data: FormValues) => {
     console.log(data);
 
     const isNameTyped = watch("host") != "";
     const isHostGroupSelected = watch("groups")?.length != 0;
-    function include(error: ApiError, params: string) {
-      return error.response?.data?.detail?.includes(params);
-    }
+
     if (isNameTyped && isHostGroupSelected) {
       try {
         const response = await instance.post("/core/hosts/create", data);
         console.log(response);
-        ToastFire("success", "موفق", "هاست اضافه شد");
+        ToastFire("success", "موفق", "هاست با موفقیت اضافه شد");
       } catch (error) {
-        console.error(error)
+        console.error(error);
         if ((error as ApiError).response?.status === 401) {
           localStorage.removeItem("token");
           navigate("/");
           ToastFire("error", `توکن منقضی شده است`, "لطفا مجدد وارد شوید");
         }
         if (include(error as ApiError, "cannot be without host group")) {
-          SwalFire("error", "خطا", "", true, false, "بستن");
+          SwalFire("error", "خطا", "ss", true, false, "بستن");
         } else if (include(error as ApiError, "Host with the same name ")) {
-          SwalFire("error", "خطا", "هاست با این نام از قبل وجود دارد", true, false, "بستن");
+          SwalFire(
+            "error",
+            "خطا",
+            "هاست با این نام از قبل وجود دارد",
+            true,
+            false,
+            "بستن"
+          );
         }
       }
     } else {
@@ -134,15 +142,6 @@ const CreateHost: FC = () => {
                 رمز گذاری
               </a>
             </li>
-            <li className="nav-item">
-              <a
-                className="nav-link btn btn-sm btn-color-muted btn-active btn-active-light-primary fw-bold px-4"
-                data-bs-toggle="tab"
-                href="#tab-set-value"
-              >
-                تعیین مقدار
-              </a>
-            </li>
           </ul>
         </div>
       </div>
@@ -175,9 +174,6 @@ const CreateHost: FC = () => {
           </div>
           <div className="tab-pane" id="tab-Encryption">
             <Encryption control={control} watch={watch} register={register} />
-          </div>
-          <div className="tab-pane" id="tab-set-value">
-            <Setvalue control={control} watch={watch} />
           </div>
         </div>
         <div className="position-absolute bottom-0 left-0 d-flex gap-3 mb-3 ">

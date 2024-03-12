@@ -39,12 +39,6 @@ const Host: React.FC<HostProps> = ({ control, watch, setValue, register }) => {
 
   const HostGroupData = useSelector(selectApiData);
   const loading = useSelector(selectApiLoading);
-  // const error = useSelector(selectApiError);
-
-  // useEffect(() => {
-  //   // dispatch(fetchHostGroup({}));
-  //   dispatch(fetchHostGroup({}));
-  // }, [dispatch]);
 
   useEffect(() => {
     handleGetTemplates();
@@ -81,7 +75,14 @@ const Host: React.FC<HostProps> = ({ control, watch, setValue, register }) => {
       <div className="container text-center">
         <div className="row">
           <div className="input-group mb-3 col">
-            <Input iconName="user" register={register("host")} placeholder="" required/>  
+            <Input
+              iconName="user"
+              register={register("host")}
+              placeholder={intl.formatMessage({
+                id: "HOST.NAME",
+              })}
+              required
+            />
           </div>
           <div className="input-group mb-3 col">
             <span
