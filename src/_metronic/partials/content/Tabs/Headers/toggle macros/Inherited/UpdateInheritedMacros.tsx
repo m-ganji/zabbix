@@ -21,6 +21,7 @@ interface UpdateInheritedMacrosProps {
   item: ItemType | null;
   onHide: () => void;
   onUpdate: (updatedItem: ItemType) => void;
+  setValue: CallableFunction;
 }
 
 // Modal component for editing an item
@@ -28,12 +29,14 @@ const UpdateInheritedMacros: React.FC<UpdateInheritedMacrosProps> = ({
   show,
   item,
   onHide,
+  setValue,
   // onUpdate,
 }) => {
   // Ensure item is not null before using its properties
   const itemDescription = item?.description || "";
   const itemMacro = item?.macro || "";
   const itemValue = item?.value || "";
+  console.log(setValue);
   const intl = useIntl();
   // const secondaryColor = getCSSVariableValue("--bs-gray-300");
   const { handleSubmit, register } = useForm<Macro>({
@@ -81,14 +84,16 @@ const UpdateInheritedMacros: React.FC<UpdateInheritedMacrosProps> = ({
                 })}
                 defaultValue={itemValue}
               />
+            </div>
+            <div className="col">
               <Select
-                onChange={(e) => console.log(e)}
                 // defaultLabel={intl.formatMessage({ id: "YEAR" })}
                 options={[
-                  { label: "text" },
-                  { label: "secret text" },
-                  { label: "vault text" },
+                  { label: "text", value: "0" },
+                  { label: "secret text", value: "1" },
+                  { label: "vault text", value: "2" },
                 ]}
+                register={register("type")}
               />
             </div>
             <div className="col">

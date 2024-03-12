@@ -46,26 +46,29 @@ const Host: React.FC<HostProps> = ({ control, watch, setValue, register }) => {
   // }, [dispatch]);
 
   useEffect(() => {
-    const handleGetTemplates = async () => {
-      try {
-        const response = await instance.post("/core/templates/get", {});
-        const mapped = response.data.map((e: { name: string }) => ({
-          label: e.name,
-          value:e.templateid
-        }));
-        setTemplates(mapped);
-      } catch (error) {
-        if ((error as ApiError).response?.status === 401) {
-          localStorage.removeItem("token");
-          navigate("/");
-          ToastFire("error", `توکن منقضی شده است`, "لطفا مجدد وارد شوید");
-        }
-        throw error;
-      }
-    };
-
     handleGetTemplates();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigate]);
+
+  const handleGetTemplates = async () => {
+    try {
+      const response = await instance.post("/core/templates/get", {});
+      const mapped = response.data.map(
+        (e: { name: string; templateid: string }) => ({
+          label: e.name,
+          value: e.templateid,
+        })
+      );
+      setTemplates(mapped);
+    } catch (error) {
+      if ((error as ApiError).response?.status === 401) {
+        localStorage.removeItem("token");
+        navigate("/");
+        ToastFire("error", `توکن منقضی شده است`, "لطفا مجدد وارد شوید");
+      }
+      throw error;
+    }
+  };
 
   const { fields, append, remove } = useFieldArray({
     control,

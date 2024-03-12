@@ -11,7 +11,7 @@ interface SelectProps {
   defaultLabel?: string;
   value?: string | number;
   register?: CallableFunction;
-  disabled:boolean
+  disabled?: boolean;
 }
 
 export const Select: React.FC<SelectProps> = ({
@@ -20,7 +20,7 @@ export const Select: React.FC<SelectProps> = ({
   defaultLabel = "Select...",
   value,
   register,
-  disabled
+  disabled,
 }) => {
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const value = event?.target?.value;

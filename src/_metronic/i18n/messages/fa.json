@@ -100,10 +100,12 @@
   "EDIT":"ویرایش",
   "SERVER":"سرور",
   "PORT.RANGE":"محدوده پورت",
+  "UPDATE":"بروزرسانی",
 
   "DATE.START_END": "تاریخ شروع تا پایان",
   "DATE.FROM": "از تاریخ",
   "DATE.TILL": "تا تاریخ",
+  "NOT_FOUND" : "موردی یافت نشد",
 
   "READ.ONLY": "فقط برای خواندن",
   "READ-WRITE": "خواندن و نوشتن",
@@ -160,6 +162,7 @@
   "MONITORING.HOSTS.SUPPRESSED": "نمایش مشکلات سرکوب شده",
   "MONITORING.HOSTS.HOST.PORT": "پورت",
   "MONITORING.HOSTS.DNS": "دی‌ان‌اس",
+  "MONITORING.HOSTS.CREATE": "ساخت هاست",
   "MONITORING.HOSTS.PORT": "پورت",
   "MONITORING.HOSTS.MONITORED": "هاست تحت نظارت",
   "MONITORING.HOSTS.SEVERITY": "سطح بحران",
