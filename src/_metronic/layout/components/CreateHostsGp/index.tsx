@@ -1,13 +1,50 @@
-import React from "react";
+import React, { useState } from "react";
 import { useIntl } from "react-intl";
 import { KTIcon } from "../../../helpers";
 import BTN from "../BTN";
 import Input from "../Input";
+import { instance } from "../../../../services/axiosInstance";
+import { ApiError } from "../../../partials/content/Tabs/Headers/Host";
+import { useNavigate } from "react-router-dom";
+import ToastFire from "../Toast";
+import SwalFire from "../SW_Modal";
 
 interface CreateMapProps {}
 
 export const CreateHostsGp: React.FC<CreateMapProps> = () => {
   const intl = useIntl();
+  const navigate = useNavigate();
+
+  const [Name, setName] = useState("");
+
+  async function fetchData() {
+    try {
+      const response = await instance.post("/core/hostgroup/create", {
+        name: Name,
+      });
+      ToastFire("success", "موفق", "گروه هاست اضافه شد");
+      console.log(response);
+    } catch (error) {
+      if ((error as ApiError).response?.status === 401) {
+        localStorage.removeItem("token");
+        navigate("/");
+      } else if (
+        (error as ApiError).response?.data?.detail?.includes(
+          `unexpected parameter "Name"`
+        )
+      ) {
+        SwalFire(
+          "error",
+          "خطا",
+          "مقدار نادرست برای فیلد نام",
+          true,
+          false,
+          "بستن"
+        );
+      }
+      console.error(error);
+    }
+  }
 
   return (
     <div
@@ -48,23 +85,22 @@ export const CreateHostsGp: React.FC<CreateMapProps> = () => {
                     {intl.formatMessage({ id: "GP.NAME" })}
                   </h5>
                   <Input
-                    className=""
+                    value={Name}
                     iconName="user"
                     placeholder={intl.formatMessage({ id: "NAME" })}
-                    value=""
+                    onChange={(e) => setName(e.currentTarget.value)}
                   />
                 </div>
                 <div className="d-flex w-100 justify-content-center mt-5 column-gap-5">
                   <BTN
                     label={intl.formatMessage({ id: "ADD" })}
                     className="btn-light-success"
-                    // onClick={submit}
+                    onClick={fetchData}
                   />
                   <BTN
                     label={intl.formatMessage({ id: "CANCEL" })}
                     className="btn-light-danger"
                     id="create_host_gp_close"
-                    // onClick={resetData}
                   />
                 </div>
               </div>

@@ -19,7 +19,7 @@ export const CheckBox: React.FC<CheckBoxProps> = ({
   return (
     <label
       dir={dir}
-      className="form-check form-check-sm form-check-custom form-check-solid gap-2"
+      className="form-check form-check-sm form-check-custom form-check-solid gap-2 p-0"
     >
       <input
         type="checkbox"

@@ -3,7 +3,7 @@ import { useIntl } from "react-intl";
 
 interface Option {
   label: string;
-  value: string | number | string[];
+  value: string | number;
 }
 
 interface Props {
@@ -17,6 +17,9 @@ const ToggleBtns: FC<Props> = ({ options, setData, initialData, data }) => {
   const intl = useIntl();
 
   const handleClick = (newState: Option) => {
+    console.log("newState",newState.value);
+    console.log("initialData",initialData);
+    
     if (setData) {
       if (data != "") {
         setData(data, newState.value);
@@ -26,9 +29,11 @@ const ToggleBtns: FC<Props> = ({ options, setData, initialData, data }) => {
     }
   };
 
+
   return (
-    <div className="btn-group pb-2" role="group" aria-label="Basic example">
+    <div className="btn-group pb-2" role="group">
       {options.map((option, index) => (
+        console.log(initialData == option.value),
         <button
           key={index}
           type="button"

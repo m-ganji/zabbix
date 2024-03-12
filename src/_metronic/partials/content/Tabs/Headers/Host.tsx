@@ -19,6 +19,12 @@ interface HostProps {
 export interface ApiError {
   response?: {
     status: number;
+    data?: {
+      detail?: {
+        data: string;
+        includes: (e: string) => boolean;
+      };
+    };
   };
 }
 
@@ -40,25 +46,29 @@ const Host: React.FC<HostProps> = ({ control, watch, setValue, register }) => {
   // }, [dispatch]);
 
   useEffect(() => {
-    const handleGetTemplates = async () => {
-      try {
-        const response = await instance.post("/core/templates/get", {});
-        const mapped = response.data.map((e: { name: string }) => ({
-          label: e.name,
-        }));
-        setTemplates(mapped);
-      } catch (error) {
-        if ((error as ApiError).response?.status === 401) {
-          localStorage.removeItem("token");
-          navigate("/");
-          ToastFire("error", `توکن منقضی شده است`, "لطفا مجدد وارد شوید");
-        }
-        throw error;
-      }
-    };
-
     handleGetTemplates();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigate]);
+
+  const handleGetTemplates = async () => {
+    try {
+      const response = await instance.post("/core/templates/get", {});
+      const mapped = response.data.map(
+        (e: { name: string; templateid: string }) => ({
+          label: e.name,
+          value: e.templateid,
+        })
+      );
+      setTemplates(mapped);
+    } catch (error) {
+      if ((error as ApiError).response?.status === 401) {
+        localStorage.removeItem("token");
+        navigate("/");
+        ToastFire("error", `توکن منقضی شده است`, "لطفا مجدد وارد شوید");
+      }
+      throw error;
+    }
+  };
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -114,7 +124,10 @@ const Host: React.FC<HostProps> = ({ control, watch, setValue, register }) => {
               title="MENU.SELECT.HOSTS.GP"
               reset={false}
               addAll={false}
-              options={HostGroupData}
+              options={HostGroupData?.map((gp) => ({
+                value: gp.groupid,
+                label: gp.name,
+              }))}
               Loading={loading}
               DataName="groups"
               setData={setValue}
@@ -146,7 +159,7 @@ const Host: React.FC<HostProps> = ({ control, watch, setValue, register }) => {
               type="text"
               className="form-control rounded-start-2 rounded-end-0"
               placeholder={intl.formatMessage({
-                id: "MONITORING.HOSTS.HOST.IP",
+                id: "IP",
               })}
               aria-label="آی‌پی"
               aria-describedby="tab-hosts"
@@ -157,7 +170,7 @@ const Host: React.FC<HostProps> = ({ control, watch, setValue, register }) => {
               type="text"
               className="form-control rounded-start-2 rounded-end-0 me-2"
               placeholder={intl.formatMessage({
-                id: "MONITORING.HOSTS.HOST.DNS",
+                id: "MONITORING.HOSTS.DNS",
               })}
               aria-label="دی‌ان‌اس"
               aria-describedby="tab-hosts"
@@ -168,11 +181,11 @@ const Host: React.FC<HostProps> = ({ control, watch, setValue, register }) => {
                 options={[
                   {
                     value: 0,
-                    label: "MONITORING.HOSTS.HOST.DNS",
+                    label: "MONITORING.HOSTS.DNS",
                   },
                   {
                     value: 1,
-                    label: "MONITORING.HOSTS.HOST.IP",
+                    label: "IP",
                   },
                 ]}
                 data={`interface.${index}.useip`}

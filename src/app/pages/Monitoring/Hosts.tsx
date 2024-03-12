@@ -191,7 +191,7 @@ export function Overview() {
                         <ToggleBtns
                           options={[
                             {
-                              value: ["0", "1"],
+                              value: "",
                               label: "ALL",
                             },
                             {

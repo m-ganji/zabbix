@@ -23,6 +23,9 @@ import AvailabilityReport from "../pages/Reports/AvailabilityReport";
 import BusiestTriggers from "../pages/Reports/BusiestTriggers";
 import InventoryOverview from "../pages/Inventory/Overview";
 import InventoryHost from "../pages/Inventory/Host";
+import { DiscoveryData } from "../pages/LatestData/Discovery";
+import { EventCorrelation } from "../pages/LatestData/EventCorrelation";
+import { DataHosts } from "../pages/LatestData/Hosts";
 
 const PrivateRoutes = () => {
   const ProfilePage = lazy(() => import("../modules/profile/ProfilePage"));
@@ -71,10 +74,10 @@ const PrivateRoutes = () => {
         <Route path="Data/Templates-Groups" element={<DataTemplatesGroups />} />
         <Route path="Data/Host-Groups" element={<DataHostGroups />} />
         <Route path="Data/Templates" element={<Maps />} />
-        <Route path="Data/Hosts" element={<Maps />} />
+        <Route path="Data/Hosts" element={<DataHosts />} />
         <Route path="Data/Maintenance" element={<Maps />} />
-        <Route path="Data/Event-Correlation" element={<Maps />} />
-        <Route path="Data/Discovery" element={<Maps />} />
+        <Route path="Data/Event-Correlation" element={<EventCorrelation />} />
+        <Route path="Data/Discovery" element={<DiscoveryData />} />
 
         {/* Lazy Modules */}
 
