@@ -147,14 +147,12 @@ const Inheritedmacros: React.FC<Macro> = () => {
                     <div className="s">
                       <Select
                         value={e.type}
-                        onChange={(e) => console.log(e)}
-                        // defaultLabel={intl.formatMessage({ id: "YEAR" })}
                         options={[
                           { label: "text", value: "0" },
                           { label: "hidden", value: "1" },
                           { label: "select", value: "2" },
                         ]}
-                        
+                        disabled
                       />
 
                       {/* {e.type == "0" && (
@@ -241,6 +239,7 @@ const Inheritedmacros: React.FC<Macro> = () => {
         item={editedItem}
         onHide={closeModal}
         onUpdate={handleUpdate}
+        setValue={setValue}
       />
       <div className="d-flex">
         <button
