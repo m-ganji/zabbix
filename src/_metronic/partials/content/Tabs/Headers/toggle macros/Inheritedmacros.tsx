@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import UpdateInheritedMacros from "./Inherited/UpdateInheritedMacros";
 import AddInheritedMacros from "./Inherited/AddInheritedMacros";
 import { useFieldArray } from "react-hook-form";
+import { Select } from "../../../../../layout/components/Select";
 
 interface ItemType {
   description?: string;
@@ -142,11 +143,21 @@ const Inheritedmacros: React.FC<Macro> = () => {
                     value={e.value}
                     // readonly
                   />
-                  <div
-                    className={`custom-dropdown border border-${secondaryColor} border-2 `}
-                  >
-                    <div className="selected-option mt-2">
-                      {e.type == "0" && (
+                  <div className={`custom-dropdown`}>
+                    <div className="s">
+                      <Select
+                        value={e.type}
+                        onChange={(e) => console.log(e)}
+                        // defaultLabel={intl.formatMessage({ id: "YEAR" })}
+                        options={[
+                          { label: "text", value: "0" },
+                          { label: "hidden", value: "1" },
+                          { label: "select", value: "2" },
+                        ]}
+                        
+                      />
+
+                      {/* {e.type == "0" && (
                         <span>
                           <KTIcon
                             iconName="text"
@@ -169,7 +180,7 @@ const Inheritedmacros: React.FC<Macro> = () => {
                             className="fs-2 d-flex justify-content-center justify-content-end gap-2"
                           />
                         </span>
-                      )}
+                      )} */}
                     </div>
                   </div>
                 </div>

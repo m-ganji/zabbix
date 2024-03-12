@@ -5,6 +5,8 @@ import { getCSSVariableValue } from "../../../../../../assets/ts/_utils";
 import { useForm } from "react-hook-form";
 import ToastFire from "../../../../../../layout/components/Toast";
 import { instance } from "../../../../../../../services/axiosInstance";
+import { Select } from "../../../../../../layout/components/Select";
+import { KTIcon } from "../../../../../../helpers";
 
 interface ItemType {
   description?: string;
@@ -78,6 +80,15 @@ const UpdateInheritedMacros: React.FC<UpdateInheritedMacrosProps> = ({
                   id: "MONITORING.HOSTS.CREATEHOST.MACROS.INHERITED.EFFECTIVE",
                 })}
                 defaultValue={itemValue}
+              />
+              <Select
+                onChange={(e) => console.log(e)}
+                // defaultLabel={intl.formatMessage({ id: "YEAR" })}
+                options={[
+                  { label: "text" },
+                  { label: "secret text" },
+                  { label: "vault text" },
+                ]}
               />
             </div>
             <div className="col">
