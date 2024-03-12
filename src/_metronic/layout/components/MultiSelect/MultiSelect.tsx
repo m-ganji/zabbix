@@ -194,22 +194,26 @@ const MultiSelect: React.FC<{
               </Dropdown.Item>
             </div>
             <Dropdown.Divider />
-            {options?.map((option, index) => (
-              <Dropdown.Item
-                key={index}
-                style={{
-                  direction: "ltr",
-                  textOverflow: "ellipsis",
-                  maxHeight: "250px",
-                }}
-                onClick={() => toggleOption(option)}
-                active={selectedOptions.some(
-                  (selectedOption) => selectedOption.value === option.value
-                )}
-              >
-                {option.label}
-              </Dropdown.Item>
-            ))}
+            {options?.length != 0 ? (
+              options?.map((option, index) => (
+                <Dropdown.Item
+                  key={index}
+                  style={{
+                    direction: "ltr",
+                    textOverflow: "ellipsis",
+                    maxHeight: "250px",
+                  }}
+                  onClick={() => toggleOption(option)}
+                  active={selectedOptions.some(
+                    (selectedOption) => selectedOption.value === option.value
+                  )}
+                >
+                  {option.label}
+                </Dropdown.Item>
+              ))
+            ) : (
+              <p>{intl.formatMessage({ id: "NOT_FOUND" })}</p>
+            )}
           </>
         )}
       </Dropdown.Menu>

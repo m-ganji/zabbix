@@ -2,7 +2,6 @@ import React from "react";
 import { useIntl } from "react-intl";
 import { KTIcon } from "../../../helpers";
 import BTN from "../BTN";
-import { CheckBox } from "../CheckBox";
 
 interface CreateMapProps {}
 

@@ -11,6 +11,7 @@ interface SelectProps {
   defaultLabel?: string;
   value?: string | number;
   register?: CallableFunction;
+  disabled?: boolean;
 }
 
 export const Select: React.FC<SelectProps> = ({
@@ -19,6 +20,7 @@ export const Select: React.FC<SelectProps> = ({
   defaultLabel = "Select...",
   value,
   register,
+  disabled,
 }) => {
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const value = event?.target?.value;
@@ -30,6 +32,7 @@ export const Select: React.FC<SelectProps> = ({
       className="form-select h-40px"
       value={value}
       onChange={handleSelectChange}
+      disabled={disabled}
     >
       <option disabled value="-1">
         {defaultLabel}

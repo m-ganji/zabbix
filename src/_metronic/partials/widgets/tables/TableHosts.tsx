@@ -74,13 +74,13 @@ const TableHosts: React.FC<TableHostsProps> = ({ data, isLoaded, isError }) => {
                       <th className="text-center min-w-100px">نام</th>
                       <th className="text-center min-w-150px">رابط</th>
                       <th className="text-center min-w-100px">دسترسی</th>
-                      <th className="text-center min-w-150px">برچسب ها</th>
+                      <th className="text-center min-w-120px">برچسب ها</th>
                       <th className="text-center min-w-50px">وضعیت</th>
                       <th className="text-center min-w-125px">آخرین داده ها</th>
                       <th className="text-center min-w-150px">مشکلات</th>
                       <th className="text-center min-w-100px">نمودارها</th>
                       <th className="text-center min-w-100px">داشبوردها</th>
-                      <th className="text-center min-w-150px">وب</th>
+                      <th className="text-center min-w-50px">وب</th>
                     </tr>
                   </thead>
                   <tbody>
