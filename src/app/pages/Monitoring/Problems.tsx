@@ -28,6 +28,7 @@ import ToggleBtns from "../../../_metronic/layout/components/ToggleBtn/ToggleBtn
 import BTN from "../../../_metronic/layout/components/BTN";
 import ModalContainer from "../../../_metronic/layout/components/ModalContainer";
 import { CheckBox } from "./../../../_metronic/layout/components/CheckBox/index";
+import Input from "../../../_metronic/layout/components/Input";
 
 interface Triggers {
   priority: string;
@@ -844,9 +845,8 @@ export function Problems() {
                             <input
                               type="checkbox"
                               onChange={(e) =>
-                                e.currentTarget.checked
-                                  ? setValue("age_state", "1")
-                                  : setValue("age_state", "0")
+                                e.currentTarget.checked &&
+                                unregister("time_from")
                               }
                             />
                           )}
@@ -856,11 +856,11 @@ export function Problems() {
                             id: "MONITORING.PROBLEMS.AGE",
                           })}
                         </span>
-                        <input
+                        <Input
                           type="number"
-                          className="form-control py-2 text-center w-25 py-2"
                           onChange={handleAgeData}
-                          value={age}
+                          value={watch("time_from")}
+                          className=" text-center w-25"
                         />
                         <span className="form-check-label m-2 ">
                           {intl.formatMessage({

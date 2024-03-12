@@ -8,7 +8,7 @@ const TemplatesGpTable = () => {
       {/* begin::Header */}
       <div className="card-header border-0 pt-5">
         <h3 className="card-title align-items-start flex-column">
-          {intl.formatMessage({ id: "DATA.TEMPLATE" })}
+          {intl.formatMessage({ id: "DATA.TEMPLATE.GP" })}
         </h3>
         <div
           className="card-toolbar"

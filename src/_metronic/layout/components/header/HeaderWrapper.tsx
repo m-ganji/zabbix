@@ -1,12 +1,10 @@
-import clsx from "clsx";
 import { Link } from "react-router-dom";
 import { KTIcon, toAbsoluteUrl } from "../../../helpers";
 import { LayoutSetup, useLayout } from "../../core";
-import { Header } from "./Header";
 import { Navbar } from "./Navbar";
 
 export function HeaderWrapper() {
-  const { config, classes } = useLayout();
+  const { config } = useLayout();
   if (config.app?.header?.default?.container === "fluid") {
     LayoutSetup.classes.headerContainer.push("container-fluid");
   } else {

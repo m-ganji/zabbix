@@ -120,7 +120,6 @@ const Encryption: React.FC<HostProps> = ({ register }) => {
               aria-describedby="tab-hosts"
               required
             />
-
             <input
               {...register(`tls_subject`)}
               type="text"

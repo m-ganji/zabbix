@@ -1,12 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Modal } from "react-bootstrap";
 import { useIntl } from "react-intl";
-import { getCSSVariableValue } from "../../../../../../assets/ts/_utils";
 import { useForm } from "react-hook-form";
 import ToastFire from "../../../../../../layout/components/Toast";
 import { instance } from "../../../../../../../services/axiosInstance";
 import { Select } from "../../../../../../layout/components/Select";
-import { KTIcon } from "../../../../../../helpers";
 
 interface ItemType {
   description?: string;
@@ -29,17 +27,14 @@ const UpdateInheritedMacros: React.FC<UpdateInheritedMacrosProps> = ({
   show,
   item,
   onHide,
-  setValue,
   // onUpdate,
 }) => {
-  // Ensure item is not null before using its properties
   const itemDescription = item?.description || "";
   const itemMacro = item?.macro || "";
   const itemValue = item?.value || "";
-  console.log(setValue);
   const intl = useIntl();
   // const secondaryColor = getCSSVariableValue("--bs-gray-300");
-  const { handleSubmit, register } = useForm<Macro>({
+  const { handleSubmit, register, setValue, watch } = useForm<Macro>({
     defaultValues: {},
   });
 
@@ -58,6 +53,13 @@ const UpdateInheritedMacros: React.FC<UpdateInheritedMacrosProps> = ({
     }
   };
 
+  useEffect(() => {
+    setValue("type", item?.type);
+    setValue("macro", item?.macro);
+    setValue("description", item?.description);
+    setValue("value", item?.value);
+  }, [show]);
+
   return (
     <Modal show={show} onHide={onHide}>
       <Modal.Header closeButton>
@@ -73,7 +75,22 @@ const UpdateInheritedMacros: React.FC<UpdateInheritedMacrosProps> = ({
           onSubmit={handleSubmit(onSubmit)}
         >
           <div className="row mb-2 ">
-            <div className="col">
+            <div className="col d-flex ">
+              <div className="w-50">
+                <Select
+                  defaultLabel={intl.formatMessage({
+                    id: "TYPE",
+                  })}
+                  value={watch("type")}
+                  onChange={(e) => setValue("type", e)}
+                  options={[
+                    { label: "text", value: "0" },
+                    { label: "secret text", value: "1" },
+                    { label: "vault secret", value: "2" },
+                  ]}
+                />
+              </div>
+
               <input
                 {...register("value")}
                 type="text"
@@ -83,17 +100,6 @@ const UpdateInheritedMacros: React.FC<UpdateInheritedMacrosProps> = ({
                   id: "MONITORING.HOSTS.CREATEHOST.MACROS.INHERITED.EFFECTIVE",
                 })}
                 defaultValue={itemValue}
-              />
-            </div>
-            <div className="col">
-              <Select
-                // defaultLabel={intl.formatMessage({ id: "YEAR" })}
-                options={[
-                  { label: "text", value: "0" },
-                  { label: "secret text", value: "1" },
-                  { label: "vault text", value: "2" },
-                ]}
-                register={register("type")}
               />
             </div>
             <div className="col">
@@ -148,7 +154,3 @@ const UpdateInheritedMacros: React.FC<UpdateInheritedMacrosProps> = ({
 };
 
 export default UpdateInheritedMacros;
-
-// todo
-// 1 request
-// 2 toast

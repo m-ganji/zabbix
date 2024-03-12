@@ -3,12 +3,14 @@ import { KTIcon } from "../../../helpers";
 
 interface Props {
   className?: string;
-  iconName: string;
+  iconName?: string;
   placeholder?: string;
   value?: string;
   required?: boolean;
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
-  register?: CallableFunction;
+  register?: CallableFunction | object;
+  disabled?: boolean;
+  type?: string;
 }
 
 const Input: React.FC<Props> = ({
@@ -19,20 +21,27 @@ const Input: React.FC<Props> = ({
   required,
   onChange,
   register,
+  disabled,
+  type,
 }) => {
   return register ? (
     <div className={`input-group ${className}`}>
       {required && (
         <span className="text-danger position-absolute top-0 me-1 fs-3">*</span>
       )}
-      <span className="input-group-text rounded-start-0 rounded-end-2 p-3">
-        <KTIcon iconName={iconName} className="fs-3" />
-      </span>
+      {iconName && (
+        <span className="input-group-text rounded-start-0 rounded-end-2 p-3">
+          <KTIcon iconName={iconName} className="fs-3" />
+        </span>
+      )}
       <input
-        type="text"
-        className="form-control py-0 rounded-start-2 rounded-end-0"
+        type={type ?? "text"}
+        className={`form-control py-0 rounded-start-2 ${
+          iconName ? "rounded-end-0" : ""
+        }`}
         placeholder={placeholder}
         {...register}
+        disabled={disabled}
       />
     </div>
   ) : (
@@ -40,15 +49,20 @@ const Input: React.FC<Props> = ({
       {required && (
         <span className="text-danger position-absolute top-0 me-1 fs-3">*</span>
       )}
-      <span className="input-group-text rounded-start-0 rounded-end-2 p-3">
-        <KTIcon iconName={iconName} className="fs-3" />
-      </span>
+      {iconName && (
+        <span className="input-group-text rounded-start-0 rounded-end-2 p-3">
+          <KTIcon iconName={iconName} className="fs-3" />
+        </span>
+      )}
       <input
-        type="text"
-        className="form-control py-0 rounded-start-2 rounded-end-0"
+        type={type ?? "text"}
+        className={`form-control py-0 rounded-start-2 ${
+          iconName ? "rounded-end-0" : ""
+        }`}
         placeholder={placeholder}
         value={value}
         onChange={onChange}
+        disabled={disabled}
       />
     </div>
   );

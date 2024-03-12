@@ -5,6 +5,7 @@ import { getCSSVariableValue } from "../../../../../../assets/ts/_utils";
 import { useForm } from "react-hook-form";
 import ToastFire from "../../../../../../layout/components/Toast";
 import { instance } from "../../../../../../../services/axiosInstance";
+import { Select } from "../../../../../../layout/components/Select";
 
 interface ItemType {
   description?: string;
@@ -28,7 +29,7 @@ const AddInheritedMacros: React.FC<AddInheritedMacrosProps> = ({
   const intl = useIntl();
   const secondaryColor = getCSSVariableValue("--bs-gray-300");
 
-  const { handleSubmit, register } = useForm<Macro>({
+  const { handleSubmit, register, setValue } = useForm<Macro>({
     defaultValues: {},
   });
 
@@ -71,6 +72,14 @@ const AddInheritedMacros: React.FC<AddInheritedMacrosProps> = ({
                 placeholder={intl.formatMessage({
                   id: "MONITORING.HOSTS.CREATEHOST.MACROS.INHERITED.EFFECTIVE",
                 })}
+              />
+              <Select
+                onChange={(e) => setValue("type", e)}
+                options={[
+                  { label: "text", value: "0" },
+                  { label: "secret text", value: "1" },
+                  { label: "vault secret", value: "2" },
+                ]}
               />
             </div>
             <div className="col">
