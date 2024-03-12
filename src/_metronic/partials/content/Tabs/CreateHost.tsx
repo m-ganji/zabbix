@@ -3,7 +3,7 @@ import { FC, useEffect, useState } from "react";
 import { instance } from "../../../../services/axiosInstance";
 import Tags from "./Headers/Tags";
 import IPMI from "./Headers/IPMI";
-import Host from "./Headers/Host";
+import Host, { ApiError } from "./Headers/Host";
 import Macros from "./Headers/Macros";
 import Inventory from "./Headers/Inventory";
 import Encryption from "./Headers/Encryption";
@@ -11,20 +11,19 @@ import Setvalue from "./Headers/Setvalue";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import ToastFire from "../../../layout/components/Toast";
-interface ApiError {
-  response?: {
-    status: number;
-  };
-}
+import SwalFire from "../../../layout/components/SW_Modal";
 
 interface FormValues {
   host?: string;
+  groups?: [];
+  macros?: [];
+  tags?: [];
 }
 
 const CreateHost: FC = () => {
   const navigate = useNavigate();
 
-  const { control, handleSubmit, watch, setValue, register } =
+  const { control, handleSubmit, watch, setValue, register, unregister } =
     useForm<FormValues>({
       defaultValues: {
         host: "",
@@ -34,17 +33,46 @@ const CreateHost: FC = () => {
   const onSubmit = async (data: FormValues) => {
     console.log(data);
 
-    try {
-      const response = await instance.post("/core/hosts/create", data);
-      console.log(response);
-    } catch (error) {
-      if ((error as ApiError).response?.status === 401) {
-        localStorage.removeItem("token");
-        navigate("/");
-        ToastFire("error", `توکن منقضی شده است`, "لطفا مجدد وارد شوید");
-      }
-      console.error("Error occurred:", error);
+    const isNameTyped = watch("host") != "";
+    const isHostGroupSelected = watch("groups")?.length != 0;
+    function include(error: ApiError, params: string) {
+      return error.response?.data?.detail?.includes(params);
     }
+    if (isNameTyped && isHostGroupSelected) {
+      try {
+        const response = await instance.post("/core/hosts/create", data);
+        console.log(response);
+        ToastFire("success", "موفق", "هاست اضافه شد");
+      } catch (error) {
+        console.error(error)
+        if ((error as ApiError).response?.status === 401) {
+          localStorage.removeItem("token");
+          navigate("/");
+          ToastFire("error", `توکن منقضی شده است`, "لطفا مجدد وارد شوید");
+        }
+        if (include(error as ApiError, "cannot be without host group")) {
+          SwalFire("error", "خطا", "", true, false, "بستن");
+        } else if (include(error as ApiError, "Host with the same name ")) {
+          SwalFire("error", "خطا", "هاست با این نام از قبل وجود دارد", true, false, "بستن");
+        }
+      }
+    } else {
+      SwalFire(
+        "error",
+        "خطا",
+        "مواردی که با ستاره* علامت گذاری شده اند نمی توانند خالی باشند",
+        true,
+        false,
+        "بستن"
+      );
+    }
+  };
+
+  const submit = () => {
+    watch("groups")?.length === 0 && unregister("groups");
+    watch("macros")?.length === 0 && unregister("macros");
+    watch("tags")?.length === 0 && unregister("tags");
+    handleSubmit(onSubmit)();
   };
 
   return (
@@ -143,7 +171,7 @@ const CreateHost: FC = () => {
             <Macros control={control} watch={watch} setValue={setValue} />
           </div>
           <div className="tab-pane" id="tab-inventory">
-            <Inventory register={register} />
+            <Inventory watch={watch} setValue={setValue} />
           </div>
           <div className="tab-pane" id="tab-Encryption">
             <Encryption control={control} watch={watch} register={register} />
@@ -155,7 +183,7 @@ const CreateHost: FC = () => {
         <div className="position-absolute bottom-0 left-0 d-flex gap-3 mb-3 ">
           <button
             type="button"
-            onClick={handleSubmit(onSubmit)}
+            onClick={submit}
             className="btn btn-light-success"
           >
             اضافه کردن

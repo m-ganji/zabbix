@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import ToastFire from "../../../../layout/components/Toast";
 import { selectApiData, selectApiLoading } from "../../../../../store/store";
 import ToggleBtns from "../../../../layout/components/ToggleBtn/ToggleBtn";
+import Input from "../../../../layout/components/Input";
 
 interface HostProps {
   control: Control;
@@ -80,21 +81,7 @@ const Host: React.FC<HostProps> = ({ control, watch, setValue, register }) => {
       <div className="container text-center">
         <div className="row">
           <div className="input-group mb-3 col">
-            <span
-              className="input-group-text rounded-start-0 rounded-end-2"
-              id="tab-hosts"
-            >
-              <i className="bi bi-hdd-network" />
-            </span>
-            <input
-              {...register("host")}
-              type="text"
-              className="form-control rounded-start-2 rounded-end-0"
-              placeholder="نام هاست"
-              aria-label="نام هاست"
-              aria-describedby="tab-hosts"
-              required
-            />
+            <Input iconName="user" register={register("host")} placeholder="" required/>  
           </div>
           <div className="input-group mb-3 col">
             <span

@@ -21,7 +21,7 @@ const ToggleBtns: FC<Props> = ({ options, setData, initialData, data }) => {
     console.log("initialData",initialData);
     
     if (setData) {
-      if (data != "") {
+      if (data === "") {
         setData(data, newState.value);
       } else {
         setData(newState.value);

@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { Control, useForm } from "react-hook-form";
 import { Loader } from "../../../../../layout/components/loader/Loader";
 import { getCSSVariableValue } from "../../../../../assets/ts/_utils";
-import { KTIcon } from "../../../../../helpers";
 import { useNavigate } from "react-router-dom";
 import UpdateInheritedMacros from "./Inherited/UpdateInheritedMacros";
 import AddInheritedMacros from "./Inherited/AddInheritedMacros";
@@ -32,7 +31,6 @@ const Inheritedmacros: React.FC<Macro> = () => {
   const intl = useIntl();
   const [globalUserMacro, setGlobalUserMacro] = useState<ItemType[]>([]);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
-  const secondaryColor = getCSSVariableValue("--bs-gray-300");
   const navigate = useNavigate();
 
   const { control, handleSubmit, watch, setValue, register } = useForm<Macro>({
@@ -128,6 +126,7 @@ const Inheritedmacros: React.FC<Macro> = () => {
                     id: "MONITORING.HOSTS.CREATEHOST.MACROS.INHERITED.MACRO",
                   })}
                   key={index}
+                  disabled
                   // readonly
                 />
               </div>
@@ -141,48 +140,20 @@ const Inheritedmacros: React.FC<Macro> = () => {
                       id: "MONITORING.HOSTS.CREATEHOST.MACROS.INHERITED.EFFECTIVE",
                     })}
                     value={e.value}
+                    disabled
                     // readonly
                   />
-                  <div className={`custom-dropdown`}>
-                    <div className="s">
-                      <Select
-                        value={e.type}
-                        onChange={(e) => console.log(e)}
-                        // defaultLabel={intl.formatMessage({ id: "YEAR" })}
-                        options={[
-                          { label: "text", value: "0" },
-                          { label: "hidden", value: "1" },
-                          { label: "select", value: "2" },
-                        ]}
-                        disabled
-                        
-                      />
-
-                      {/* {e.type == "0" && (
-                        <span>
-                          <KTIcon
-                            iconName="text"
-                            className="fs-2 d-flex justify-content-center justify-content-end gap-2"
-                          />
-                        </span>
-                      )}
-                      {e.type == "1" && (
-                        <span>
-                          <KTIcon
-                            iconName="eye-slash"
-                            className="fs-2 d-flex justify-content-center justify-content-end "
-                          />
-                        </span>
-                      )}
-                      {e.type == "2" && (
-                        <span>
-                          <KTIcon
-                            iconName="lock-2"
-                            className="fs-2 d-flex justify-content-center justify-content-end gap-2"
-                          />
-                        </span>
-                      )} */}
-                    </div>
+                  <div>
+                    <Select
+                      value={e.type}
+                      onChange={(e) => console.log(e)}
+                      options={[
+                        { label: "text", value: "0" },
+                        { label: "secret text", value: "1" },
+                        { label: "vault secret", value: "2" },
+                      ]}
+                      disabled
+                    />
                   </div>
                 </div>
               </div>
@@ -196,6 +167,7 @@ const Inheritedmacros: React.FC<Macro> = () => {
                   placeholder={intl.formatMessage({
                     id: "MONITORING.HOSTS.CREATEHOST.MACROS.INHERITED.DESC",
                   })}
+                  disabled
                   // readonly
                 />
               </div>

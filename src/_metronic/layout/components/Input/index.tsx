@@ -9,6 +9,7 @@ interface Props {
   required?: boolean;
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
   register?: CallableFunction;
+  disabled?:boolean
 }
 
 const Input: React.FC<Props> = ({
@@ -19,6 +20,7 @@ const Input: React.FC<Props> = ({
   required,
   onChange,
   register,
+  disabled,
 }) => {
   return register ? (
     <div className={`input-group ${className}`}>
@@ -33,6 +35,7 @@ const Input: React.FC<Props> = ({
         className="form-control py-0 rounded-start-2 rounded-end-0"
         placeholder={placeholder}
         {...register}
+        disabled={disabled}
       />
     </div>
   ) : (
@@ -49,6 +52,7 @@ const Input: React.FC<Props> = ({
         placeholder={placeholder}
         value={value}
         onChange={onChange}
+        disabled={disabled}
       />
     </div>
   );
