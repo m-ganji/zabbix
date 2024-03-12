@@ -60,19 +60,21 @@ const CardsWidget17: FC<Props> = ({
     }
   });
 
-  const countsList = Object.entries(severityCounts).map(([severity, count]) => (
-    <>
-      <div className="d-flex fw-semibold align-items-center">
-        <div
-          className={`bullet w-8px h-3px rounded-2 bg-${severityToColor[severity].color} me-3`}
-        />
-        <div className="fw-bolder text-gray-700 text-xxl-end">
-          {severityToColor[severity].title}
+  const countsList = Object.entries(severityCounts).map(
+    ([severity, count], index) => (
+      <>
+        <div key={index} className="d-flex fw-semibold align-items-center">
+          <div
+            className={`bullet w-8px h-3px rounded-2 bg-${severityToColor[severity].color} me-3`}
+          />
+          <div className="fw-bolder text-gray-700 text-xxl-end">
+            {severityToColor[severity].title}
+          </div>
+          <div className="text-gray-500 flex-grow-1 me-4">{count}</div>
         </div>
-        <div className="text-gray-500 flex-grow-1 me-4">{count}</div>
-      </div>
-    </>
-  ));
+      </>
+    )
+  );
 
   return (
     <div className={`card card-flush ${className}`}>

@@ -3,7 +3,6 @@ import { instance } from "../../../../../../services/axiosInstance";
 import { useEffect, useState } from "react";
 import { Control, useForm } from "react-hook-form";
 import { Loader } from "../../../../../layout/components/loader/Loader";
-import { getCSSVariableValue } from "../../../../../assets/ts/_utils";
 import { useNavigate } from "react-router-dom";
 import UpdateInheritedMacros from "./Inherited/UpdateInheritedMacros";
 import AddInheritedMacros from "./Inherited/AddInheritedMacros";

@@ -8,7 +8,7 @@ interface Props {
   value?: string;
   onChange?: (event: ChangeEvent<HTMLTextAreaElement>) => void;
   register?: CallableFunction;
-  required: boolean;
+  required?: boolean;
 }
 
 const TextArea: React.FC<Props> = ({

@@ -22,6 +22,8 @@ import {
   selectApiData,
   selectApiLoading,
 } from "../../../store/store";
+import { ApiError } from "../../../_metronic/partials/content/Tabs/Headers/Host";
+import { useNavigate } from "react-router-dom";
 
 interface FormValues {
   selectProblems: string;
@@ -92,6 +94,7 @@ export function Overview() {
   const HostGroupLoading = useSelector(selectApiLoading);
 
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
 
   useEffect(() => {
     dataHost(watch());
@@ -120,6 +123,10 @@ export function Overview() {
       return response;
     } catch (error) {
       console.error("Error fetching host data:", error);
+      if ((error as ApiError).response?.status === 401) {
+        localStorage.removeItem("token");
+        navigate("/");
+      }
       setIsError(true);
       throw error;
     }
