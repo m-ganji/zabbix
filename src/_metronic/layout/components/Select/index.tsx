@@ -44,7 +44,7 @@ export const Select: React.FC<SelectProps> = ({
       ))}
     </select>
   ) : (
-    <select className="form-select h-40px" {...register}>
+    <select disabled={disabled} className="form-select h-40px" {...register}>
       <option disabled value="-1">
         {defaultLabel}
       </option>
