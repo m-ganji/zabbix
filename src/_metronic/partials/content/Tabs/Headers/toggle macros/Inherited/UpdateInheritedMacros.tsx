@@ -93,7 +93,7 @@ const UpdateInheritedMacros: React.FC<UpdateInheritedMacrosProps> = ({
                   { label: "secret text", value: "1" },
                   { label: "vault text", value: "2" },
                 ]}
-                {...register("type")}
+                register={register("type")}
               />
             </div>
             <div className="col">
