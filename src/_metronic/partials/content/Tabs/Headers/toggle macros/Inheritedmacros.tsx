@@ -154,6 +154,7 @@ const Inheritedmacros: React.FC<Macro> = () => {
                           { label: "hidden", value: "1" },
                           { label: "select", value: "2" },
                         ]}
+                        disabled
                         
                       />
 
