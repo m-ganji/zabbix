@@ -62,6 +62,7 @@ const UpdateInheritedMacros: React.FC<UpdateInheritedMacrosProps> = ({
       });
       console.log("Response:", response);
       ToastFire("success", `موفق`, "با موفقیت ویرایش شد");
+      onHide();
     } catch (error) {
       console.error("Error during Zabbix request:", error);
       ToastFire("error", `لطفا با فرمت مناسب مقادیر را وارد کنید`, "");
