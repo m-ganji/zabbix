@@ -106,10 +106,10 @@ const Inheritedmacros: React.FC<Macro> = () => {
 
   return (
     <div className="d-flex flex-column">
-      <div className="d-flex gap-3">
+      <div className="d-flex gap-3 mb-4">
         <button
           type="button"
-          className="btn btn-light-primary "
+          className="btn btn-light-primary px-5"
           onClick={handleSubmit(handleDeleteRequest)}
         >
           {intl.formatMessage({
@@ -118,7 +118,7 @@ const Inheritedmacros: React.FC<Macro> = () => {
         </button>
         <button
           type="button"
-          className="btn btn-success "
+          className="btn btn-success px-5"
           onClick={() => openModalForAdd()}
         >
           {intl.formatMessage({
