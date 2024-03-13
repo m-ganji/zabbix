@@ -49,6 +49,7 @@ const AddInheritedMacros: React.FC<AddInheritedMacrosProps> = ({
         formData
       );
       console.log("Response:", response);
+      onHide();
       ToastFire("success", `موفق`, "با موفقیت ساخته شد");
     } catch (error) {
       console.error("Error during Zabbix request:", error);
@@ -64,19 +65,18 @@ const AddInheritedMacros: React.FC<AddInheritedMacrosProps> = ({
       show={show}
       setHide={onHide}
     >
-      <form
-        className="d-flex flex-column"
-        onSubmit={handleSubmit(onSubmit)}
-      >
+      <form className="d-flex flex-column" onSubmit={handleSubmit(onSubmit)}>
         <div className="row mb-2 ">
           <div className="col d-flex gap-3">
-            <Input
-              register={register("macro")}
-              defaultValue="{$Macro}"
+            <input
+              {...register("macro")}
+              type="text"
+              className="form-control"
               placeholder={intl.formatMessage({
                 id: "MONITORING.HOSTS.CREATEHOST.MACROS.INHERITED.MACRO",
               })}
-              className="col"
+              defaultValue="{$MACRO}"
+              onChange={(e) => setValue("macro", e.target.value.toUpperCase())}
             />
             <Input
               register={register("value")}
