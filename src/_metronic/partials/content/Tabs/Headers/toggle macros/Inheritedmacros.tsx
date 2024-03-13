@@ -1,5 +1,4 @@
 import { useIntl } from "react-intl";
-import { instance } from "../../../../../../services/axiosInstance";
 import { useEffect, useState } from "react";
 import { Control, useForm } from "react-hook-form";
 import { Loader } from "../../../../../layout/components/loader/Loader";
@@ -7,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import UpdateInheritedMacros from "./Inherited/UpdateInheritedMacros";
 import AddInheritedMacros from "./Inherited/AddInheritedMacros";
 import { Select } from "../../../../../layout/components/Select";
+import { instance } from "../../../../../../services/axiosInstance";
 
 interface ItemType {
   description?: string;
@@ -94,10 +94,10 @@ const Inheritedmacros: React.FC<Macro> = () => {
     setGlobalUserMacro(updatedMacroList);
   };
 
-  const handleDeleteRequest = () => {
+  const handleDeleteRequest = async () => {
     try {
       const response = await instance.post("/core/usermacro/delete", {});
-      consoloe.log(response);
+      console.log(response);
     } catch (error) {
       console.error("Error during Zabbix request:", error);
     }
