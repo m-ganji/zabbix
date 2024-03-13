@@ -64,7 +64,7 @@ const UpdateInheritedMacros: React.FC<UpdateInheritedMacrosProps> = ({
     setValue("macro", item?.macro);
     setValue("description", item?.description);
     setValue("value", item?.value);
-  }, [show]);
+  }, [item?.description, item?.macro, item?.type, item?.value, setValue, show]);
 
   return (
     <Modal show={show} onHide={onHide}>
