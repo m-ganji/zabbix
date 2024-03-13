@@ -81,19 +81,6 @@ const Inheritedmacros: React.FC<Macro> = () => {
     setAddEditedItem(null);
   };
 
-  const handleUpdate = (updatedItem: ItemType) => {
-    console.log("Updated item:", updatedItem);
-  };
-
-  const handleDeleteUi = (item: ItemType) => {
-    const updatedMacroList = globalUserMacro.filter(
-      (macro) => macro.macro !== item.macro
-    );
-    console.log(updatedMacroList);
-    setValue<string[]>("macroids", [...watch("macroids"), item.globalmacroid]);
-    setGlobalUserMacro(updatedMacroList);
-  };
-
   const handleDeleteRequest = async (macroids: string[]) => {
     console.log(macroids);
     try {
@@ -182,7 +169,10 @@ const Inheritedmacros: React.FC<Macro> = () => {
                   type="button"
                   className="btn btn-light-danger w-50"
                   onClick={() => {
-                    handleDeleteUi(e);
+                    const updatedMacroList = globalUserMacro.filter(
+                      (_, idx) => idx !== index
+                    );
+                    setGlobalUserMacro(updatedMacroList);
                   }}
                 >
                   {intl.formatMessage({
@@ -197,7 +187,6 @@ const Inheritedmacros: React.FC<Macro> = () => {
         show={isInheritedModalOpen}
         item={editedItem}
         onHide={closeModal}
-        onUpdate={handleUpdate}
       />
       <div className="d-flex">
         <button

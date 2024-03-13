@@ -18,7 +18,6 @@ interface UpdateInheritedMacrosProps {
   show: boolean;
   item: ItemType | null;
   onHide: () => void;
-  onUpdate: (updatedItem: ItemType) => void;
 }
 
 interface Macro {
@@ -33,7 +32,6 @@ const UpdateInheritedMacros: React.FC<UpdateInheritedMacrosProps> = ({
   show,
   item,
   onHide,
-  // onUpdate,
 }) => {
   const itemDescription = item?.description || "";
   const itemMacro = item?.macro || "";
