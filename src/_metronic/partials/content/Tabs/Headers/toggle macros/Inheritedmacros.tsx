@@ -90,7 +90,7 @@ const Inheritedmacros: React.FC<Macro> = () => {
     const updatedMacroList = globalUserMacro.filter(
       (macro) => macro.macro !== item.macro
     );
-    setValue("macroids", [...watch("macroids"), item.globalmacroid]);
+    setValue<string[]>("macroids", [...watch("macroids"), item.globalmacroid]);
     setGlobalUserMacro(updatedMacroList);
   };
 
