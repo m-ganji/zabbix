@@ -64,8 +64,8 @@ const Inheritedmacros: React.FC<Macro> = () => {
   const openModalForEdit = (index: number) => {
     const itemToEdit = globalUserMacro[index];
     setEditedItem(itemToEdit);
-    setIsInheritedModalOpen(true);
     console.log(itemToEdit);
+    setIsInheritedModalOpen(true);
   };
 
   const openModalForAdd = () => {
@@ -98,7 +98,10 @@ const Inheritedmacros: React.FC<Macro> = () => {
   const handleDeleteRequest = async (macroids: string[]) => {
     console.log(macroids);
     try {
-      const response = await instance.post("/core/usermacro/delete_global", macroids);
+      const response = await instance.post(
+        "/core/usermacro/delete_global",
+        macroids
+      );
       console.log(response);
     } catch (error) {
       console.error("Error during Zabbix request:", error);
