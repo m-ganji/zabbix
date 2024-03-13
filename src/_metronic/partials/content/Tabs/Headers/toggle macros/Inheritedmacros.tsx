@@ -1,12 +1,12 @@
-import { useIntl } from "react-intl";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Control, useForm } from "react-hook-form";
-import { Loader } from "../../../../../layout/components/loader/Loader";
+import { useIntl } from "react-intl";
 import { useNavigate } from "react-router-dom";
-import UpdateInheritedMacros from "./Inherited/UpdateInheritedMacros";
-import AddInheritedMacros from "./Inherited/AddInheritedMacros";
+import { Loader } from "../../../../../layout/components/loader/Loader";
 import { Select } from "../../../../../layout/components/Select";
 import { instance } from "../../../../../../services/axiosInstance";
+import UpdateInheritedMacros from "./Inherited/UpdateInheritedMacros";
+import AddInheritedMacros from "./Inherited/AddInheritedMacros";
 
 interface ItemType {
   description?: string;
@@ -17,21 +17,23 @@ interface ItemType {
 }
 
 interface Macro {
-  macrosField: object[];
+  macrosField: ItemType[];
   control: Control;
   macrosRemove: CallableFunction;
   macrosAppend: CallableFunction;
   macroids?: string | string[];
 }
 
-const Inheritedmacros: React.FC<Macro> = () => {
+const Inheritedmacros: React.FC<Macro> = ({ macrosField }) => {
   const { handleSubmit, watch, setValue } = useForm<Macro>({
     defaultValues: {
       macroids: "",
     },
   });
+  
   const intl = useIntl();
-  const [globalUserMacro, setGlobalUserMacro] = useState<ItemType[]>([]);
+  const [globalUserMacro, setGlobalUserMacro] =
+    useState<ItemType[]>(macrosField);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const navigate = useNavigate();
 
@@ -43,7 +45,6 @@ const Inheritedmacros: React.FC<Macro> = () => {
           output: "extend",
           globalmacro: true,
         });
-
         setGlobalUserMacro(response.data || []);
         setIsLoaded(true);
       } catch (error) {
@@ -95,9 +96,8 @@ const Inheritedmacros: React.FC<Macro> = () => {
     }
   };
 
-  const delUi = (id, index) => {
+  const delUi = (id: string, index: number) => {
     const macroidsToDelete = watch("macroids") ?? [];
-
     const updatedMacroList = globalUserMacro.filter((_, idx) => idx !== index);
     console.log(macroidsToDelete);
     setValue("macroids", [...macroidsToDelete, id]);
@@ -197,7 +197,6 @@ const Inheritedmacros: React.FC<Macro> = () => {
                     id: "MONITORING.HOSTS.CREATEHOST.MACROS.INHERITED.UPDATE",
                   })}
                 </button>
-                {console.log(e)}
                 <button
                   type="button"
                   className="btn btn-light-danger w-100"

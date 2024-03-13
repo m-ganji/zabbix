@@ -1,5 +1,4 @@
-import React, { useEffect } from "react";
-import { Modal } from "react-bootstrap";
+import React, { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
 import { useForm } from "react-hook-form";
 import ToastFire from "../../../../../../layout/components/Toast";
@@ -8,6 +7,7 @@ import { Select } from "../../../../../../layout/components/Select";
 import Input from "../../../../../../layout/components/Input";
 import ModalContainer from "../../../../../../layout/components/ModalContainer";
 import BTN from "../../../../../../layout/components/BTN";
+import { Loader } from "../../../../../../layout/components/loader/Loader";
 
 interface ItemType {
   description?: string;
@@ -41,17 +41,12 @@ const UpdateInheritedMacros: React.FC<UpdateInheritedMacrosProps> = ({
   const itemValue = item?.value || "";
   const itemGlobalIds = item?.globalmacroid || "";
   const intl = useIntl();
+  const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const { handleSubmit, register, setValue, watch } = useForm<Macro>({
     defaultValues: {},
   });
   const onSubmit = async (formData: ItemType) => {
-    console.log({
-      value: formData.value,
-      macro: formData.macro,
-      description: formData.description,
-      type: formData.type,
-      globalmacroid: itemGlobalIds,
-    });
+    setIsLoaded(true);
 
     try {
       const response = await instance.post("/core/usermacro/update_global", {
@@ -61,6 +56,7 @@ const UpdateInheritedMacros: React.FC<UpdateInheritedMacrosProps> = ({
         type: formData.type,
         globalmacroid: itemGlobalIds,
       });
+      setIsLoaded(true);
       console.log("Response:", response);
       ToastFire("success", `موفق`, "با موفقیت ویرایش شد");
       onHide();
@@ -68,6 +64,7 @@ const UpdateInheritedMacros: React.FC<UpdateInheritedMacrosProps> = ({
       console.error("Error during Zabbix request:", error);
       ToastFire("error", `لطفا با فرمت مناسب مقادیر را وارد کنید`, "");
     }
+    setIsLoaded(false);
   };
 
   useEffect(() => {
@@ -138,22 +135,28 @@ const UpdateInheritedMacros: React.FC<UpdateInheritedMacrosProps> = ({
             className="col"
           />
         </div>
-        <div className="m-auto d-flex gap-3 mt-5 ">
-          <BTN
-            label={intl.formatMessage({
-              id: "UPDATE",
-            })}
-            className="btn-light-success"
-            type="submit"
-          />
-          <BTN
-            label={intl.formatMessage({
-              id: "CLOSE",
-            })}
-            className="btn-light-danger"
-            onClick={onHide}
-          />
-        </div>
+        {(isLoaded && (
+          <div className="d-flex pt-7 w-100 justify-content-center">
+            <Loader />
+          </div>
+        )) || (
+          <div className="m-auto d-flex gap-3 mt-5 ">
+            <BTN
+              label={intl.formatMessage({
+                id: "UPDATE",
+              })}
+              className="btn-light-success"
+              type="submit"
+            />
+            <BTN
+              label={intl.formatMessage({
+                id: "CLOSE",
+              })}
+              className="btn-light-danger"
+              onClick={onHide}
+            />
+          </div>
+        )}
       </form>
     </ModalContainer>
   );
