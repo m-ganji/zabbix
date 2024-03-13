@@ -34,8 +34,7 @@ const Inheritedmacros: React.FC<Macro> = () => {
   const [globalUserMacro, setGlobalUserMacro] = useState<ItemType[]>([]);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const navigate = useNavigate();
-  const macroidsToDelete = (watch("macroids") || []).map(String);
-  console.log(macroidsToDelete);
+
   useEffect(() => {
     setIsLoaded(false);
     const fetchData = async () => {
@@ -81,18 +80,28 @@ const Inheritedmacros: React.FC<Macro> = () => {
     setAddEditedItem(null);
   };
 
-  const handleDeleteRequest = async (macroids: string[]) => {
+  const handleDeleteRequest = async () => {
+    const macroids = watch("macroids");
     console.log(macroids);
     try {
       const response = await instance.post(
         "/core/usermacro/delete_global",
         macroids
       );
+      setValue("macroids", []);
       console.log(response);
     } catch (error) {
       console.error("Error during Zabbix request:", error);
     }
-    
+  };
+
+  const delUi = (id, index) => {
+    const macroidsToDelete = watch("macroids") ?? [];
+
+    const updatedMacroList = globalUserMacro.filter((_, idx) => idx !== index);
+    console.log(macroidsToDelete);
+    setValue("macroids", [...macroidsToDelete, id]);
+    setGlobalUserMacro(updatedMacroList);
   };
 
   return (
@@ -126,7 +135,7 @@ const Inheritedmacros: React.FC<Macro> = () => {
                     placeholder={intl.formatMessage({
                       id: "MONITORING.HOSTS.CREATEHOST.MACROS.INHERITED.EFFECTIVE",
                     })}
-                    value={e.value}
+                    value={e.globalmacroid}
                     disabled
                   />
                   <div>
@@ -154,6 +163,7 @@ const Inheritedmacros: React.FC<Macro> = () => {
                     id: "MONITORING.HOSTS.CREATEHOST.MACROS.INHERITED.DESC",
                   })}
                   disabled
+                  value={e.description}
                 />
               </div>
               <div className="col d-flex gap-5">
@@ -166,15 +176,11 @@ const Inheritedmacros: React.FC<Macro> = () => {
                     id: "MONITORING.HOSTS.CREATEHOST.MACROS.INHERITED.UPDATE",
                   })}
                 </button>
+                {console.log(e)}
                 <button
                   type="button"
                   className="btn btn-light-danger w-50"
-                  onClick={() => {
-                    const updatedMacroList = globalUserMacro.filter(
-                      (_, idx) => idx !== index
-                    );
-                    setGlobalUserMacro(updatedMacroList);
-                  }}
+                  onClick={() => delUi(e.globalmacroid, index)}
                 >
                   {intl.formatMessage({
                     id: "MONITORING.HOSTS.CREATEHOST.MACROS.INHERITED.DELETE",
@@ -193,11 +199,7 @@ const Inheritedmacros: React.FC<Macro> = () => {
         <button
           type="button"
           className="btn btn-light-primary w-50"
-          onClick={() =>
-            handleSubmit((data: Macro) =>
-              handleDeleteRequest(data.macroids as string[])
-            )
-          }
+          onClick={handleSubmit(handleDeleteRequest)}
         >
           {intl.formatMessage({
             id: "SUBMIT",
