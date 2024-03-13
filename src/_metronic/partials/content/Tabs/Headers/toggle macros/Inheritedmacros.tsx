@@ -106,6 +106,26 @@ const Inheritedmacros: React.FC<Macro> = () => {
 
   return (
     <div className="d-flex flex-column">
+      <div className="d-flex gap-3">
+        <button
+          type="button"
+          className="btn btn-light-primary "
+          onClick={handleSubmit(handleDeleteRequest)}
+        >
+          {intl.formatMessage({
+            id: "SUBMIT",
+          })}
+        </button>
+        <button
+          type="button"
+          className="btn btn-success "
+          onClick={() => openModalForAdd()}
+        >
+          {intl.formatMessage({
+            id: "ADD",
+          })}
+        </button>
+      </div>
       {(!isLoaded && (
         <div className="d-flex pt-7 w-100 justify-content-center">
           <Loader />
@@ -113,8 +133,8 @@ const Inheritedmacros: React.FC<Macro> = () => {
       )) ||
         globalUserMacro.map((e, index) => (
           <div key={index}>
-            <div className="row mb-2 ">
-              <div className="col">
+            <div className="row gap-3 px-3 ">
+              <div className="col p-0">
                 <input
                   type="text"
                   className="form-control"
@@ -126,7 +146,7 @@ const Inheritedmacros: React.FC<Macro> = () => {
                   disabled
                 />
               </div>
-              <div className="col">
+              <div className="col p-0">
                 <div className="d-flex">
                   <input
                     type="text"
@@ -138,23 +158,24 @@ const Inheritedmacros: React.FC<Macro> = () => {
                     value={e.globalmacroid}
                     disabled
                   />
-                  <div>
-                    <Select
-                      value={e.type}
-                      onChange={(e) => console.log(e)}
-                      options={[
-                        { label: "text", value: "0" },
-                        { label: "secret text", value: "1" },
-                        { label: "vault secret", value: "2" },
-                      ]}
-                      disabled
-                    />
-                  </div>
                 </div>
               </div>
+              <div className="col-2 p-0">
+                <Select
+                  value={e.type}
+                  onChange={(e) => console.log(e)}
+                  options={[
+                    { label: "text", value: "0" },
+                    { label: "secret text", value: "1" },
+                    { label: "vault secret", value: "2" },
+                  ]}
+                  disabled
+                />
+              </div>
             </div>
-            <div className="row mt-5 mb-5">
-              <div className="col">
+
+            <div className="row gap-3 px-3 mt-3 mb-5">
+              <div className="col p-0">
                 <input
                   type="text"
                   className="form-control "
@@ -166,11 +187,11 @@ const Inheritedmacros: React.FC<Macro> = () => {
                   value={e.description}
                 />
               </div>
-              <div className="col d-flex gap-5">
+              <div className="col-3 d-flex gap-3 p-0">
                 <button
                   type="button"
                   onClick={() => openModalForEdit(index)}
-                  className="btn btn-light-warning w-50"
+                  className="btn btn-light-warning w-100"
                 >
                   {intl.formatMessage({
                     id: "MONITORING.HOSTS.CREATEHOST.MACROS.INHERITED.UPDATE",
@@ -179,7 +200,7 @@ const Inheritedmacros: React.FC<Macro> = () => {
                 {console.log(e)}
                 <button
                   type="button"
-                  className="btn btn-light-danger w-50"
+                  className="btn btn-light-danger w-100"
                   onClick={() => delUi(e.globalmacroid, index)}
                 >
                   {intl.formatMessage({
@@ -195,26 +216,7 @@ const Inheritedmacros: React.FC<Macro> = () => {
         item={editedItem}
         onHide={closeModal}
       />
-      <div className="d-flex">
-        <button
-          type="button"
-          className="btn btn-light-primary w-50"
-          onClick={handleSubmit(handleDeleteRequest)}
-        >
-          {intl.formatMessage({
-            id: "SUBMIT",
-          })}
-        </button>
-        <button
-          type="button"
-          className="btn btn-success w-50"
-          onClick={() => openModalForAdd()}
-        >
-          {intl.formatMessage({
-            id: "ADD",
-          })}
-        </button>
-      </div>
+
       <AddInheritedMacros
         show={isAddInheritedModalOpen}
         item={editedAddItem}

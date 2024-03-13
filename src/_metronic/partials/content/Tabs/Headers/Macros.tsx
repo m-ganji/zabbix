@@ -3,6 +3,7 @@ import { Control, useFieldArray } from "react-hook-form";
 import { useIntl } from "react-intl";
 import Hostmacros from "./toggle macros/Hostmacros";
 import Inheritedmacros from "./toggle macros/Inheritedmacros";
+import ToggleBtns from "../../../../layout/components/ToggleBtn/ToggleBtn";
 interface HostProps {
   control: Control;
   watch: CallableFunction;
@@ -25,39 +26,20 @@ const Macros: React.FC<HostProps> = ({ control, setValue }) => {
 
   return (
     <div>
-      <div className="btn-group py-2 " role="group" aria-label="Basic example">
-        <button
-          type="button"
-          className={
-            "btn btn-primary rounded-end-2 py-2" +
-            (activeMacro === "HOSTMACROS" ? " active" : "")
-          }
-          onClick={() => {
-            setActiveMacro("HOSTMACROS");
-          }}
-          data-bs-toggle="button"
-        >
-          {intl.formatMessage({
-            id: "MONITORING.HOSTS.CREATEHOST.MACROS.HOSTMACROS",
-          })}
-        </button>
-
-        <button
-          type="button"
-          className={
-            "btn btn-primary rounded-start-2 py-2" +
-            (activeMacro === "INHERITED" ? " active" : "")
-          }
-          onClick={() => {
-            setActiveMacro("INHERITED");
-          }}
-          data-bs-toggle="button"
-        >
-          {intl.formatMessage({
-            id: "MONITORING.HOSTS.CREATEHOST.MACROS.INHERITED",
-          })}
-        </button>
-      </div>
+      <ToggleBtns
+        options={[
+          {
+            label: "MONITORING.HOSTS.CREATEHOST.MACROS.HOSTMACROS",
+            value: "HOSTMACROS",
+          },
+          {
+            label: "MONITORING.HOSTS.CREATEHOST.MACROS.INHERITED",
+            value: "INHERITED",
+          },
+        ]}
+        setData={setActiveMacro}
+        initialData={activeMacro}
+      />
       {activeMacro == "HOSTMACROS" && (
         <Hostmacros
           macrosField={macrosField}
@@ -68,7 +50,7 @@ const Macros: React.FC<HostProps> = ({ control, setValue }) => {
         />
       )}
       {activeMacro == "INHERITED" && (
-        <div style={{ maxHeight: "65vh", overflow: "auto" }} className="mt-3">
+        <div className="mt-3">
           <Inheritedmacros
             macrosField={macrosField}
             control={control}

@@ -5,6 +5,7 @@ WORKDIR /app
 COPY . /app/
 
 RUN rm -rf /app/package-lock.json /app/dist && \
+    npm config set registry http://registry.npmjs.org/ && \
     npm i && \
     npm run build
 
