@@ -44,12 +44,6 @@ const Host: React.FC<HostProps> = ({ control, watch, setValue, register }) => {
 
   const HostGroupData = useSelector(selectApiData);
   const loading = useSelector(selectApiLoading);
-  // const error = useSelector(selectApiError);
-
-  // useEffect(() => {
-  //   // dispatch(fetchHostGroup({}));
-  //   dispatch(fetchHostGroup({}));
-  // }, [dispatch]);
 
   useEffect(() => {
     handleGetTemplates();

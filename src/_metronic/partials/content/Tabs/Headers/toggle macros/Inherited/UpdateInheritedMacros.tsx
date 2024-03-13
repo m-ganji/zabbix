@@ -19,7 +19,13 @@ interface UpdateInheritedMacrosProps {
   item: ItemType | null;
   onHide: () => void;
   onUpdate: (updatedItem: ItemType) => void;
-  setValue: CallableFunction;
+}
+
+interface Macro {
+  value?: string;
+  type?: string;
+  macro?: string;
+  description?: string;
 }
 
 // Modal component for editing an item
@@ -58,7 +64,7 @@ const UpdateInheritedMacros: React.FC<UpdateInheritedMacrosProps> = ({
     setValue("macro", item?.macro);
     setValue("description", item?.description);
     setValue("value", item?.value);
-  }, [show]);
+  }, [item?.description, item?.macro, item?.type, item?.value, setValue, show]);
 
   return (
     <Modal show={show} onHide={onHide}>
@@ -82,7 +88,7 @@ const UpdateInheritedMacros: React.FC<UpdateInheritedMacrosProps> = ({
                     id: "TYPE",
                   })}
                   value={watch("type")}
-                  onChange={(e) => setValue("type", e)}
+                  onChange={(e) => setValue("type", String(e))}
                   options={[
                     { label: "text", value: "0" },
                     { label: "secret text", value: "1" },

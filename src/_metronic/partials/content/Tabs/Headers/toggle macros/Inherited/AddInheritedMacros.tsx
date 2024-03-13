@@ -1,7 +1,6 @@
 import React from "react";
 import { Modal } from "react-bootstrap";
 import { useIntl } from "react-intl";
-import { getCSSVariableValue } from "../../../../../../assets/ts/_utils";
 import { useForm } from "react-hook-form";
 import ToastFire from "../../../../../../layout/components/Toast";
 import { instance } from "../../../../../../../services/axiosInstance";
@@ -21,13 +20,19 @@ interface AddInheritedMacrosProps {
   onHide: () => void;
 }
 
+interface Macro {
+  value?: string;
+  type?: string;
+  macro?: string;
+  description?: string;
+}
+
 // Modal component for editing an item
 const AddInheritedMacros: React.FC<AddInheritedMacrosProps> = ({
   show,
   onHide,
 }) => {
   const intl = useIntl();
-  const secondaryColor = getCSSVariableValue("--bs-gray-300");
 
   const { handleSubmit, register, setValue } = useForm<Macro>({
     defaultValues: {},
@@ -74,7 +79,7 @@ const AddInheritedMacros: React.FC<AddInheritedMacrosProps> = ({
                 })}
               />
               <Select
-                onChange={(e) => setValue("type", e)}
+                onChange={(e) => setValue("type", String(e))}
                 options={[
                   { label: "text", value: "0" },
                   { label: "secret text", value: "1" },
