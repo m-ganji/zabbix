@@ -19,7 +19,13 @@ interface UpdateInheritedMacrosProps {
   item: ItemType | null;
   onHide: () => void;
   onUpdate: (updatedItem: ItemType) => void;
-  setValue: CallableFunction;
+}
+
+interface Macro {
+  value?: string;
+  type?: string;
+  macro?: string;
+  description?: string;
 }
 
 // Modal component for editing an item

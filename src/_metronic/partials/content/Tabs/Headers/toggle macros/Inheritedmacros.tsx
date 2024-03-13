@@ -1,13 +1,12 @@
 import { useIntl } from "react-intl";
-import { instance } from "../../../../../../services/axiosInstance";
 import { useEffect, useState } from "react";
 import { Control, useForm } from "react-hook-form";
 import { Loader } from "../../../../../layout/components/loader/Loader";
 import { useNavigate } from "react-router-dom";
 import UpdateInheritedMacros from "./Inherited/UpdateInheritedMacros";
 import AddInheritedMacros from "./Inherited/AddInheritedMacros";
-import { useFieldArray } from "react-hook-form";
 import { Select } from "../../../../../layout/components/Select";
+import { instance } from "../../../../../../services/axiosInstance";
 
 interface ItemType {
   description?: string;
@@ -32,14 +31,10 @@ const Inheritedmacros: React.FC<Macro> = () => {
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const navigate = useNavigate();
 
-  const { control, handleSubmit, watch, setValue, register } = useForm<Macro>({
+  const { handleSubmit, watch, setValue } = useForm<Macro>({
     defaultValues: {
       macroids: "",
     },
-  });
-
-  const { fields } = useFieldArray({
-    control,
   });
 
   useEffect(() => {
@@ -59,7 +54,7 @@ const Inheritedmacros: React.FC<Macro> = () => {
       }
     };
     fetchData();
-  }, []);
+  }, [navigate]);
 
   const [editedItem, setEditedItem] = useState<ItemType | null>(null);
   const [editedAddItem, setAddEditedItem] = useState<ItemType | null>(null);
@@ -73,11 +68,8 @@ const Inheritedmacros: React.FC<Macro> = () => {
     console.log(itemToEdit);
   };
 
-  const openModalForAdd = (index: number) => {
-    const itemToEdit = globalUserMacro[index];
-    setAddEditedItem(itemToEdit);
+  const openModalForAdd = () => {
     setIsAddInheritedModalOpen(true);
-    console.log(itemToEdit);
   };
 
   const closeModal = () => {
@@ -102,8 +94,13 @@ const Inheritedmacros: React.FC<Macro> = () => {
     setGlobalUserMacro(updatedMacroList);
   };
 
-  const handleDeleteRequest = (item: ItemType) => {
-    console.log(item);
+  const handleDeleteRequest = async () => {
+    try {
+      const response = await instance.post("/core/usermacro/delete", {});
+      console.log(response);
+    } catch (error) {
+      console.error("Error during Zabbix request:", error);
+    }
   };
 
   return (
@@ -195,19 +192,6 @@ const Inheritedmacros: React.FC<Macro> = () => {
             </div>
           </div>
         ))}
-      {fields.map(() => (
-        <div className="col">
-          <input
-            {...register(`inherited`)}
-            type="text"
-            className="form-control "
-            aria-describedby="emailHelp"
-            placeholder={intl.formatMessage({
-              id: "MONITORING.HOSTS.CREATEHOST.MACROS.INHERITED.DESC",
-            })}
-          />
-        </div>
-      ))}
       <UpdateInheritedMacros
         show={isInheritedModalOpen}
         item={editedItem}
