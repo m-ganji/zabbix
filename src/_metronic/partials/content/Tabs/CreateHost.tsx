@@ -1,5 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { FC, useEffect, useState } from "react";
+import { FC } from "react";
 import { instance } from "../../../../services/axiosInstance";
 import Tags from "./Headers/Tags";
 import IPMI from "./Headers/IPMI";

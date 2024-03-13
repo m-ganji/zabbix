@@ -21,7 +21,6 @@ interface Macro {
   control: Control;
   macrosRemove: CallableFunction;
   macrosAppend: CallableFunction;
-  setValue: CallableFunction;
   macroids?: string | string[];
 }
 
@@ -35,8 +34,8 @@ const Inheritedmacros: React.FC<Macro> = () => {
   const [globalUserMacro, setGlobalUserMacro] = useState<ItemType[]>([]);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const navigate = useNavigate();
-  const macroidsToDelete = watch("macroids");
-
+  const macroidsToDelete = (watch("macroids") || []).map(String);
+  console.log(macroidsToDelete);
   useEffect(() => {
     setIsLoaded(false);
     const fetchData = async () => {
@@ -64,8 +63,8 @@ const Inheritedmacros: React.FC<Macro> = () => {
   const openModalForEdit = (index: number) => {
     const itemToEdit = globalUserMacro[index];
     setEditedItem(itemToEdit);
-    setIsInheritedModalOpen(true);
     console.log(itemToEdit);
+    setIsInheritedModalOpen(true);
   };
 
   const openModalForAdd = () => {
@@ -98,7 +97,10 @@ const Inheritedmacros: React.FC<Macro> = () => {
   const handleDeleteRequest = async (macroids: string[]) => {
     console.log(macroids);
     try {
-      const response = await instance.post("/core/usermacro/delete_global", macroids);
+      const response = await instance.post(
+        "/core/usermacro/delete_global",
+        macroids
+      );
       console.log(response);
     } catch (error) {
       console.error("Error during Zabbix request:", error);
@@ -125,7 +127,6 @@ const Inheritedmacros: React.FC<Macro> = () => {
                   })}
                   key={index}
                   disabled
-                  // readonly
                 />
               </div>
               <div className="col">
@@ -139,7 +140,6 @@ const Inheritedmacros: React.FC<Macro> = () => {
                     })}
                     value={e.value}
                     disabled
-                    // readonly
                   />
                   <div>
                     <Select
@@ -166,7 +166,6 @@ const Inheritedmacros: React.FC<Macro> = () => {
                     id: "MONITORING.HOSTS.CREATEHOST.MACROS.INHERITED.DESC",
                   })}
                   disabled
-                  // readonly
                 />
               </div>
               <div className="col d-flex gap-5">
@@ -204,7 +203,11 @@ const Inheritedmacros: React.FC<Macro> = () => {
         <button
           type="button"
           className="btn btn-light-primary w-50"
-          onClick={() => handleSubmit(handleDeleteRequest(macroidsToDelete))}
+          onClick={() =>
+            handleSubmit((data: Macro) =>
+              handleDeleteRequest(data.macroids as string[])
+            )
+          }
         >
           {intl.formatMessage({
             id: "SUBMIT",
