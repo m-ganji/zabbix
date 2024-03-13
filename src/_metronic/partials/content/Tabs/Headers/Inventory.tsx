@@ -12,8 +12,6 @@ interface HostProps {
 const Inventory: React.FC<HostProps> = ({ setValue, watch }) => {
   const [activeInventory, setActiveInventory] = useState<string>("DISABLED");
 
-  console.log(activeInventory);
-
   return (
     <div>
       <ToggleBtns

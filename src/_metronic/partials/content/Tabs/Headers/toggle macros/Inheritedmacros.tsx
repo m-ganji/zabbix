@@ -84,27 +84,13 @@ const Inheritedmacros: React.FC<Macro> = () => {
   const handleUpdate = (updatedItem: ItemType) => {
     console.log("Updated item:", updatedItem);
   };
-
   const handleDeleteUi = (item: ItemType) => {
     const updatedMacroList = globalUserMacro.filter(
       (macro) => macro.macro !== item.macro
     );
-    console.log(updatedMacroList);
-    setValue<string[]>("macroids", [...watch("macroids"), item.globalmacroid]);
-    setGlobalUserMacro(updatedMacroList);
-  };
 
-  const handleDeleteRequest = async (macroids: string[]) => {
-    console.log(macroids);
-    try {
-      const response = await instance.post(
-        "/core/usermacro/delete_global",
-        macroids
-      );
-      console.log(response);
-    } catch (error) {
-      console.error("Error during Zabbix request:", error);
-    }
+    setValue("macroids", [...watch("macroids"), item.globalmacroid]);
+    setGlobalUserMacro(updatedMacroList);
   };
 
   return (

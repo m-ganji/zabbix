@@ -19,7 +19,7 @@ const ModalContainer: React.FC<ModalContainerProps> = ({
       <Modal.Header closeButton>
         <Modal.Title>{title}</Modal.Title>
       </Modal.Header>
-      <Modal.Body dir="rtl">{children}</Modal.Body>
+      <Modal.Body>{children}</Modal.Body>
     </Modal>
   );
 };

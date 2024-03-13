@@ -11,6 +11,7 @@ interface Props {
   register?: CallableFunction | object;
   disabled?: boolean;
   type?: string;
+  defaultValue?: string;
 }
 
 const Input: React.FC<Props> = ({
@@ -23,9 +24,10 @@ const Input: React.FC<Props> = ({
   register,
   disabled,
   type,
+  defaultValue,
 }) => {
   return register ? (
-    <div className={`input-group ${className || ""}`}>
+    <div dir="rtl" className={`input-group ${className || ""}`}>
       {required && (
         <span className="text-danger position-absolute top-0 me-1 fs-3">*</span>
       )}
@@ -42,10 +44,11 @@ const Input: React.FC<Props> = ({
         placeholder={placeholder}
         {...register}
         disabled={disabled}
+        defaultValue={defaultValue}
       />
     </div>
   ) : (
-    <div className={`input-group ${className}`}>
+    <div dir="rtl" className={`input-group ${className}`}>
       {required && (
         <span className="text-danger position-absolute top-0 me-1 fs-3">*</span>
       )}
@@ -63,6 +66,7 @@ const Input: React.FC<Props> = ({
         value={value}
         onChange={onChange}
         disabled={disabled}
+        defaultValue={defaultValue}
       />
     </div>
   );

@@ -879,7 +879,7 @@ $modal-inner-padding:     					    1.75rem !default;
 // Margin between elements in footer, must be lower than or equal to 2 * $modal-inner-padding
 $modal-footer-margin-between:    				.5rem !default;
 
-$modal-dialog-margin:      				        .5rem !default;
+$modal-dialog-margin:      				        fit-content !default;
 $modal-dialog-margin-y-sm-up:    				1.75rem !default;
 
 $modal-content-color:      				        null !default;
