@@ -9,6 +9,11 @@ import ToastFire from "../../../../layout/components/Toast";
 import { selectApiData, selectApiLoading } from "../../../../../store/store";
 import ToggleBtns from "../../../../layout/components/ToggleBtn/ToggleBtn";
 import Input from "../../../../layout/components/Input";
+import { Dropdown } from "react-bootstrap";
+import { CheckBox } from "./../../../../layout/components/CheckBox/index";
+import TextArea from "./../../../../layout/components/TextArea/index";
+import { KTIcon } from "../../../../helpers";
+import Badge from "./../../../../layout/components/Badge/index";
 
 interface HostProps {
   control: Control;
@@ -76,37 +81,66 @@ const Host: React.FC<HostProps> = ({ control, watch, setValue, register }) => {
     name: "interface",
   });
 
+  const handleAddInterface = (e: string | null) => {
+    console.log(e);
+    let port;
+    let type;
+
+    // Set port based on selected Item
+    if (e === "Agent") {
+      type = "1";
+      port = "10050";
+    } else if (e === "JMX") {
+      type = "4";
+      port = "12345";
+    } else if (e === "IPMI") {
+      type = "3";
+      port = "623";
+    } else if (e === "SNMP") {
+      type = "2";
+      port = "161";
+    }
+    const length = watch("interface")?.length;
+
+    append({
+      interfaceid: length,
+      label: e,
+      ip: "127.0.0.1",
+      main: 1,
+      dns: "",
+      useip: 0,
+      type,
+      port,
+    });
+  };
+
   return (
-    <div>
-      <div className="container text-center">
-        <div className="row">
-          <div className="input-group mb-3 col">
-            <Input iconName="user" register={register("host")} placeholder="" required/>  
-          </div>
-          <div className="input-group mb-3 col">
-            <span
-              className="input-group-text rounded-start-0 rounded-end-2"
-              id="tab-hosts"
-            >
-              <i className="bi bi-bullseye" />
-            </span>
-            <input
-              type="text"
-              className="form-control rounded-start-2 rounded-end-0"
-              aria-label="نام نمایشی"
-              aria-describedby="tab-hosts"
-              autoComplete="off"
-              placeholder={
-                watch("host") === ""
-                  ? "نام نمایشی"
-                  : `نام نمایشی : ${watch("host")}`
-              }
-              required
-            />
-          </div>
+    <>
+      <div className="d-grid gap-3 text-center">
+        <div className="row gap-3">
+          <Input
+            iconName="user"
+            register={register("host")}
+            placeholder={intl.formatMessage({
+              id: "HOST.NAME",
+            })}
+            required
+            className="col p-0"
+          />
+          <Input
+            value={watch("visiblename")}
+            placeholder={
+              watch("host") === ""
+                ? "نام نمایشی"
+                : `نام نمایشی : ${watch("host")}`
+            }
+            onChange={(e) => setValue("visiblename", e.currentTarget.value)}
+            iconName="eye"
+            className="col p-0"
+          />
         </div>
-        <div className="row">
-          <div className="col w-50">
+        <div className="row gap-3">
+          <div className="col p-0">
             <MultiSelect
               title="MENU.SELECT.HOSTS.GP"
               reset={false}
@@ -121,7 +155,7 @@ const Host: React.FC<HostProps> = ({ control, watch, setValue, register }) => {
               currentData={currentGroupids}
             />
           </div>
-          <div className="col">
+          <div className="col p-0">
             <MultiSelect
               title="MENU.SELECT.TEMPLATES"
               reset={false}
@@ -140,133 +174,102 @@ const Host: React.FC<HostProps> = ({ control, watch, setValue, register }) => {
           </div>
         </div>
         {fields.map((value, index) => (
-          <div className="d-flex mt-3" key={index}>
-            <input
-              {...register(`interface[${index}].ip`)}
-              type="text"
-              className="form-control rounded-start-2 rounded-end-0"
+          <div
+            className="d-flex gap-3 bg-light-primary rounded-3 shadow-lg p-3"
+            key={value.id}
+          >
+            <Badge title={watch(`interface.${index}.label`)} bg="primary" />
+            <Input
+              register={register(`interface[${index}].ip`)}
               placeholder={intl.formatMessage({
                 id: "IP",
               })}
-              aria-label="آی‌پی"
-              aria-describedby="tab-hosts"
-              required
             />
-            <input
-              {...register(`interface[${index}].dns`)}
-              type="text"
-              className="form-control rounded-start-2 rounded-end-0 me-2"
+            <Input
+              register={register(`interface[${index}].dns`)}
               placeholder={intl.formatMessage({
                 id: "MONITORING.HOSTS.DNS",
               })}
-              aria-label="دی‌ان‌اس"
-              aria-describedby="tab-hosts"
-              required
             />
-            <div className="mt-2 me-0 ms-2">
-              <ToggleBtns
-                options={[
-                  {
-                    value: 0,
-                    label: "MONITORING.HOSTS.DNS",
-                  },
-                  {
-                    value: 1,
-                    label: "IP",
-                  },
-                ]}
-                data={`interface.${index}.useip`}
-                setData={setValue}
-                initialData={watch(`interface.${index}.useip`)}
-              />
-            </div>
-            <input
-              {...register(`interface[${index}].port`)}
-              type="text"
-              className="form-control rounded-start-2 rounded-end-0"
+            <ToggleBtns
+              options={[
+                {
+                  value: 0,
+                  label: "MONITORING.HOSTS.DNS",
+                },
+                {
+                  value: 1,
+                  label: "IP",
+                },
+              ]}
+              data={`interface.${index}.useip`}
+              setData={setValue}
+              initialData={watch(`interface.${index}.useip`)}
+            />
+            <Input
+              register={register(`interface[${index}].port`)}
               placeholder={intl.formatMessage({
-                id: "MONITORING.HOSTS.HOST.PORT",
+                id: "MONITORING.HOSTS.PORT",
               })}
-              aria-label="پورت"
-              aria-describedby="tab-hosts"
-              required
             />
-
+            <div className="d-flex align-items-center px-2">
+              <input className="form-check-input" type="radio" checked />
+            </div>
             <button
               type="button"
-              className="btn btn-danger me-2 py-2"
+              className="btn btn-danger p-5"
               onClick={() => remove(index)}
             >
-              {intl.formatMessage({
-                id: "DELETE",
-              })}
+              <KTIcon iconName="trash" className="fs-1" />
             </button>
           </div>
         ))}
-
-        {/* <Dropdown onSelect={handleSelect}>
-          <Dropdown.Toggle variant="success" id="dropdown-basic">
-            {intl.formatMessage({
-              id: "ADD",
-            })}{" "}
-          </Dropdown.Toggle>
-
-          <Dropdown.Menu>
-            <Dropdown.Item eventKey="Agent" href="#/action-1">
-              Agent
-            </Dropdown.Item>
-            <Dropdown.Item eventKey="SNMP" href="#/action-2">
-              SNMP
-            </Dropdown.Item>
-            <Dropdown.Item eventKey="JMX" href="#/action-3">
-              JMX
-            </Dropdown.Item>
-            <Dropdown.Item eventKey="IPMI" href="#/action-4">
-              IPMI
-            </Dropdown.Item>
-          </Dropdown.Menu>
-        </Dropdown> */}
-
-        <button
-          type="button"
-          className="btn btn-success py-2 d-flex justify-content-end mt-3 mb-3"
-          onClick={() => {
-            append({
-              label: "",
-              ip: "127.0.0.1",
-              dns: "",
-              useip: 0,
-              port: "10050",
-            });
-          }}
-        >
-          {intl.formatMessage({
-            id: "ADD",
-          })}
-        </button>
-        <div className="row mt-3 position-relative" style={{ zIndex: 0 }}>
-          <div className="col">
-            <div dir="rtl" className="form-floating">
-              <textarea
-                {...register(`description`)}
-                className="form-control"
-                title="توضیحات را اینجا وارد کنید"
-                id="floatingTextarea2"
-                style={{ height: 100 }}
-              />
-            </div>
-            <div className="d-flex justify-content-start mt-5">
-              <input type="checkbox" />
-              <span className="me-2">
+        <div className="row">
+          <>
+            <Dropdown className="w-fit p-0" onSelect={handleAddInterface}>
+              <Dropdown.Toggle variant="success">
                 {intl.formatMessage({
-                  id: "ACTIVE",
+                  id: "ADD",
                 })}
-              </span>
-            </div>
+              </Dropdown.Toggle>
+              <Dropdown.Menu>
+                <Dropdown.Item className="text-center" eventKey="Agent">
+                  Agent
+                </Dropdown.Item>
+                <Dropdown.Item className="text-center" eventKey="SNMP">
+                  SNMP
+                </Dropdown.Item>
+                <Dropdown.Item className="text-center" eventKey="JMX">
+                  JMX
+                </Dropdown.Item>
+                <Dropdown.Item className="text-center" eventKey="IPMI">
+                  IPMI
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+          </>
+        </div>
+        <div className="row">
+          <div className="col p-0">
+            <TextArea
+              iconName="abstract-27"
+              placeholder="توضیحات را اینجا وارد کنید"
+              register={register(`description`)}
+            />
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-2 p-0">
+            <CheckBox
+              label={intl.formatMessage({
+                id: "ACTIVED",
+              })}
+              checked
+            />
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

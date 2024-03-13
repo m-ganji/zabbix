@@ -13,6 +13,7 @@ import BTN from "../../../_metronic/layout/components/BTN";
 import { Modal } from "react-bootstrap";
 import Input from "../../../_metronic/layout/components/Input";
 import Tags from "../../modules/profile/components/hosts/tags/Index";
+import { TablesWidget13 } from "../../../_metronic/partials/widgets";
 
 interface HostGroupData {
   payload: [];
@@ -482,13 +483,8 @@ export function LatestData() {
           </div>
         </div>
         {/* {data.length == 0 && <p>هاستی یافت نشد</p>} */}
-        {/* {!isLoaded ? (
-          <ProblemTable ProblemsData={[]} isLoaded={true} />
-        ) : (
-          <div className="d-flex pt-7 w-100 justify-content-center">
-            <Loader />
-          </div>
-        )} */}
+
+        <TablesWidget13 />
       </form>
     </Content>
   );
