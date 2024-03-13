@@ -6,7 +6,6 @@ import { Loader } from "../../../../../layout/components/loader/Loader";
 import { useNavigate } from "react-router-dom";
 import UpdateInheritedMacros from "./Inherited/UpdateInheritedMacros";
 import AddInheritedMacros from "./Inherited/AddInheritedMacros";
-import { useFieldArray } from "react-hook-form";
 import { Select } from "../../../../../layout/components/Select";
 
 interface ItemType {
@@ -32,7 +31,7 @@ const Inheritedmacros: React.FC<Macro> = () => {
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const navigate = useNavigate();
 
-  const { control, handleSubmit, watch, setValue, register } = useForm<Macro>({
+  const { handleSubmit, watch, setValue } = useForm<Macro>({
     defaultValues: {
       macroids: "",
     },
@@ -55,7 +54,7 @@ const Inheritedmacros: React.FC<Macro> = () => {
       }
     };
     fetchData();
-  }, []);
+  }, [navigate]);
 
   const [editedItem, setEditedItem] = useState<ItemType | null>(null);
   const [editedAddItem, setAddEditedItem] = useState<ItemType | null>(null);
@@ -95,9 +94,14 @@ const Inheritedmacros: React.FC<Macro> = () => {
     setGlobalUserMacro(updatedMacroList);
   };
 
-  // const handleDeleteRequest = (item: ItemType) => {
-  //   console.log(item);
-  // };
+  const handleDeleteRequest = () => {
+    try {
+      const response = await instance.post("/core/usermacro/delete", {});
+      consoloe.log(response);
+    } catch (error) {
+      console.error("Error during Zabbix request:", error);
+    }
+  };
 
   return (
     <div className="d-flex flex-column">
@@ -198,7 +202,7 @@ const Inheritedmacros: React.FC<Macro> = () => {
         <button
           type="button"
           className="btn btn-light-primary w-50"
-          // onClick={handleSubmit(handleDeleteRequest)}
+          onClick={handleSubmit(handleDeleteRequest)}
         >
           {intl.formatMessage({
             id: "SUBMIT",
