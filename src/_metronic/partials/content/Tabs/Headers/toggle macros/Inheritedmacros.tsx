@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
 import { instance } from "../../../../../../services/axiosInstance";
+import { useEffect, useState } from "react";
+import { Control, useForm } from "react-hook-form";
 import { Loader } from "../../../../../layout/components/loader/Loader";
 import { useNavigate } from "react-router-dom";
 import UpdateInheritedMacros from "./Inherited/UpdateInheritedMacros";
 import AddInheritedMacros from "./Inherited/AddInheritedMacros";
+import { useFieldArray } from "react-hook-form";
 import { Select } from "../../../../../layout/components/Select";
-import { useForm, useFieldArray, Control } from "react-hook-form";
 
 interface ItemType {
   description?: string;
@@ -25,26 +26,21 @@ interface Macro {
   macroids?: string | string[];
 }
 
-const useFormConfig = () => {
+const Inheritedmacros: React.FC<Macro> = () => {
+  const intl = useIntl();
+  const [globalUserMacro, setGlobalUserMacro] = useState<ItemType[]>([]);
+  const [isLoaded, setIsLoaded] = useState<boolean>(false);
+  const navigate = useNavigate();
+
   const { control, handleSubmit, watch, setValue, register } = useForm<Macro>({
     defaultValues: {
       macroids: "",
     },
   });
 
-  return { control, handleSubmit, watch, setValue, register };
-};
-
-const Inheritedmacros: React.FC<Macro> = () => {
-  const intl = useIntl();
-  const [globalUserMacro, setGlobalUserMacro] = useState<ItemType[]>([]);
-  const [isLoaded, setIsLoaded] = useState<boolean>(false);
-  const navigate = useNavigate();
-  const { control, handleSubmit, watch, setValue, register } = useFormConfig();
-
   useEffect(() => {
+    setIsLoaded(false);
     const fetchData = async () => {
-      setIsLoaded(false);
       try {
         const response = await instance.post("/core/usermacro/get", {
           output: "extend",
@@ -58,9 +54,8 @@ const Inheritedmacros: React.FC<Macro> = () => {
         navigate("/");
       }
     };
-
     fetchData();
-  }, [navigate]);
+  }, []);
 
   const [editedItem, setEditedItem] = useState<ItemType | null>(null);
   const [editedAddItem, setAddEditedItem] = useState<ItemType | null>(null);
@@ -74,11 +69,8 @@ const Inheritedmacros: React.FC<Macro> = () => {
     console.log(itemToEdit);
   };
 
-  const openModalForAdd = (index: number) => {
-    const itemToEdit = globalUserMacro[index];
-    setAddEditedItem(itemToEdit);
+  const openModalForAdd = () => {
     setIsAddInheritedModalOpen(true);
-    console.log(itemToEdit);
   };
 
   const closeModal = () => {
@@ -103,48 +95,49 @@ const Inheritedmacros: React.FC<Macro> = () => {
     setGlobalUserMacro(updatedMacroList);
   };
 
-  const handleDeleteRequest = (item: ItemType) => {
-    console.log(item);
-  };
+  // const handleDeleteRequest = (item: ItemType) => {
+  //   console.log(item);
+  // };
 
   return (
     <div className="d-flex flex-column">
-      {!isLoaded && (
+      {(!isLoaded && (
         <div className="d-flex pt-7 w-100 justify-content-center">
           <Loader />
         </div>
-      )}
-      {isLoaded &&
-        globalUserMacro.map((i, index) => (
+      )) ||
+        globalUserMacro.map((e, index) => (
           <div key={index}>
-            <div className="row mb-2">
+            <div className="row mb-2 ">
               <div className="col">
                 <input
                   type="text"
                   className="form-control"
-                  defaultValue={i.macro}
+                  value={e.macro}
                   placeholder={intl.formatMessage({
                     id: "MONITORING.HOSTS.CREATEHOST.MACROS.INHERITED.MACRO",
                   })}
                   key={index}
                   disabled
+                  // readonly
                 />
               </div>
               <div className="col">
                 <div className="d-flex">
                   <input
                     type="text"
-                    className="form-control"
+                    className="form-control "
                     aria-describedby="emailHelp"
                     placeholder={intl.formatMessage({
                       id: "MONITORING.HOSTS.CREATEHOST.MACROS.INHERITED.EFFECTIVE",
                     })}
-                    defaultValue={i.value}
+                    value={e.value}
                     disabled
+                    // readonly
                   />
                   <div>
                     <Select
-                      value={i.type}
+                      value={e.type}
                       onChange={(e) => console.log(e)}
                       options={[
                         { label: "text", value: "0" },
@@ -161,12 +154,13 @@ const Inheritedmacros: React.FC<Macro> = () => {
               <div className="col">
                 <input
                   type="text"
-                  className="form-control"
+                  className="form-control "
                   aria-describedby="emailHelp"
                   placeholder={intl.formatMessage({
                     id: "MONITORING.HOSTS.CREATEHOST.MACROS.INHERITED.DESC",
                   })}
                   disabled
+                  // readonly
                 />
               </div>
               <div className="col d-flex gap-5">
@@ -183,7 +177,7 @@ const Inheritedmacros: React.FC<Macro> = () => {
                   type="button"
                   className="btn btn-light-danger w-50"
                   onClick={() => {
-                    handleDeleteUi(i);
+                    handleDeleteUi(e);
                   }}
                 >
                   {intl.formatMessage({
@@ -204,7 +198,7 @@ const Inheritedmacros: React.FC<Macro> = () => {
         <button
           type="button"
           className="btn btn-light-primary w-50"
-          onClick={handleSubmit(handleDeleteRequest)}
+          // onClick={handleSubmit(handleDeleteRequest)}
         >
           {intl.formatMessage({
             id: "SUBMIT",

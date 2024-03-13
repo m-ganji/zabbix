@@ -19,7 +19,6 @@ interface UpdateInheritedMacrosProps {
   item: ItemType | null;
   onHide: () => void;
   onUpdate: (updatedItem: ItemType) => void;
-  setValue: CallableFunction;
 }
 
 interface Macro {
