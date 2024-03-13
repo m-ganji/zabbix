@@ -1,7 +1,6 @@
 import React from "react";
 import { Modal } from "react-bootstrap";
 import { useIntl } from "react-intl";
-import { getCSSVariableValue } from "../../../../../../assets/ts/_utils";
 import { useForm } from "react-hook-form";
 import ToastFire from "../../../../../../layout/components/Toast";
 import { instance } from "../../../../../../../services/axiosInstance";
@@ -80,7 +79,7 @@ const AddInheritedMacros: React.FC<AddInheritedMacrosProps> = ({
                 })}
               />
               <Select
-                onChange={(e) => setValue("type", e)}
+                onChange={(e) => setValue("type", String(e))}
                 options={[
                   { label: "text", value: "0" },
                   { label: "secret text", value: "1" },
