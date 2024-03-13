@@ -13,6 +13,7 @@ const MultiSelect: React.FC<{
   currentData: number[];
   reset: boolean;
   selectedValue?: hostGroupItems[];
+  required?: boolean;
 }> = ({
   title,
   options,
@@ -23,6 +24,7 @@ const MultiSelect: React.FC<{
   currentData,
   reset,
   selectedValue,
+  required,
 }) => {
   const [selectedOptions, setSelectedOptions] = useState<hostGroupItems[]>([]);
   const [isOpen, setIsOpen] = useState(false);
@@ -168,7 +170,14 @@ const MultiSelect: React.FC<{
             ))}
           </div>
         ) : (
-          intl.formatMessage({ id: title })
+          <span>
+            {intl.formatMessage({ id: title })}
+            {required && (
+              <span className="text-danger position-absolute mt-2 top-0 me-1 fs-3">
+                *
+              </span>
+            )}
+          </span>
         )}
       </Dropdown.Toggle>
       <Dropdown.Menu dir="rtl" className="w-100 text-center p-0">

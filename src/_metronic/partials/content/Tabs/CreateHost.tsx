@@ -16,7 +16,7 @@ interface FormValues {
   host?: string;
   groups?: [];
   macros?: [];
-  tags?: [];
+  tags?: { tag: string; value: string }[];
 }
 
 const CreateHost: FC = () => {
@@ -37,9 +37,9 @@ const CreateHost: FC = () => {
     console.log(data);
 
     const isNameTyped = watch("host") != "";
-    const isHostGroupSelected = watch("groups")?.length != 0;
+    const isHostGroupSelected = watch("groups") === undefined;
 
-    if (isNameTyped && isHostGroupSelected) {
+    if (isNameTyped && !isHostGroupSelected) {
       try {
         const response = await instance.post("/core/hosts/create", data);
         console.log(response);
@@ -88,7 +88,11 @@ const CreateHost: FC = () => {
   const submit = () => {
     watch("groups")?.length === 0 && unregister("groups");
     watch("macros")?.length === 0 && unregister("macros");
-    watch("tags")?.length === 0 && unregister("tags");
+    const isTagEmpty = watch("tags")?.every(
+      (item) => item.tag === "" && item.value === ""
+    );
+    isTagEmpty && unregister("tags");
+
     handleSubmit(onSubmit)();
   };
 

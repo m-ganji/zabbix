@@ -147,6 +147,7 @@ const Host: React.FC<HostProps> = ({ control, watch, setValue, register }) => {
               DataName="groups"
               setData={setValue}
               currentData={currentGroupids}
+              required
             />
           </div>
           <div className="col p-0">
