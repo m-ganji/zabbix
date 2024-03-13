@@ -152,15 +152,6 @@ const CreateHost: FC = () => {
                   رمز گذاری
                 </a>
               </li>
-              <li className="nav-item">
-                <a
-                  className="nav-link btn btn-sm btn-color-muted btn-active btn-active-light-primary fw-bold px-4"
-                  data-bs-toggle="tab"
-                  href="#tab-set-value"
-                >
-                  تعیین مقدار
-                </a>
-              </li>
             </ul>
           </div>
         </div>
@@ -196,9 +187,6 @@ const CreateHost: FC = () => {
             </div>
             <div className="tab-pane" id="tab-Encryption">
               <Encryption control={control} watch={watch} register={register} />
-            </div>
-            <div className="tab-pane" id="tab-set-value">
-              <Setvalue control={control} watch={watch} />
             </div>
           </div>
         </div>
