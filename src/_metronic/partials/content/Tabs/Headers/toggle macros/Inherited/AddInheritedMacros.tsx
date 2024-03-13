@@ -21,13 +21,19 @@ interface AddInheritedMacrosProps {
   onHide: () => void;
 }
 
+interface Macro {
+  value?: string;
+  type?: string;
+  macro?: string;
+  description?: string;
+}
+
 // Modal component for editing an item
 const AddInheritedMacros: React.FC<AddInheritedMacrosProps> = ({
   show,
   onHide,
 }) => {
   const intl = useIntl();
-  const secondaryColor = getCSSVariableValue("--bs-gray-300");
 
   const { handleSubmit, register, setValue } = useForm<Macro>({
     defaultValues: {},

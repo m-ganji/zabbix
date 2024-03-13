@@ -22,6 +22,13 @@ interface UpdateInheritedMacrosProps {
   setValue: CallableFunction;
 }
 
+interface Macro {
+  value?: string;
+  type?: string;
+  macro?: string;
+  description?: string;
+}
+
 // Modal component for editing an item
 const UpdateInheritedMacros: React.FC<UpdateInheritedMacrosProps> = ({
   show,
