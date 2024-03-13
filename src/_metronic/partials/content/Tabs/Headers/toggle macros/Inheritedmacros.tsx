@@ -26,16 +26,16 @@ interface Macro {
 }
 
 const Inheritedmacros: React.FC<Macro> = () => {
-  const intl = useIntl();
-  const [globalUserMacro, setGlobalUserMacro] = useState<ItemType[]>([]);
-  const [isLoaded, setIsLoaded] = useState<boolean>(false);
-  const navigate = useNavigate();
-
   const { handleSubmit, watch, setValue } = useForm<Macro>({
     defaultValues: {
       macroids: "",
     },
   });
+  const intl = useIntl();
+  const [globalUserMacro, setGlobalUserMacro] = useState<ItemType[]>([]);
+  const [isLoaded, setIsLoaded] = useState<boolean>(false);
+  const navigate = useNavigate();
+  const macroidsToDelete = watch("macroids");
 
   useEffect(() => {
     setIsLoaded(false);
@@ -95,9 +95,10 @@ const Inheritedmacros: React.FC<Macro> = () => {
     setGlobalUserMacro(updatedMacroList);
   };
 
-  const handleDeleteRequest = async () => {
+  const handleDeleteRequest = async (macroids: string[]) => {
+    console.log(macroids);
     try {
-      const response = await instance.post("/core/usermacro/delete", {});
+      const response = await instance.post("/core/usermacro/delete_global", macroids);
       console.log(response);
     } catch (error) {
       console.error("Error during Zabbix request:", error);
@@ -203,7 +204,7 @@ const Inheritedmacros: React.FC<Macro> = () => {
         <button
           type="button"
           className="btn btn-light-primary w-50"
-          onClick={handleSubmit(handleDeleteRequest)}
+          onClick={() => handleSubmit(handleDeleteRequest(macroidsToDelete))}
         >
           {intl.formatMessage({
             id: "SUBMIT",
