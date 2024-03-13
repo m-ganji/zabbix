@@ -17,9 +17,10 @@ const ToggleBtns: FC<Props> = ({ options, setData, initialData, data }) => {
   const intl = useIntl();
 
   const handleClick = (newState: Option) => {
-    
+    console.log(data, newState.value);
+
     if (setData) {
-      if (data === "") {
+      if (data != undefined) {
         setData(data, newState.value);
       } else {
         setData(newState.value);
@@ -27,9 +28,8 @@ const ToggleBtns: FC<Props> = ({ options, setData, initialData, data }) => {
     }
   };
 
-
   return (
-    <div className="btn-group pb-2" role="group">
+    <div className="btn-group" role="group">
       {options.map((option, index) => (
         <button
           key={index}
