@@ -25,7 +25,7 @@ const Input: React.FC<Props> = ({
   type,
 }) => {
   return register ? (
-    <div className={`input-group ${className}`}>
+    <div className={`input-group ${className || ""}`}>
       {required && (
         <span className="text-danger position-absolute top-0 me-1 fs-3">*</span>
       )}

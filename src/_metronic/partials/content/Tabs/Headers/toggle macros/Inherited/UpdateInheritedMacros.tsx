@@ -38,21 +38,31 @@ const UpdateInheritedMacros: React.FC<UpdateInheritedMacrosProps> = ({
   const itemDescription = item?.description || "";
   const itemMacro = item?.macro || "";
   const itemValue = item?.value || "";
+  const itemGlobalIds = item?.globalmacroid || "";
   const intl = useIntl();
-  // const secondaryColor = getCSSVariableValue("--bs-gray-300");
   const { handleSubmit, register, setValue, watch } = useForm<Macro>({
     defaultValues: {},
   });
-
   const onSubmit = async (formData: ItemType) => {
-    console.log(formData);
+    console.log({
+      value: formData.value,
+      macro: formData.macro,
+      description: formData.description,
+      type: formData.type,
+      globalmacroid: itemGlobalIds,
+    });
+
     try {
-      const response = await instance.post(
-        "/core/usermacro/update_global",
-        formData
-      );
+      const response = await instance.post("/core/usermacro/update_global", {
+        value: formData.value,
+        macro: formData.macro,
+        description: formData.description,
+        type: formData.type,
+        globalmacroid: itemGlobalIds,
+      });
       console.log("Response:", response);
       ToastFire("success", `موفق`, "با موفقیت ویرایش شد");
+      onHide();
     } catch (error) {
       console.error("Error during Zabbix request:", error);
       ToastFire("error", `لطفا با فرمت مناسب مقادیر را وارد کنید`, "");
@@ -64,8 +74,16 @@ const UpdateInheritedMacros: React.FC<UpdateInheritedMacrosProps> = ({
     setValue("macro", item?.macro);
     setValue("description", item?.description);
     setValue("value", item?.value);
-  }, [item?.description, item?.macro, item?.type, item?.value, setValue, show]);
-
+    setValue("value", item?.globalmacroid);
+  }, [
+    item?.description,
+    item?.macro,
+    item?.type,
+    item?.globalmacroid,
+    item?.value,
+    setValue,
+    show,
+  ]);
   return (
     <Modal show={show} onHide={onHide}>
       <Modal.Header closeButton>
@@ -92,7 +110,6 @@ const UpdateInheritedMacros: React.FC<UpdateInheritedMacrosProps> = ({
                   options={[
                     { label: "text", value: "0" },
                     { label: "secret text", value: "1" },
-                    { label: "vault secret", value: "2" },
                   ]}
                 />
               </div>
